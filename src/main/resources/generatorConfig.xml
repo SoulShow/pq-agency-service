@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <context id="gzb_table" targetRuntime="MyBatis3Simple">
+        <!--去除注释  -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!--数据库连接 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://rm-2ze41lui7lm025267o.mysql.rds.aliyuncs.com:3306/db_jedi_coupon_dev"
+                        userId="test"
+                        password="Test@hfq">
+        </jdbcConnection>
+
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!--生成实体类 指定包名 以及生成的地址 （可以自定义地址，但是路径不存在不会自动创建  使用Maven生成在target目录下，会自动创建） -->
+        <javaModelGenerator targetPackage="com.github.prontera.entity" targetProject="MAVEN">
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <!--生成SQLMAP文件 -->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources/mybatis">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <!--生成Dao文件 可以配置 type="XMLMAPPER"生成xml的dao实现 ANNOTATEDMAPPER  context id="DB2Tables" 修改targetRuntime="MyBatis3"     -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.github.prontera.mapper" targetProject="MAVEN">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!--<table tableName="t_coupon_batch" domainObjectName="CouponBatch">-->
+            <!--<generatedKey column="f_id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnRenamingRule sear
+            chString="f_" replaceString=""/>-->
+            <!--&lt;!&ndash;start&ndash;&gt;-->
+            <!--&lt;!&ndash;mysql TINYINT 需要手动转换为Integer&ndash;&gt;-->
+            <!--<columnOverride column="f_amount_rule_type" javaType="java.lang.Integer" jdbcType="TINYINT"/>-->
+            <!--<columnOverride column="f_status" javaType="java.lang.Integer" jdbcType="TINYINT"/>-->
+            <!--&lt;!&ndash;end&ndash;&gt;-->
+            <!--<columnOverride column="f_create_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="f_update_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="f_state" javaType="java.lang.Integer" jdbcType="TINYINT"/>-->
+
+        <!--</table>-->
+        <!--<table tableName="t_coupon_amount_rule" domainObjectName="CouponAmountRule">-->
+            <!--<generatedKey column="f_id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnRenamingRule searchString="f_" replaceString=""/>-->
+            <!--&lt;!&ndash;start&ndash;&gt;-->
+            <!--&lt;!&ndash;mysql TINYINT 需要手动转换为Integer&ndash;&gt;-->
+            <!--<columnOverride column="f_discount_model" javaType="java.lang.Integer" jdbcType="TINYINT"/>-->
+            <!--<columnOverride column="f_discount_type" javaType="java.lang.Integer" jdbcType="TINYINT"/>-->
+            <!--<columnOverride column="f_discount_scope" javaType="java.lang.Integer" jdbcType="TINYINT"/>-->
+
+            <!--&lt;!&ndash;end&ndash;&gt;-->
+            <!--<columnOverride column="f_create_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="f_update_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="f_state" javaType="java.lang.Integer" jdbcType="TINYINT"/>-->
+
+        <!--</table>-->
+        <!--<table tableName="t_coupon_info" domainObjectName="CouponInfo">-->
+            <!--<generatedKey column="f_id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnRenamingRule searchString="f_" replaceString=""/>-->
+            <!--&lt;!&ndash;start&ndash;&gt;-->
+            <!--&lt;!&ndash;mysql TINYINT 需要手动转换为Integer&ndash;&gt;-->
+            <!--<columnOverride column="f_validity_type" javaType="java.lang.Integer" jdbcType="TINYINT"/>-->
+            <!--<columnOverride column="f_status" javaType="java.lang.Integer" jdbcType="TINYINT"/>-->
+            <!--&lt;!&ndash;end&ndash;&gt;-->
+            <!--<columnOverride column="f_create_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="f_update_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="f_state" javaType="java.lang.Integer" jdbcType="TINYINT"/>-->
+
+        <!--</table>-->
+
+        <!--<table tableName="t_coupon_use_rule" domainObjectName="CouponUseRule">-->
+            <!--<generatedKey column="f_id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnRenamingRule searchString="f_" replaceString=""/>-->
+            <!--&lt;!&ndash;start&ndash;&gt;-->
+            <!--&lt;!&ndash;mysql TINYINT 需要手动转换为Integer&ndash;&gt;-->
+            <!--<columnOverride column="f_use_condition_type" javaType="java.lang.Integer" jdbcType="TINYINT"/>-->
+
+            <!--&lt;!&ndash;end&ndash;&gt;-->
+            <!--<columnOverride column="f_create_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="f_update_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="f_state" javaType="java.lang.Integer" jdbcType="TINYINT"/>-->
+        <!--</table>-->
+
+        <table tableName="t_coupon_used_log" domainObjectName="CouponUsedLog">
+            <generatedKey column="f_id" sqlStatement="MySql" identity="true"/>
+            <columnRenamingRule searchString="f_" replaceString=""/>
+            <!--start-->
+            <!--mysql TINYINT 需要手动转换为Integer-->
+            <columnOverride column="f_status" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="f_pay_order_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
+
+            <!--end-->
+            <columnOverride column="f_create_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
+            <columnOverride column="f_update_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
+            <columnOverride column="f_state" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        </table>
+        <!--<table tableName="t_coupon_user" domainObjectName="CouponUser">-->
+            <!--<generatedKey column="f_id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnRenamingRule searchString="f_" replaceString=""/>-->
+            <!--&lt;!&ndash;start&ndash;&gt;-->
+            <!--&lt;!&ndash;mysql TINYINT 需要手动转换为Integer&ndash;&gt;-->
+            <!--&lt;!&ndash;end&ndash;&gt;-->
+            <!--<columnOverride column="f_create_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="f_update_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="f_state" javaType="java.lang.Integer" jdbcType="TINYINT"/>-->
+        <!--</table>-->
+
+        <!--<table tableName="t_coupon_batch_operation_log" domainObjectName="CouponBatchOperationLog">-->
+            <!--<generatedKey column="f_id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnRenamingRule searchString="f_" replaceString=""/>-->
+            <!--&lt;!&ndash;start&ndash;&gt;-->
+            <!--&lt;!&ndash;mysql TINYINT 需要手动转换为Integer&ndash;&gt;-->
+            <!--<columnOverride column="f_status" javaType="java.lang.Integer" jdbcType="TINYINT"/>-->
+            <!--&lt;!&ndash;end&ndash;&gt;-->
+            <!--<columnOverride column="f_create_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="f_update_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="f_state" javaType="java.lang.Integer" jdbcType="TINYINT"/>-->
+        <!--</table>-->
+    </context>
+</generatorConfiguration>
