@@ -1,19 +1,6 @@
-#命令执行超时时间，默认1000ms
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 1000
-      circuitBreaker:
-        enabled: false
-
-#线程池数量
-  threadpool:
-    default:
-      coreSize: 10
-
+feign:
+  hystrix:
+    enabled: false
 spring:
   jpa:
     show-sql: false
