@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pq.agency.mapper.AgencyClassCourseRelationMapper" >
+  <resultMap id="BaseResultMap" type="com.pq.agency.entity.AgencyClassCourseRelation" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="agency_id" property="agencyId" jdbcType="BIGINT" />
+    <result column="course_id" property="courseId" jdbcType="BIGINT" />
+    <result column="course_name" property="courseName" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="BIT" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pq_agency_course_relation
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pq.agency.entity.AgencyClassCourseRelation" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pq_agency_course_relation (agency_id, course_id, course_name, 
+      state, updated_time, created_time
+      )
+    values (#{agencyId,jdbcType=BIGINT}, #{courseId,jdbcType=BIGINT}, #{courseName,jdbcType=VARCHAR}, 
+      #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.AgencyClassCourseRelation" >
+    update pq_agency_course_relation
+    set agency_id = #{agencyId,jdbcType=BIGINT},
+      course_id = #{courseId,jdbcType=BIGINT},
+      course_name = #{courseName,jdbcType=VARCHAR},
+      state = #{state,jdbcType=BIT},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      created_time = #{createdTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, agency_id, course_id, course_name, state, updated_time, created_time
+    from pq_agency_course_relation
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, agency_id, course_id, course_name, state, updated_time, created_time
+    from pq_agency_course_relation
+  </select>
+</mapper>

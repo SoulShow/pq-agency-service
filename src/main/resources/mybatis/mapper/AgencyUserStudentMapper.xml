@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pq.agency.mapper.AgencyUserStudentMapper" >
+  <resultMap id="BaseResultMap" type="com.pq.agency.entity.AgencyUserStudent" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="agency_id" property="agencyId" jdbcType="BIGINT" />
+    <result column="grade_id" property="gradeId" jdbcType="BIGINT" />
+    <result column="class_id" property="classId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="agency_user_id" property="agencyUserId" jdbcType="BIGINT" />
+    <result column="student_id" property="studentId" jdbcType="BIGINT" />
+    <result column="state" property="state" jdbcType="BIT" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pq_agency_user_student
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pq.agency.entity.AgencyUserStudent" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pq_agency_user_student (agency_id, grade_id, class_id, 
+      user_id, agency_user_id, student_id, 
+      state, updated_time, created_time
+      )
+    values (#{agencyId,jdbcType=BIGINT}, #{gradeId,jdbcType=BIGINT}, #{classId,jdbcType=BIGINT}, 
+      #{userId,jdbcType=VARCHAR}, #{agencyUserId,jdbcType=BIGINT}, #{studentId,jdbcType=BIGINT}, 
+      #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.AgencyUserStudent" >
+    update pq_agency_user_student
+    set agency_id = #{agencyId,jdbcType=BIGINT},
+      grade_id = #{gradeId,jdbcType=BIGINT},
+      class_id = #{classId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=VARCHAR},
+      agency_user_id = #{agencyUserId,jdbcType=BIGINT},
+      student_id = #{studentId,jdbcType=BIGINT},
+      state = #{state,jdbcType=BIT},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      created_time = #{createdTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, agency_id, grade_id, class_id, user_id, agency_user_id, student_id, state, 
+    updated_time, created_time
+    from pq_agency_user_student
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, agency_id, grade_id, class_id, user_id, agency_user_id, student_id, state, 
+    updated_time, created_time
+    from pq_agency_user_student
+  </select>
+</mapper>

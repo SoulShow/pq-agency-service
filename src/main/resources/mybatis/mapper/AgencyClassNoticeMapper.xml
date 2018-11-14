@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pq.agency.mapper.AgencyClassNoticeMapper" >
+  <resultMap id="BaseResultMap" type="com.pq.agency.entity.AgencyClassNotice" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="agency_id" property="agencyId" jdbcType="BIGINT" />
+    <result column="grade_id" property="gradeId" jdbcType="BIGINT" />
+    <result column="class_id" property="classId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="is_receipt" property="isReceipt" jdbcType="BIT" />
+    <result column="state" property="state" jdbcType="BIT" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pq_agency_class_notice
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pq.agency.entity.AgencyClassNotice" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pq_agency_class_notice (agency_id, grade_id, class_id, 
+      user_id, title, content, 
+      is_receipt, state, updated_time, 
+      created_time)
+    values (#{agencyId,jdbcType=BIGINT}, #{gradeId,jdbcType=BIGINT}, #{classId,jdbcType=BIGINT}, 
+      #{userId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{isReceipt,jdbcType=BIT}, #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{createdTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.AgencyClassNotice" >
+    update pq_agency_class_notice
+    set agency_id = #{agencyId,jdbcType=BIGINT},
+      grade_id = #{gradeId,jdbcType=BIGINT},
+      class_id = #{classId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      is_receipt = #{isReceipt,jdbcType=BIT},
+      state = #{state,jdbcType=BIT},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      created_time = #{createdTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, agency_id, grade_id, class_id, user_id, title, content, is_receipt, state, 
+    updated_time, created_time
+    from pq_agency_class_notice
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, agency_id, grade_id, class_id, user_id, title, content, is_receipt, state, 
+    updated_time, created_time
+    from pq_agency_class_notice
+  </select>
+</mapper>

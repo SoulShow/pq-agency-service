@@ -1,0 +1,36 @@
+package com.pq.agency.service.impl;
+
+import com.pq.agency.entity.AgencyStudent;
+import com.pq.agency.mapper.AgencyStudentMapper;
+import com.pq.agency.service.AgencyStudentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * @author liutao
+ */
+@Service
+public class AgencyStudentServiceImpl implements AgencyStudentService {
+    @Autowired
+    private AgencyStudentMapper agencyStudentMapper;
+    @Override
+    public  Boolean checkStudent(Long agencyId, Long gradeId, Long classId, String studentName){
+        List<AgencyStudent> list = agencyStudentMapper.selectByAgencyInfo(agencyId,gradeId,classId);
+        if(list==null||list.size()==0){
+            return false;
+        }else {
+            for(AgencyStudent student:list){
+                if(studentName.equals(student.getName())){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
+
+}

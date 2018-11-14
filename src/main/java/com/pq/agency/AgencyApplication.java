@@ -11,7 +11,6 @@ import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.context.annotation.ComponentScan;
 
 @ComponentScan
-@EnableHystrix
 @MapperScan("com.pq.agency.mapper")
 @EnableEurekaClient
 @SpringBootApplication

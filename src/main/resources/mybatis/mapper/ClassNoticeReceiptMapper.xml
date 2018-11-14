@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pq.agency.mapper.ClassNoticeReceiptMapper" >
+  <resultMap id="BaseResultMap" type="com.pq.agency.entity.ClassNoticeReceipt" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="notice_id" property="noticeId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="receipt_content" property="receiptContent" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="BIT" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pq_class_notice_receipt
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pq.agency.entity.ClassNoticeReceipt" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pq_class_notice_receipt (notice_id, user_id, name, 
+      receipt_content, state, updated_time, 
+      created_time)
+    values (#{noticeId,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{receiptContent,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{createdTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.ClassNoticeReceipt" >
+    update pq_class_notice_receipt
+    set notice_id = #{noticeId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      receipt_content = #{receiptContent,jdbcType=VARCHAR},
+      state = #{state,jdbcType=BIT},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      created_time = #{createdTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, notice_id, user_id, name, receipt_content, state, updated_time, created_time
+    from pq_class_notice_receipt
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, notice_id, user_id, name, receipt_content, state, updated_time, created_time
+    from pq_class_notice_receipt
+  </select>
+</mapper>
