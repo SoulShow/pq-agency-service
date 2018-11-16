@@ -3,9 +3,7 @@
 <mapper namespace="com.pq.agency.mapper.AgencyClassInvitationCodeMapper" >
   <resultMap id="BaseResultMap" type="com.pq.agency.entity.AgencyClassInvitationCode" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="agency_id" property="agencyId" jdbcType="BIGINT" />
-    <result column="grade_id" property="gradeId" jdbcType="BIGINT" />
-    <result column="class_id" property="classId" jdbcType="BIGINT" />
+    <result column="agency_class_id" property="agencyClassId" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="code" property="code" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="BIT" />
@@ -20,18 +18,16 @@
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into pq_agency_class_invitation_code (agency_id, grade_id, class_id, 
-      name, code, state, updated_time, 
-      created_time)
-    values (#{agencyId,jdbcType=BIGINT}, #{gradeId,jdbcType=BIGINT}, #{classId,jdbcType=BIGINT}, 
-      #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, 
-      #{createdTime,jdbcType=TIMESTAMP})
+    insert into pq_agency_class_invitation_code (agency_class_id, name, code, 
+      state, updated_time, created_time
+      )
+    values (#{agencyClassId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
+      #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.AgencyClassInvitationCode" >
     update pq_agency_class_invitation_code
-    set agency_id = #{agencyId,jdbcType=BIGINT},
-      grade_id = #{gradeId,jdbcType=BIGINT},
-      class_id = #{classId,jdbcType=BIGINT},
+    set agency_class_id = #{agencyClassId,jdbcType=BIGINT},
       name = #{name,jdbcType=VARCHAR},
       code = #{code,jdbcType=VARCHAR},
       state = #{state,jdbcType=BIT},
@@ -40,34 +36,18 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, agency_id, grade_id, class_id, name, code, state, updated_time, created_time
+    select id, agency_class_id, name, code, state, updated_time, created_time
     from pq_agency_class_invitation_code
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, agency_id, grade_id, class_id, name, code, state, updated_time, created_time
+    select id, agency_class_id, name, code, state, updated_time, created_time
     from pq_agency_class_invitation_code
   </select>
-
-  <select id="selectGradeByAgencyId" resultMap="BaseResultMap" >
-    select distinct (grade_id)
+  <select id="selectByAgencyClassId" resultMap="BaseResultMap" >
+    select id, agency_class_id, name, code, state, updated_time, created_time
     from pq_agency_class_invitation_code
-    where agency_id = #{agencyId}
-    and state = 1
-  </select>
-  <select id="selectClassByAgencyIdAndGradeId" resultMap="BaseResultMap" >
-    select id, agency_id, grade_id, class_id, name, code, state, updated_time, created_time
-    from pq_agency_class_invitation_code
-    where agency_id = #{agencyId}
-    and grade_id = #{gradeId}
-    and state = 1
-  </select>
-  <select id="selectByAgencyInfo" resultMap="BaseResultMap" >
-    select id, agency_id, grade_id, class_id, name, code, state, updated_time, created_time
-    from pq_agency_class_invitation_code
-    where agency_id = #{agencyId}
-    and grade_id = #{gradeId}
-    and class_id = #{classId}
+    and agency_class_id = #{agencyClassId}
     and state = 1
   </select>
 </mapper>

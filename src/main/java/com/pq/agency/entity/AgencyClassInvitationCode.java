@@ -5,11 +5,7 @@ import java.sql.Timestamp;
 public class AgencyClassInvitationCode {
     private Long id;
 
-    private Long agencyId;
-
-    private Long gradeId;
-
-    private Long classId;
+    private Long agencyClassId;
 
     private String name;
 
@@ -29,28 +25,12 @@ public class AgencyClassInvitationCode {
         this.id = id;
     }
 
-    public Long getAgencyId() {
-        return agencyId;
+    public Long getAgencyClassId() {
+        return agencyClassId;
     }
 
-    public void setAgencyId(Long agencyId) {
-        this.agencyId = agencyId;
-    }
-
-    public Long getGradeId() {
-        return gradeId;
-    }
-
-    public void setGradeId(Long gradeId) {
-        this.gradeId = gradeId;
-    }
-
-    public Long getClassId() {
-        return classId;
-    }
-
-    public void setClassId(Long classId) {
-        this.classId = classId;
+    public void setAgencyClassId(Long agencyClassId) {
+        this.agencyClassId = agencyClassId;
     }
 
     public String getName() {

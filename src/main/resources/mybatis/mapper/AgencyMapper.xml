@@ -46,7 +46,6 @@
     select id, name, introduce, address, type, state, updated_time, created_time
     from pq_agency
   </select>
-
   <select id="selectByName" resultMap="BaseResultMap" >
     select id, name, introduce, address, type, state, updated_time, created_time
     from pq_agency

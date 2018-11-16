@@ -16,11 +16,5 @@ public interface AgencyClassInvitationCodeMapper {
 
     int updateByPrimaryKey(AgencyClassInvitationCode record);
 
-    List<AgencyClassInvitationCode> selectGradeByAgencyId(@Param("agencyId")Long agencyId);
-
-    List<AgencyClassInvitationCode> selectClassByAgencyIdAndGradeId(@Param("agencyId")Long agencyId,
-                                                                    @Param("gradeId")Long gradeId);
-
-    AgencyClassInvitationCode selectByAgencyInfo(@Param("agencyId")Long agencyId, @Param("gradeId")Long gradeId,
-                              @Param("classId") Long classId);
+    AgencyClassInvitationCode selectByAgencyClassId(@Param("agencyClassId")Long agencyClassId);
 }

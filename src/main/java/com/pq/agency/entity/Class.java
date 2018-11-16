@@ -2,7 +2,7 @@ package com.pq.agency.entity;
 
 import java.sql.Timestamp;
 
-public class AgencyGrade {
+public class Class {
     private Long id;
 
     private String name;

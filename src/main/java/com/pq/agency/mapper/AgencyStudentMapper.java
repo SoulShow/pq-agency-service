@@ -16,6 +16,5 @@ public interface AgencyStudentMapper {
 
     int updateByPrimaryKey(AgencyStudent record);
 
-    List<AgencyStudent> selectByAgencyInfo(@Param("agencyId")Long agencyId, @Param("gradeId")Long gradeId,
-                       @Param("classId") Long classId);
+    List<AgencyStudent> selectByAgencyClassIdAndName(@Param("agencyClassId")Long agencyClassId,@Param("name")String studentName);
 }

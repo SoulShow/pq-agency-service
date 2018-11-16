@@ -40,77 +40,83 @@
 
 
 
-        <table tableName="pq_agency" domainObjectName="Agency">
-        <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-        <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-        </table>
+        <!--<table tableName="pq_agency" domainObjectName="Agency">-->
+        <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+        <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
 
-        <table tableName="pq_agency_class" domainObjectName="AgencyClass">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-        </table>
+        <!--<table tableName="pq_agency_class" domainObjectName="AgencyClass">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
 
-        <table tableName="pq_agency_class_invitation_code" domainObjectName="AgencyClassInvitationCode">
+        <!--<table tableName="pq_class" domainObjectName="Class">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
+
+        <!--<table tableName="pq_agency_class_invitation_code" domainObjectName="AgencyClassInvitationCode">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
+        <!--<table tableName="pq_agency_class_notice" domainObjectName="AgencyClassNotice">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
+        <!--<table tableName="pq_agency_course" domainObjectName="AgencyClassCourse">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
+        <!--<table tableName="pq_agency_course_relation" domainObjectName="AgencyClassCourseRelation">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
+        <table tableName="pq_grade" domainObjectName="Grade">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
             <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
         </table>
-        <table tableName="pq_agency_class_notice" domainObjectName="AgencyClassNotice">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-        </table>
-        <table tableName="pq_agency_course" domainObjectName="AgencyClassCourse">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-        </table>
-        <table tableName="pq_agency_course_relation" domainObjectName="AgencyClassCourseRelation">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-        </table>
-        <table tableName="pq_agency_grade" domainObjectName="AgencyGrade">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-        </table>
-        <table tableName="pq_agency_show" domainObjectName="AgencyGradeShow">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-        </table>
-        <table tableName="pq_agency_student" domainObjectName="AgencyStudent">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-        </table>
-        <table tableName="pq_agency_user_student" domainObjectName="AgencyUserStudent">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-        </table>
-        <table tableName="pq_class_notice_file" domainObjectName="ClassNoticeFile">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-        </table>
-        <table tableName="pq_class_notice_receipt" domainObjectName="ClassNoticeReceipt">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-        </table>
-        <table tableName="pq_class_show" domainObjectName="ClassShow">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-        </table>
-        <table tableName="pq_class_show_img" domainObjectName="ClassShowImg">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-        </table>
+        <!--<table tableName="pq_agency_show" domainObjectName="AgencyGradeShow">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
+        <!--<table tableName="pq_agency_student" domainObjectName="AgencyStudent">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
+        <!--<table tableName="pq_agency_user_student" domainObjectName="AgencyUserStudent">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
+        <!--<table tableName="pq_class_notice_file" domainObjectName="ClassNoticeFile">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
+        <!--<table tableName="pq_class_notice_receipt" domainObjectName="ClassNoticeReceipt">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
+        <!--<table tableName="pq_class_show" domainObjectName="ClassShow">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
+        <!--<table tableName="pq_class_show_img" domainObjectName="ClassShowImg">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
     </context>
 </generatorConfiguration>

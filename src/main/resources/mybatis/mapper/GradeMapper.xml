@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.pq.agency.mapper.AgencyGradeMapper" >
-  <resultMap id="BaseResultMap" type="com.pq.agency.entity.AgencyGrade" >
+<mapper namespace="com.pq.agency.mapper.GradeMapper" >
+  <resultMap id="BaseResultMap" type="com.pq.agency.entity.Grade" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="BIT" />
@@ -9,20 +9,20 @@
     <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from pq_agency_grade
+    delete from pq_grade
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.pq.agency.entity.AgencyGrade" >
+  <insert id="insert" parameterType="com.pq.agency.entity.Grade" >
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into pq_agency_grade (name, state, updated_time, 
+    insert into pq_grade (name, state, updated_time, 
       created_time)
     values (#{name,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, 
       #{createdTime,jdbcType=TIMESTAMP})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.AgencyGrade" >
-    update pq_agency_grade
+  <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.Grade" >
+    update pq_grade
     set name = #{name,jdbcType=VARCHAR},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
@@ -31,17 +31,11 @@
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select id, name, state, updated_time, created_time
-    from pq_agency_grade
+    from pq_grade
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select id, name, state, updated_time, created_time
-    from pq_agency_grade
-  </select>
-
-  <select id="selectValid" resultMap="BaseResultMap" >
-    select id, name, state, updated_time, created_time
-    from pq_agency_grade
-    where state = 1
+    from pq_grade
   </select>
 </mapper>

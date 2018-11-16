@@ -3,9 +3,7 @@
 <mapper namespace="com.pq.agency.mapper.AgencyStudentMapper" >
   <resultMap id="BaseResultMap" type="com.pq.agency.entity.AgencyStudent" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="agency_id" property="agencyId" jdbcType="BIGINT" />
-    <result column="grade_id" property="gradeId" jdbcType="BIGINT" />
-    <result column="class_id" property="classId" jdbcType="BIGINT" />
+    <result column="agency_class_id" property="agencyClassId" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="sex" property="sex" jdbcType="BIT" />
     <result column="avatar" property="avatar" jdbcType="VARCHAR" />
@@ -21,18 +19,16 @@
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into pq_agency_student (agency_id, grade_id, class_id, 
-      name, sex, avatar, state, 
-      updated_time, created_time)
-    values (#{agencyId,jdbcType=BIGINT}, #{gradeId,jdbcType=BIGINT}, #{classId,jdbcType=BIGINT}, 
-      #{name,jdbcType=VARCHAR}, #{sex,jdbcType=BIT}, #{avatar,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, 
-      #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP})
+    insert into pq_agency_student (agency_class_id, name, sex, 
+      avatar, state, updated_time, 
+      created_time)
+    values (#{agencyClassId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=BIT}, 
+      #{avatar,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{createdTime,jdbcType=TIMESTAMP})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.AgencyStudent" >
     update pq_agency_student
-    set agency_id = #{agencyId,jdbcType=BIGINT},
-      grade_id = #{gradeId,jdbcType=BIGINT},
-      class_id = #{classId,jdbcType=BIGINT},
+    set agency_class_id = #{agencyClassId,jdbcType=BIGINT},
       name = #{name,jdbcType=VARCHAR},
       sex = #{sex,jdbcType=BIT},
       avatar = #{avatar,jdbcType=VARCHAR},
@@ -42,14 +38,20 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, agency_id, grade_id, class_id, name, sex, avatar, state, updated_time, 
-    created_time
+    select id, agency_class_id, name, sex, avatar, state, updated_time, created_time
     from pq_agency_student
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, agency_id, grade_id, class_id, name, sex, avatar, state, updated_time, 
-    created_time
+    select id, agency_class_id, name, sex, avatar, state, updated_time, created_time
     from pq_agency_student
+  </select>
+
+  <select id="selectByAgencyClassIdAndName" resultMap="BaseResultMap" >
+    select id, agency_class_id, name, sex, avatar, state, updated_time, created_time
+    from pq_agency_student
+    where agency_class_id =#{agencyClassId}
+    and name = #{name}
+    and state = 1
   </select>
 </mapper>
