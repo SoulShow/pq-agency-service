@@ -38,4 +38,9 @@
     select id, name, state, updated_time, created_time
     from pq_grade
   </select>
+  <select id="selectValid" resultMap="BaseResultMap" >
+    select id, name, state, updated_time, created_time
+    from pq_grade
+    where state = 1
+  </select>
 </mapper>

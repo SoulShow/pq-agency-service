@@ -11,7 +11,7 @@ spring:
     host: 47.92.82.130
     port: 9736
     password:
-    database: 1
+    database: 0
   datasource:
     name: dataSource
     type: com.alibaba.druid.pool.DruidDataSource
@@ -75,7 +75,7 @@ xxl:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://eureka-service:8001/eureka/
+      defaultZone: http://eureka-service:9001/eureka/
 server:
   port: 8082
 

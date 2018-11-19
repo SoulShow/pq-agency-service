@@ -1,6 +1,6 @@
 package com.pq.agency.param;
 
-public class AgencyUserRegisterCheckForm {
+public class AgencyUserRegisterForm {
 
     private Long agencyId;
 
@@ -10,7 +10,7 @@ public class AgencyUserRegisterCheckForm {
 
     private Long studentId;
 
-    private String invitationCode;
+    private String userId;
 
     private int role;
 
@@ -38,14 +38,6 @@ public class AgencyUserRegisterCheckForm {
         this.classId = classId;
     }
 
-    public String getInvitationCode() {
-        return invitationCode;
-    }
-
-    public void setInvitationCode(String invitationCode) {
-        this.invitationCode = invitationCode;
-    }
-
     public int getRole() {
         return role;
     }
@@ -60,5 +52,13 @@ public class AgencyUserRegisterCheckForm {
 
     public void setStudentId(Long studentId) {
         this.studentId = studentId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

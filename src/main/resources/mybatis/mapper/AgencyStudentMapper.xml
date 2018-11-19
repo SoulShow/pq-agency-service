@@ -47,6 +47,14 @@
     from pq_agency_student
   </select>
 
+  <select id="selectByAgencyClassIdAndId" resultMap="BaseResultMap" >
+    select id, agency_class_id, name, sex, avatar, state, updated_time, created_time
+    from pq_agency_student
+    where agency_class_id =#{agencyClassId}
+    and id = #{id}
+    and state = 1
+  </select>
+
   <select id="selectByAgencyClassIdAndName" resultMap="BaseResultMap" >
     select id, agency_class_id, name, sex, avatar, state, updated_time, created_time
     from pq_agency_student

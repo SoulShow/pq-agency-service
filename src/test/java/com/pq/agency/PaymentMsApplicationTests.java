@@ -10,13 +10,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class PaymentMsApplicationTests {
-    @Autowired
-    private HystrixService hystrixService;
+
     @Test
     public void contextLoads() {
 
-            String str = hystrixService.getOrderPageList();
-            System.out.print(str);
+
 
     }
 

@@ -2,20 +2,14 @@ package com.pq.agency.entity;
 
 import java.sql.Timestamp;
 
-public class AgencyUserStudent {
+public class AgencyUser {
     private Long id;
 
     private Long agencyClassId;
 
     private String userId;
 
-    private Long agencyUserId;
-
-    private Long studentId;
-
-    private String studentName;
-
-    private Integer relation;
+    private Integer role;
 
     private Boolean state;
 
@@ -47,20 +41,12 @@ public class AgencyUserStudent {
         this.userId = userId == null ? null : userId.trim();
     }
 
-    public Long getAgencyUserId() {
-        return agencyUserId;
+    public Integer getRole() {
+        return role;
     }
 
-    public void setAgencyUserId(Long agencyUserId) {
-        this.agencyUserId = agencyUserId;
-    }
-
-    public Long getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
+    public void setRole(Integer role) {
+        this.role = role;
     }
 
     public Boolean getState() {
@@ -85,21 +71,5 @@ public class AgencyUserStudent {
 
     public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
-    }
-
-    public String getStudentName() {
-        return studentName;
-    }
-
-    public void setStudentName(String studentName) {
-        this.studentName = studentName;
-    }
-
-    public Integer getRelation() {
-        return relation;
-    }
-
-    public void setRelation(Integer relation) {
-        this.relation = relation;
     }
 }
