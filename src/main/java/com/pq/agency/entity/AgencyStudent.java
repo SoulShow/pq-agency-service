@@ -9,7 +9,7 @@ public class AgencyStudent {
 
     private String name;
 
-    private Boolean sex;
+    private int sex;
 
     private String avatar;
 
@@ -43,14 +43,6 @@ public class AgencyStudent {
         this.name = name == null ? null : name.trim();
     }
 
-    public Boolean getSex() {
-        return sex;
-    }
-
-    public void setSex(Boolean sex) {
-        this.sex = sex;
-    }
-
     public String getAvatar() {
         return avatar;
     }
@@ -81,5 +73,13 @@ public class AgencyStudent {
 
     public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
     }
 }

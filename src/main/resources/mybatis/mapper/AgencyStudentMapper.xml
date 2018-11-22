@@ -5,7 +5,7 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="agency_class_id" property="agencyClassId" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="sex" property="sex" jdbcType="BIT" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
     <result column="avatar" property="avatar" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
@@ -22,7 +22,7 @@
     insert into pq_agency_student (agency_class_id, name, sex, 
       avatar, state, updated_time, 
       created_time)
-    values (#{agencyClassId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=BIT}, 
+    values (#{agencyClassId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER},
       #{avatar,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, 
       #{createdTime,jdbcType=TIMESTAMP})
   </insert>
@@ -30,7 +30,7 @@
     update pq_agency_student
     set agency_class_id = #{agencyClassId,jdbcType=BIGINT},
       name = #{name,jdbcType=VARCHAR},
-      sex = #{sex,jdbcType=BIT},
+      sex = #{sex,jdbcType=INTEGER},
       avatar = #{avatar,jdbcType=VARCHAR},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
