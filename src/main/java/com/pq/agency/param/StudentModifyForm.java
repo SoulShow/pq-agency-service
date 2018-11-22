@@ -1,11 +1,11 @@
-package com.pq.agency.dto;
+package com.pq.agency.param;
 
 import java.io.Serializable;
 
 /**
  * @author liutao
  */
-public class StudentModifyDto implements Serializable {
+public class StudentModifyForm implements Serializable {
 
     private static final long serialVersionUID = 4414194841724802043L;
     private Long studentId;

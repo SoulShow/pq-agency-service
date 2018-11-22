@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pq.agency.mapper.AgencyStudentLifeImgMapper" >
+  <resultMap id="BaseResultMap" type="com.pq.agency.entity.AgencyStudentLifeImg" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="life_id" property="lifeId" jdbcType="BIGINT" />
+    <result column="img" property="img" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="BIT" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pq_agency_student_life_img
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pq.agency.entity.AgencyStudentLifeImg" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pq_agency_student_life_img (life_id, img, state, 
+      created_time, updated_time)
+    values (#{lifeId,jdbcType=BIGINT}, #{img,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{updatedTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.AgencyStudentLifeImg" >
+    update pq_agency_student_life_img
+    set life_id = #{lifeId,jdbcType=BIGINT},
+      img = #{img,jdbcType=VARCHAR},
+      state = #{state,jdbcType=BIT},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, life_id, img, state, created_time, updated_time
+    from pq_agency_student_life_img
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, life_id, img, state, created_time, updated_time
+    from pq_agency_student_life_img
+  </select>
+  <select id="selectByLifeId" resultMap="BaseResultMap" >
+    select id, life_id, img, state, created_time, updated_time
+    from pq_agency_student_life_img
+    where state = 1
+    and life_id = #{lifeId}
+  </select>
+</mapper>
