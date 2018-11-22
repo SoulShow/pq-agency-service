@@ -1,7 +1,5 @@
 package com.pq.agency.dto;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.Serializable;
 
 /**
@@ -12,14 +10,7 @@ public class StudentModifyDto implements Serializable {
     private static final long serialVersionUID = 4414194841724802043L;
     private Long studentId;
     private int sex;
-    private MultipartFile avatar;
-    public MultipartFile getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(MultipartFile avatar) {
-        this.avatar = avatar;
-    }
+    private String avatar;
 
     public Long getStudentId() {
         return studentId;
@@ -35,5 +26,13 @@ public class StudentModifyDto implements Serializable {
 
     public void setSex(int sex) {
         this.sex = sex;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

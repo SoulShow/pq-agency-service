@@ -5,9 +5,7 @@ import com.pq.agency.dto.StudentModifyDto;
 import com.pq.agency.entity.AgencyStudent;
 import com.pq.agency.exception.AgencyErrors;
 import com.pq.agency.exception.AgencyException;
-import com.pq.agency.service.AgencyClassService;
 import com.pq.agency.service.AgencyStudentService;
-import com.pq.agency.service.QiniuService;
 import com.pq.agency.utils.AgencyResult;
 import com.pq.common.exception.CommonErrors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +21,6 @@ public class AgencyStudentController {
 
     @Autowired
 	private AgencyStudentService agencyStudentService;
-    @Autowired
-    private QiniuService qiniuService;
 
 	@PostMapping(value = "/update/avatar")
 	@ResponseBody
@@ -32,8 +28,7 @@ public class AgencyStudentController {
 		AgencyResult result = new AgencyResult();
 		try{
             AgencyStudent student = agencyStudentService.getAgencyStudentById(studentModifyDto.getStudentId());
-            String avatar = qiniuService.uploadFile(studentModifyDto.getAvatar().getBytes(),"agency");
-            student.setAvatar(avatar);
+            student.setAvatar(studentModifyDto.getAvatar());
             agencyStudentService.updateStudentInfo(student);
         }catch (AgencyException a){
 			result.setStatus(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorCode());
