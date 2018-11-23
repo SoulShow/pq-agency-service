@@ -150,7 +150,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
            }
            agencyUserDto.setAgencyName(agency.getName());
            agencyUserDto.setClassName(agencyClass.getName());
-           agencyUserDto.setSex(agencyStudentMapper.selectByPrimaryKey(agencyUserStudent.getStudentId()).getSex());
+           AgencyStudent agencyStudent = agencyStudentMapper.selectByPrimaryKey(agencyUserStudent.getStudentId());
+           agencyUserDto.setSex(agencyStudent.getSex());
+           agencyUserDto.setAvatar(agencyStudent.getAvatar());
            userDtoList.add(agencyUserDto);
        }
        return userDtoList;
