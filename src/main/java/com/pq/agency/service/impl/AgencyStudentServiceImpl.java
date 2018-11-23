@@ -1,6 +1,7 @@
 package com.pq.agency.service.impl;
 
 import com.pq.agency.dto.AgencyStudentLifeDto;
+import com.pq.agency.dto.AgencyStudentLifeListDto;
 import com.pq.agency.entity.AgencyStudent;
 import com.pq.agency.entity.AgencyStudentLife;
 import com.pq.agency.entity.AgencyStudentLifeImg;
@@ -42,29 +43,33 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
         return studentMapper.selectByPrimaryKey(id);
     }
     @Override
-    public List<AgencyStudentLifeDto> getStudentLifeList(Long studentId, Long agencyClassId,int offset,int size){
+    public AgencyStudentLifeListDto getStudentLife(Long studentId, Long agencyClassId, int offset, int size){
         List<AgencyStudentLife> agencyStudentLifeList = studentLifeMapper.selectByStudentIdAndAgencyClassId(studentId,agencyClassId, offset, size);
         if(agencyStudentLifeList==null || agencyStudentLifeList.size()==0){
             return null;
         }
         List<AgencyStudentLifeDto> lifeList = new ArrayList<>();
+        AgencyStudentLifeListDto lifeListDto = new AgencyStudentLifeListDto();
         for(AgencyStudentLife agencyStudentLife:agencyStudentLifeList){
             List<AgencyStudentLifeImg> imgList = studentLifeImgMapper.selectByLifeId(agencyStudentLife.getId());
             List<String> list = new ArrayList<>();
             for(AgencyStudentLifeImg img:imgList){
                 list.add(img.getImg());
             }
+            lifeListDto.setAgencyClassId(agencyStudentLife.getAgencyClassId());
+            lifeListDto.setStudentId(agencyStudentLife.getStudentId());
+
             AgencyStudentLifeDto lifeDto = new AgencyStudentLifeDto();
             lifeDto.setImgList(list);
-            lifeDto.setAgencyClassId(agencyStudentLife.getAgencyClassId());
             lifeDto.setContent(agencyStudentLife.getContent());
             lifeDto.setTitle(agencyStudentLife.getTitle());
-            lifeDto.setStudentId(agencyStudentLife.getStudentId());
+
             lifeDto.setCreatedTime(DateUtil.formatDate(agencyStudentLife.getCreatedTime(),DateUtil.DEFAULT_DATE_FORMAT));
             lifeDto.setId(agencyStudentLife.getId());
             lifeList.add(lifeDto);
         }
-        return lifeList;
+        lifeListDto.setList(lifeList);
+        return lifeListDto;
     }
 
     @Transactional(rollbackFor = Exception.class)

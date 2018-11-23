@@ -2,6 +2,7 @@ package com.pq.agency.api;
 
 
 import com.pq.agency.dto.AgencyStudentLifeDto;
+import com.pq.agency.dto.AgencyStudentLifeListDto;
 import com.pq.agency.entity.AgencyStudent;
 import com.pq.agency.exception.AgencyErrors;
 import com.pq.agency.exception.AgencyException;
@@ -64,10 +65,10 @@ public class AgencyStudentController {
 
 	@GetMapping(value = "/life")
 	@ResponseBody
-	public AgencyResult<List<AgencyStudentLifeDto>> getStudentLife(@RequestParam("studentId")Long studentId,
-									   @RequestParam("agencyClassId")Long agencyClassId,
-									   @RequestParam("page")Integer page,
-									   @RequestParam("size")Integer size) {
+	public AgencyResult<AgencyStudentLifeListDto> getStudentLife(@RequestParam("studentId")Long studentId,
+																 @RequestParam("agencyClassId")Long agencyClassId,
+																 @RequestParam("page")Integer page,
+																 @RequestParam("size")Integer size) {
 		if (page == null || page < 1) {
 			page = 1;
 		}
@@ -78,8 +79,8 @@ public class AgencyStudentController {
 
 		AgencyResult result = new AgencyResult();
 		try{
-			List<AgencyStudentLifeDto> list = agencyStudentService.getStudentLifeList(studentId,agencyClassId,offset,size);
-			result.setData(list);
+			AgencyStudentLifeListDto life = agencyStudentService.getStudentLife(studentId,agencyClassId,offset,size);
+			result.setData(life);
 		}catch (Exception e){
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());

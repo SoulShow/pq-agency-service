@@ -34,6 +34,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     private AgencyUserStudentMapper agencyUserStudentMapper;
     @Autowired
     private AgencyUserMapper agencyUserMapper;
+    @Autowired
+    private AgencyMapper agencyMapper;
 
     @Override
     public Boolean checkInvitationCode(Long agencyId,Long gradeId,Long classId,String invitationCode){
@@ -138,6 +140,17 @@ public class AgencyClassServiceImpl implements AgencyClassService {
            agencyUserDto.setStudentName(agencyUserStudent.getStudentName());
            agencyUserDto.setName(agencyUserStudent.getStudentName()+
                    ParentRelationTypeEnum.getByCode(agencyUserStudent.getRelation()).getDescription());
+           AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyUserStudent.getAgencyClassId());
+           if(agencyUser==null){
+               AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
+           }
+           Agency agency = agencyMapper.selectByPrimaryKey(agencyClass.getAgencyId());
+           if(agency==null){
+               AgencyException.raise(AgencyErrors.AGENCY_NOT_EXIST_ERROR);
+           }
+           agencyUserDto.setAgencyName(agency.getName());
+           agencyUserDto.setClassName(agencyClass.getName());
+           agencyUserDto.setSex(agencyStudentMapper.selectByPrimaryKey(agencyUserStudent.getStudentId()).getSex());
            userDtoList.add(agencyUserDto);
        }
        return userDtoList;

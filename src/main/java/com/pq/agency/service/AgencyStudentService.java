@@ -2,6 +2,7 @@ package com.pq.agency.service;
 
 
 import com.pq.agency.dto.AgencyStudentLifeDto;
+import com.pq.agency.dto.AgencyStudentLifeListDto;
 import com.pq.agency.entity.AgencyStudent;
 import com.pq.agency.param.StudentLifeForm;
 
@@ -30,9 +31,11 @@ public interface AgencyStudentService {
      * 获取学生成长动态
      * @param studentId
      * @param agencyClassId
+     * @param offset
+     * @param size
      * @return
      */
-    List<AgencyStudentLifeDto> getStudentLifeList(Long studentId,Long agencyClassId,int offset,int size);
+    AgencyStudentLifeListDto getStudentLife(Long studentId, Long agencyClassId, int offset, int size);
 
 
     /**
