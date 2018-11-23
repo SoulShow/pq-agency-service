@@ -138,8 +138,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
            agencyUserDto.setRole(agencyUser.getRole());
            agencyUserDto.setRelation(agencyUserStudent.getRelation());
            agencyUserDto.setStudentName(agencyUserStudent.getStudentName());
-           agencyUserDto.setName(agencyUserStudent.getStudentName()+
-                   ParentRelationTypeEnum.getByCode(agencyUserStudent.getRelation()).getDescription());
+           agencyUserDto.setName(agencyUserStudent.getStudentName()+ agencyUserStudent.getRelation());
            AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyUserStudent.getAgencyClassId());
            if(agencyUser==null){
                AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);

@@ -7,7 +7,7 @@
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="agency_user_id" property="agencyUserId" jdbcType="BIGINT" />
     <result column="student_id" property="studentId" jdbcType="BIGINT" />
-    <result column="relation" property="relation" jdbcType="INTEGER" />
+    <result column="relation" property="relation" jdbcType="VARCHAR" />
     <result column="student_name" property="studentName" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />

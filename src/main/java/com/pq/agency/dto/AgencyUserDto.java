@@ -10,7 +10,7 @@ public class AgencyUserDto {
 
     private Integer role;
 
-    private Integer relation;
+    private String relation;
 
     private String studentName;
 
@@ -73,14 +73,6 @@ public class AgencyUserDto {
         this.name = name;
     }
 
-    public Integer getRelation() {
-        return relation;
-    }
-
-    public void setRelation(Integer relation) {
-        this.relation = relation;
-    }
-
     public int getSex() {
         return sex;
     }
@@ -111,5 +103,13 @@ public class AgencyUserDto {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getRelation() {
+        return relation;
+    }
+
+    public void setRelation(String relation) {
+        this.relation = relation;
     }
 }

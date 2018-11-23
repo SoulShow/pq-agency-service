@@ -15,7 +15,7 @@ public class AgencyUserStudent {
 
     private String studentName;
 
-    private Integer relation;
+    private String relation;
 
     private Boolean state;
 
@@ -95,11 +95,11 @@ public class AgencyUserStudent {
         this.studentName = studentName;
     }
 
-    public Integer getRelation() {
+    public String getRelation() {
         return relation;
     }
 
-    public void setRelation(Integer relation) {
+    public void setRelation(String relation) {
         this.relation = relation;
     }
 }
