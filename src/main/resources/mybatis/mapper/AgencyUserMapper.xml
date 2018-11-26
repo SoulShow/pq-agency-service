@@ -44,4 +44,10 @@
     select id, agency_class_id, user_id, role, state, updated_time, created_time
     from pq_agency_user
   </select>
+
+  <select id="selectClassIdByUserId" resultType="java.lang.Long" >
+    select  agency_class_id
+    from pq_agency_user
+    where user_id = #{userId}
+  </select>
 </mapper>

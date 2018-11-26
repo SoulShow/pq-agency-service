@@ -99,4 +99,17 @@ public class AgencyUserController {
 		}
 		return result;
 	}
+	@GetMapping(value = "/classId")
+	@ResponseBody
+	public AgencyResult<List<Long>> getUserClassId(@RequestParam("userId")String userId) {
+		AgencyResult result = new AgencyResult();
+		try{
+			result.setData(agencyClassService.getUserClassId(userId));
+		}catch (Exception e){
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
 }

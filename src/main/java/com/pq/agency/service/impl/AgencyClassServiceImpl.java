@@ -157,5 +157,10 @@ public class AgencyClassServiceImpl implements AgencyClassService {
        return userDtoList;
     }
 
+    @Override
+    public List<Long> getUserClassId(String userId){
+        return agencyUserMapper.selectClassIdByUserId(userId);
+    }
+
 
 }

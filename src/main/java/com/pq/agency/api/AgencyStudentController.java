@@ -1,7 +1,6 @@
 package com.pq.agency.api;
 
 
-import com.pq.agency.dto.AgencyStudentLifeDto;
 import com.pq.agency.dto.AgencyStudentLifeListDto;
 import com.pq.agency.entity.AgencyStudent;
 import com.pq.agency.exception.AgencyErrors;
@@ -13,8 +12,6 @@ import com.pq.agency.utils.AgencyResult;
 import com.pq.common.exception.CommonErrors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 机构用户相关服务

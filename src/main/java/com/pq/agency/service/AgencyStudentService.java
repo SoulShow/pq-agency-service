@@ -1,12 +1,9 @@
 package com.pq.agency.service;
 
 
-import com.pq.agency.dto.AgencyStudentLifeDto;
 import com.pq.agency.dto.AgencyStudentLifeListDto;
 import com.pq.agency.entity.AgencyStudent;
 import com.pq.agency.param.StudentLifeForm;
-
-import java.util.List;
 
 /**
  * 机构学生服务

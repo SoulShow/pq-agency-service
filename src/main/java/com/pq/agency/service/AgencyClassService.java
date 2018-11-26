@@ -84,4 +84,11 @@ public interface AgencyClassService {
      */
     List<AgencyUserDto> getAgencyUserInfo(String userId);
 
+
+    /**
+     * 获取用户classId
+     * @param userId
+     * @return
+     */
+    List<Long> getUserClassId(String userId);
 }

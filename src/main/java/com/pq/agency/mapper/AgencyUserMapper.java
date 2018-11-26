@@ -14,4 +14,6 @@ public interface AgencyUserMapper {
     List<AgencyUser> selectAll();
 
     int updateByPrimaryKey(AgencyUser record);
+
+    List<Long> selectClassIdByUserId(String userId);
 }
