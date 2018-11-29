@@ -41,7 +41,7 @@
     from pq_class_show_img
   </select>
   <select id="selectByShowId" resultType="java.lang.String" >
-    select img,
+    select img
     from pq_class_show_img
     where show_id = #{showId}
     and state = 1
