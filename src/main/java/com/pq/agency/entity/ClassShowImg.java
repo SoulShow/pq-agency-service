@@ -9,6 +9,8 @@ public class ClassShowImg {
 
     private String img;
 
+    private int type;
+
     private Boolean state;
 
     private Timestamp createdTime;
@@ -61,5 +63,13 @@ public class ClassShowImg {
 
     public void setUpdatedTime(Timestamp updatedTime) {
         this.updatedTime = updatedTime;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

@@ -13,6 +13,8 @@ public class AgencyClassShowDetailDto {
 
     private String content;
 
+    private String movieUrl;
+
     private List<String> imgList;
 
     public String getAvatar() {
@@ -61,5 +63,13 @@ public class AgencyClassShowDetailDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getMovieUrl() {
+        return movieUrl;
+    }
+
+    public void setMovieUrl(String movieUrl) {
+        this.movieUrl = movieUrl;
     }
 }

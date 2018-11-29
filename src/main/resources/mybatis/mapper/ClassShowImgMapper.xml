@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="show_id" property="showId" jdbcType="BIGINT" />
     <result column="img" property="img" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
@@ -18,30 +19,31 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into pq_class_show_img (show_id, img, state, 
-      created_time, updated_time)
+      created_time, updated_time, type)
     values (#{showId,jdbcType=BIGINT}, #{img,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, 
-      #{createdTime,jdbcType=TIMESTAMP}, #{updatedTime,jdbcType=TIMESTAMP})
+      #{createdTime,jdbcType=TIMESTAMP}, #{updatedTime,jdbcType=TIMESTAMP},#{type})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.ClassShowImg" >
     update pq_class_show_img
     set show_id = #{showId,jdbcType=BIGINT},
       img = #{img,jdbcType=VARCHAR},
+      type = #{type},
       state = #{state,jdbcType=BIT},
       created_time = #{createdTime,jdbcType=TIMESTAMP},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, show_id, img, state, created_time, updated_time
+    select id, show_id, img, state, created_time, updated_time,type
     from pq_class_show_img
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, show_id, img, state, created_time, updated_time
+    select id, show_id, img, state, created_time, updated_time,type
     from pq_class_show_img
   </select>
-  <select id="selectByShowId" resultType="java.lang.String" >
-    select img
+  <select id="selectByShowId" resultMap="BaseResultMap" >
+    select id, show_id, img, state, created_time, updated_time,type
     from pq_class_show_img
     where show_id = #{showId}
     and state = 1

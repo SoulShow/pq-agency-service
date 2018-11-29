@@ -16,5 +16,5 @@ public interface ClassShowImgMapper {
 
     int updateByPrimaryKey(ClassShowImg record);
 
-    List<String> selectByShowId(@Param("showId")Long showId);
+    List<ClassShowImg> selectByShowId(@Param("showId")Long showId);
 }

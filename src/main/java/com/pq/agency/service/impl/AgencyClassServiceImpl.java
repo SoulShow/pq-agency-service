@@ -10,6 +10,7 @@ import com.pq.agency.mapper.*;
 import com.pq.agency.param.AgencyUserRegisterForm;
 import com.pq.agency.service.AgencyClassService;
 import com.pq.agency.utils.AgencyResult;
+import com.pq.common.constants.CommonConstants;
 import com.pq.common.constants.ParentRelationTypeEnum;
 import com.pq.common.exception.CommonErrors;
 import com.pq.common.util.DateUtil;
@@ -199,8 +200,17 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             showDetailDto.setName(userDto.getName());
             showDetailDto.setCreatedTime(DateUtil.formatDate(classShow.getCreatedTime(),DateUtil.DEFAULT_DATE_FORMAT));
             showDetailDto.setContent(classShow.getContent());
-            List<String> imgList = classShowImgMapper.selectByShowId(classShow.getId());
-
+            List<ClassShowImg> classShowImgList = classShowImgMapper.selectByShowId(classShow.getId());
+            List<String> imgList = new ArrayList<>();
+            String movieUrl = null;
+            for(ClassShowImg classShowImg:classShowImgList){
+                if(classShowImg.getType()==1){
+                    imgList.add(classShowImg.getImg());
+                }else {
+                    movieUrl = classShowImg.getImg();
+                }
+            }
+            showDetailDto.setMovieUrl(movieUrl);
             showDetailDto.setImgList(imgList);
             list.add(showDetailDto);
         }
