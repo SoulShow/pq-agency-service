@@ -15,6 +15,8 @@ public class AgencyClassNotice {
 
     private Boolean isReceipt;
 
+    private Boolean isRead;
+
     private Boolean state;
 
     private Timestamp updatedTime;
@@ -91,5 +93,13 @@ public class AgencyClassNotice {
 
     public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public Boolean getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(Boolean isRead) {
+        isRead = isRead;
     }
 }

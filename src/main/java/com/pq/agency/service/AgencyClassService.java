@@ -1,9 +1,7 @@
 package com.pq.agency.service;
 
 
-import com.pq.agency.dto.AgencyClassShowDto;
-import com.pq.agency.dto.AgencyShowDto;
-import com.pq.agency.dto.AgencyUserDto;
+import com.pq.agency.dto.*;
 import com.pq.agency.entity.AgencyClass;
 import com.pq.agency.entity.AgencyStudent;
 import com.pq.agency.entity.Grade;
@@ -113,5 +111,23 @@ public interface AgencyClassService {
      * @return
      */
     List<AgencyShowDto> getAgencyShowList(Long agencyClassId,int isBanner,int offset,int size);
+
+    /**
+     * 获取班级通知
+     * @param agencyClassId
+     * @param isReceipt
+     * @param offset
+     * @param size
+     * @return
+     */
+    List<AgencyNoticeDto> getClassNoticeList(Long agencyClassId, int isReceipt, int offset, int size);
+
+
+    /**
+     * 通知详情
+     * @param noticeId
+     * @return
+     */
+    AgencyNoticeDetailDto getClassNoticeDetail(Long noticeId);
 
 }

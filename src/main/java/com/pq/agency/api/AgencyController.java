@@ -95,5 +95,50 @@ public class AgencyController {
 		return result;
 	}
 
+	@GetMapping(value = "/class/notice")
+	@ResponseBody
+	public AgencyResult getClassNotice(@RequestParam(value = "agencyClassId")Long agencyClassId,
+									 @RequestParam(value = "isReceipt")int isReceipt,
+									 @RequestParam(value = "page",required = false)Integer page,
+									 @RequestParam(value = "size",required = false)Integer size) {
+		if (page == null || page < 1) {
+			page = 1;
+		}
+		if (size == null || size < 1) {
+			size = 10;
+		}
+		int offset = (page - 1) * size;
+
+		AgencyResult result = new AgencyResult();
+		try {
+			result.setData(agencyClassService.getClassNoticeList(agencyClassId,isReceipt,offset,size));
+		} catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
+	@GetMapping(value = "/class/notice/detail")
+	@ResponseBody
+	public AgencyResult getClassNoticeDetail(@RequestParam(value = "noticeId")Long noticeId) {
+
+		AgencyResult result = new AgencyResult();
+		try {
+			result.setData(agencyClassService.getClassNoticeDetail(noticeId));
+		} catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
+
 
 }

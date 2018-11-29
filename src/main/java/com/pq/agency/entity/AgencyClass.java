@@ -11,6 +11,8 @@ public class AgencyClass {
 
     private Long classId;
 
+    private String groupId;
+
     private String name;
 
     private Boolean state;
@@ -81,5 +83,13 @@ public class AgencyClass {
 
     public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 }

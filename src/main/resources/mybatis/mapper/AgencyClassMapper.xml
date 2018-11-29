@@ -6,6 +6,7 @@
     <result column="agency_id" property="agencyId" jdbcType="BIGINT" />
     <result column="grade_id" property="gradeId" jdbcType="BIGINT" />
     <result column="class_id" property="classId" jdbcType="BIGINT" />
+    <result column="group_id" property="groupId" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
@@ -20,17 +21,17 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into pq_agency_class (agency_id, grade_id, class_id, 
-      name, state, updated_time, 
-      created_time)
+      name, state, updated_time, created_time,group_id)
     values (#{agencyId,jdbcType=BIGINT}, #{gradeId,jdbcType=BIGINT}, #{classId,jdbcType=BIGINT}, 
       #{name,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, 
-      #{createdTime,jdbcType=TIMESTAMP})
+      #{createdTime,jdbcType=TIMESTAMP},#{groupId})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.AgencyClass" >
     update pq_agency_class
     set agency_id = #{agencyId,jdbcType=BIGINT},
       grade_id = #{gradeId,jdbcType=BIGINT},
       class_id = #{classId,jdbcType=BIGINT},
+      group_id = #{groupId},
       name = #{name,jdbcType=VARCHAR},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
@@ -38,29 +39,29 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, agency_id, grade_id, class_id, name, state, updated_time, created_time
+    select id, agency_id, grade_id, class_id, name, state, updated_time, created_time,group_id
     from pq_agency_class
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, agency_id, grade_id, class_id, name, state, updated_time, created_time
+    select id, agency_id, grade_id, class_id, name, state, updated_time, created_time,group_id
     from pq_agency_class
   </select>
   <select id="selectClassByAgencyIdAndGradeId" resultMap="BaseResultMap" >
-    select id, agency_id, grade_id, class_id, name, state, updated_time, created_time
+    select id, agency_id, grade_id, class_id, name, state, updated_time, created_time,group_id
     from pq_agency_class
     where agency_id = #{agencyId}
     and grade_id = #{gradeId}
     and state = 1
   </select>
   <select id="selectGradeByAgencyId" resultMap="BaseResultMap" >
-    select id, agency_id, grade_id, class_id, name, state, updated_time, created_time
+    select id, agency_id, grade_id, class_id, name, state, updated_time, created_time,group_id
     from pq_agency_class
     where agency_id = #{agencyId}
     and state = 1
   </select>
   <select id="selectByAgencyInfo" resultMap="BaseResultMap" >
-    select id, agency_id, grade_id, class_id, name, state, updated_time, created_time
+    select id, agency_id, grade_id, class_id, name, state, updated_time, created_time,group_id
     from pq_agency_class
     where agency_id = #{agencyId}
         and grade_id = #{gradeId}

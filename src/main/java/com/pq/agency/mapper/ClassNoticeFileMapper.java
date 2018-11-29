@@ -1,6 +1,7 @@
 package com.pq.agency.mapper;
 
 import com.pq.agency.entity.ClassNoticeFile;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface ClassNoticeFileMapper {
     List<ClassNoticeFile> selectAll();
 
     int updateByPrimaryKey(ClassNoticeFile record);
+
+    List<ClassNoticeFile> selectByNoticeId(@Param("noticeId") Long noticeId);
 }

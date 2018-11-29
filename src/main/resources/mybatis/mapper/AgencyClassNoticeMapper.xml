@@ -7,6 +7,7 @@
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="is_read" property="isRead" jdbcType="BIT" />
     <result column="is_receipt" property="isReceipt" jdbcType="BIT" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
@@ -22,10 +23,10 @@
     </selectKey>
     insert into pq_agency_class_notice (agency_class_id, user_id, title, 
       content, is_receipt, state, 
-      updated_time, created_time)
+      updated_time, created_time,is_read)
     values (#{agencyClassId,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
       #{content,jdbcType=VARCHAR}, #{isReceipt,jdbcType=BIT}, #{state,jdbcType=BIT}, 
-      #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP})
+      #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP}),#{isRead}
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.AgencyClassNotice" >
     update pq_agency_class_notice
@@ -34,20 +35,31 @@
       title = #{title,jdbcType=VARCHAR},
       content = #{content,jdbcType=VARCHAR},
       is_receipt = #{isReceipt,jdbcType=BIT},
+      is_read = #{isRead,jdbcType=BIT},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
       created_time = #{createdTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time, 
+    select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time, is_read
     created_time
     from pq_agency_class_notice
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time, 
+    select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time, is_read
     created_time
     from pq_agency_class_notice
+  </select>
+  <select id="selectByClassIdAndIsReceipt" resultMap="BaseResultMap" >
+    select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time, is_read
+    created_time
+    from pq_agency_class_notice
+    where agency_class_id = #{agencyClassId}
+    and is_receipt = #{isReceipt}
+    and state = 1
+    order by created_time desc
+    limit #{offset},#{size}
   </select>
 </mapper>

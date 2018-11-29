@@ -10,6 +10,7 @@ import com.pq.agency.mapper.*;
 import com.pq.agency.param.AgencyUserRegisterForm;
 import com.pq.agency.service.AgencyClassService;
 import com.pq.agency.utils.AgencyResult;
+import com.pq.agency.utils.Constants;
 import com.pq.common.constants.CommonConstants;
 import com.pq.common.constants.ParentRelationTypeEnum;
 import com.pq.common.exception.CommonErrors;
@@ -49,6 +50,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     private ClassShowImgMapper classShowImgMapper;
     @Autowired
     private AgencyShowMapper agencyShowMapper;
+    @Autowired
+    private AgencyClassNoticeMapper noticeMapper;
+    @Autowired
+    private ClassNoticeReceiptMapper noticeReceiptMapper;
+    @Autowired
+    private ClassNoticeFileMapper noticeFileMapper;
 
 
     @Override
@@ -241,5 +248,64 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
         return showDtoList;
     }
+
+    @Override
+    public List<AgencyNoticeDto> getClassNoticeList(Long agencyClassId, int isReceipt, int offset, int size){
+        List<AgencyClassNotice> list = noticeMapper.selectByClassIdAndIsReceipt(agencyClassId,isReceipt,offset,size);
+        List<AgencyNoticeDto> agencyNoticeDtoList = new ArrayList<>();
+        for(AgencyClassNotice agencyClassNotice:list){
+            AgencyNoticeDto agencyNoticeDto = new AgencyNoticeDto();
+            agencyNoticeDto.setId(agencyClassNotice.getId());
+            agencyNoticeDto.setCreatedTime(DateUtil.formatDate(agencyClassNotice.getCreatedTime(),DateUtil.DEFAULT_TIME_MINUTE));
+            agencyNoticeDto.setContent(agencyClassNotice.getContent());
+            agencyNoticeDto.setTitle(agencyClassNotice.getTitle());
+            agencyNoticeDto.setReadStatus(agencyClassNotice.getIsRead()==true?1:0);
+            ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeId(agencyClassNotice.getId());
+            if(noticeReceipt==null){
+                agencyNoticeDto.setReceiptStatus(Constants.CLASS_NOTICE_RECEIPT_STATUS_NO);
+            }else {
+                agencyNoticeDto.setReceiptStatus(Constants.CLASS_NOTICE_RECEIPT_STATUS_YES);
+
+            }
+            agencyNoticeDtoList.add(agencyNoticeDto);
+        }
+        return agencyNoticeDtoList;
+    }
+
+    @Override
+    public AgencyNoticeDetailDto getClassNoticeDetail(Long noticeId){
+        AgencyNoticeDetailDto agencyNoticeDetailDto = new AgencyNoticeDetailDto();
+        AgencyClassNotice agencyClassNotice = noticeMapper.selectByPrimaryKey(noticeId);
+        agencyNoticeDetailDto.setId(agencyClassNotice.getId());
+        agencyNoticeDetailDto.setCreatedTime(DateUtil.formatDate(agencyClassNotice.getCreatedTime(),DateUtil.DEFAULT_TIME_MINUTE));
+        agencyNoticeDetailDto.setContent(agencyClassNotice.getContent());
+        agencyNoticeDetailDto.setTitle(agencyClassNotice.getTitle());
+
+        AgencyResult<UserDto> result = userFeign.getUserInfo(agencyClassNotice.getUserId());
+        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+            throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+        }
+        UserDto userDto = result.getData();
+        agencyNoticeDetailDto.setName(userDto.getName());
+        agencyNoticeDetailDto.setUserId(userDto.getUserId());
+        agencyNoticeDetailDto.setAvatar(userDto.getAvatar());
+        agencyNoticeDetailDto.setGroupId(agencyClassMapper.selectByPrimaryKey(agencyClassNotice.getAgencyClassId()).getGroupId());
+        List<ClassNoticeFile> list = noticeFileMapper.selectByNoticeId(agencyClassNotice.getId());
+        List<String> imgList = new ArrayList<>();
+        for(ClassNoticeFile classNoticeFile:list){
+            if(classNoticeFile.getType()==2){
+                agencyNoticeDetailDto.setFileUrl(classNoticeFile.getFile());
+            }else {
+                imgList.add(classNoticeFile.getFile());
+            }
+        }
+        agencyNoticeDetailDto.setImgList(imgList);
+        agencyClassNotice.setIsRead(true);
+        agencyClassNotice.setUpdatedTime(DateUtil.currentTime());
+        noticeMapper.updateByPrimaryKey(agencyClassNotice);
+        return agencyNoticeDetailDto;
+    }
+
+
 
 }

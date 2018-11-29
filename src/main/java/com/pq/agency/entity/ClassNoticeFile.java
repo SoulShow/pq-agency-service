@@ -9,7 +9,7 @@ public class ClassNoticeFile {
 
     private String file;
 
-    private Boolean type;
+    private int type;
 
     private Boolean state;
 
@@ -41,14 +41,6 @@ public class ClassNoticeFile {
         this.file = file == null ? null : file.trim();
     }
 
-    public Boolean getType() {
-        return type;
-    }
-
-    public void setType(Boolean type) {
-        this.type = type;
-    }
-
     public Boolean getState() {
         return state;
     }
@@ -71,5 +63,13 @@ public class ClassNoticeFile {
 
     public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

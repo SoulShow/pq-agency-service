@@ -5,7 +5,7 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="notice_id" property="noticeId" jdbcType="BIGINT" />
     <result column="file" property="file" jdbcType="VARCHAR" />
-    <result column="type" property="type" jdbcType="BIT" />
+    <result column="type" property="type" jdbcType="INTEGER" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
     <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
@@ -21,7 +21,7 @@
     insert into pq_class_notice_file (notice_id, file, type, 
       state, updated_time, created_time
       )
-    values (#{noticeId,jdbcType=BIGINT}, #{file,jdbcType=VARCHAR}, #{type,jdbcType=BIT}, 
+    values (#{noticeId,jdbcType=BIGINT}, #{file,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
       #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -29,7 +29,7 @@
     update pq_class_notice_file
     set notice_id = #{noticeId,jdbcType=BIGINT},
       file = #{file,jdbcType=VARCHAR},
-      type = #{type,jdbcType=BIT},
+      type = #{type,jdbcType=INTEGER},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
       created_time = #{createdTime,jdbcType=TIMESTAMP}
@@ -43,5 +43,13 @@
   <select id="selectAll" resultMap="BaseResultMap" >
     select id, notice_id, file, type, state, updated_time, created_time
     from pq_class_notice_file
+  </select>
+
+  <select id="selectByNoticeId" resultMap="BaseResultMap" >
+    select id, notice_id, file, type, state, updated_time, created_time
+    from pq_class_notice_file
+    where notice_id = #{noticeId}
+    and state = 1
+    order by created_time desc
   </select>
 </mapper>
