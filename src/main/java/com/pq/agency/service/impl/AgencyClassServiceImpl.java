@@ -221,6 +221,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         for(AgencyShow agencyShow : list){
             AgencyShowDto agencyShowDto = new AgencyShowDto();
             agencyShowDto.setId(agencyShow.getId());
+            agencyShowDto.setTitle(agencyShow.getTitle());
             agencyShowDto.setAuthor(agencyShow.getAuthor());
             agencyShowDto.setContent(agencyShow.getContent());
             agencyShowDto.setImg(agencyShow.getImg());
