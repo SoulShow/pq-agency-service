@@ -2,41 +2,13 @@ package com.pq.agency.param;
 
 public class AgencyUserRegisterForm {
 
-    private Long agencyId;
-
-    private Long gradeId;
-
-    private Long classId;
-
     private Long studentId;
 
     private String userId;
 
     private int role;
 
-    public Long getAgencyId() {
-        return agencyId;
-    }
-
-    public void setAgencyId(Long agencyId) {
-        this.agencyId = agencyId;
-    }
-
-    public Long getGradeId() {
-        return gradeId;
-    }
-
-    public void setGradeId(Long gradeId) {
-        this.gradeId = gradeId;
-    }
-
-    public Long getClassId() {
-        return classId;
-    }
-
-    public void setClassId(Long classId) {
-        this.classId = classId;
-    }
+    private String relation;
 
     public int getRole() {
         return role;
@@ -60,5 +32,13 @@ public class AgencyUserRegisterForm {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getRelation() {
+        return relation;
+    }
+
+    public void setRelation(String relation) {
+        this.relation = relation;
     }
 }

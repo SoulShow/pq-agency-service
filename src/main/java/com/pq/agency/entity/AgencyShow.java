@@ -2,7 +2,7 @@ package com.pq.agency.entity;
 
 import java.sql.Timestamp;
 
-public class AgencyGradeShow {
+public class AgencyShow {
     private Long id;
 
     private Long agencyId;
@@ -16,6 +16,8 @@ public class AgencyGradeShow {
     private String content;
 
     private Integer readCount;
+
+    private Integer isBanner;
 
     private Boolean state;
 
@@ -77,6 +79,14 @@ public class AgencyGradeShow {
 
     public void setReadCount(Integer readCount) {
         this.readCount = readCount;
+    }
+
+    public Integer getIsBanner() {
+        return isBanner;
+    }
+
+    public void setIsBanner(Integer isBanner) {
+        this.isBanner = isBanner;
     }
 
     public Boolean getState() {

@@ -50,4 +50,11 @@
     and agency_class_id = #{agencyClassId}
     and state = 1
   </select>
+
+  <select id="selectByCode" resultMap="BaseResultMap" >
+    select id, agency_class_id, name, code, state, updated_time, created_time
+    from pq_agency_class_invitation_code
+    and code = #{code}
+    and state = 1
+  </select>
 </mapper>

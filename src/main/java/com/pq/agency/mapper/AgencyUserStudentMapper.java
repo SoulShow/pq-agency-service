@@ -17,4 +17,7 @@ public interface AgencyUserStudentMapper {
     int updateByPrimaryKey(AgencyUserStudent record);
 
     List<AgencyUserStudent> selectByUserId(@Param("userId") String userId);
+
+    AgencyUserStudent selectByAgencycClassIdAndStudentIdAndRelation(@Param("agencyClassId") Long agencyClassId,
+                                                  @Param("studentId")Long studentId,@Param("relation")String relation);
 }

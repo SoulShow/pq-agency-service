@@ -78,16 +78,16 @@
             <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
             <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
         <!--</table>-->
-        <table tableName="pq_agency_student_life" domainObjectName="AgencyStudentLife">
+        <table tableName="pq_agency_show" domainObjectName="AgencyShow">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
             <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
         </table>
-        <table tableName="pq_agency_student_life_img" domainObjectName="AgencyStudentLifeImg">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-        </table>
+        <!--<table tableName="pq_agency_student_life_img" domainObjectName="AgencyStudentLifeImg">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
         <!--<table tableName="pq_agency_show" domainObjectName="AgencyGradeShow">-->
             <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
             <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->

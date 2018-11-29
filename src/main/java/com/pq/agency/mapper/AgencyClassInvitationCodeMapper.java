@@ -17,4 +17,6 @@ public interface AgencyClassInvitationCodeMapper {
     int updateByPrimaryKey(AgencyClassInvitationCode record);
 
     AgencyClassInvitationCode selectByAgencyClassId(@Param("agencyClassId")Long agencyClassId);
+
+    AgencyClassInvitationCode selectByCode(@Param("code")String code);
 }

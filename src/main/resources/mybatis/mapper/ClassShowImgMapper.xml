@@ -40,4 +40,11 @@
     select id, show_id, img, state, created_time, updated_time
     from pq_class_show_img
   </select>
+  <select id="selectByShowId" resultType="java.lang.String" >
+    select img,
+    from pq_class_show_img
+    where show_id = #{showId}
+    and state = 1
+    order by created_time desc
+  </select>
 </mapper>

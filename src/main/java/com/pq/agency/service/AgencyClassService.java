@@ -1,6 +1,8 @@
 package com.pq.agency.service;
 
 
+import com.pq.agency.dto.AgencyClassShowDto;
+import com.pq.agency.dto.AgencyShowDto;
 import com.pq.agency.dto.AgencyUserDto;
 import com.pq.agency.entity.AgencyClass;
 import com.pq.agency.entity.AgencyStudent;
@@ -17,14 +19,14 @@ public interface AgencyClassService {
 
 
     /**
-     * check邀请码
-     * @param agencyId
-     * @param gradeId
-     * @param classId
+     * check邀请码、学生、关系
+     * @param studentName
+     * @param relation
      * @param invitationCode
+     * @param studentId
      * @return
      */
-    Boolean checkInvitationCode(Long agencyId,Long gradeId,Long classId,String invitationCode);
+    void checkInvitationCodeAndStudent(String invitationCode,Long studentId,String studentName,String relation);
 
 
     /**
@@ -91,4 +93,25 @@ public interface AgencyClassService {
      * @return
      */
     List<Long> getUserClassId(String userId);
+
+    /**
+     * 班级风采
+     * @param agencyClassId
+     * @param offset
+     * @param size
+     * @return
+     */
+    AgencyClassShowDto getAgencyClassShowList(Long agencyClassId,int offset,int size);
+
+
+    /**
+     * 校园风采列表
+     * @param agencyId
+     * @param isBanner
+     * @param offset
+     * @param size
+     * @return
+     */
+    List<AgencyShowDto> getAgencyShowList(Long agencyId,int isBanner,int offset,int size);
+
 }

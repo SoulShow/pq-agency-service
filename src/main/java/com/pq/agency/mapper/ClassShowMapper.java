@@ -1,6 +1,7 @@
 package com.pq.agency.mapper;
 
 import com.pq.agency.entity.ClassShow;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,4 +15,7 @@ public interface ClassShowMapper {
     List<ClassShow> selectAll();
 
     int updateByPrimaryKey(ClassShow record);
+
+    List<ClassShow> selectByClassId(@Param("agencyClassId")Long agencyClassId,
+                                    @Param("offset")int offset,@Param("size")int size);
 }

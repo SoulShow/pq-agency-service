@@ -46,4 +46,13 @@
     select id, agency_class_id, user_id, title, content, state, created_time, updated_time
     from pq_class_show
   </select>
+
+  <select id="selectByClassId" resultMap="BaseResultMap" >
+    select id, agency_class_id, user_id, title, content, state, created_time, updated_time
+    from pq_class_show
+    where agency_class_id = #{agencyClassId}
+    and state = 1
+    order by created_time desc
+    limit #{offset},#{size}
+  </select>
 </mapper>

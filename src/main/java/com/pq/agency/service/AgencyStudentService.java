@@ -5,6 +5,8 @@ import com.pq.agency.dto.AgencyStudentLifeListDto;
 import com.pq.agency.entity.AgencyStudent;
 import com.pq.agency.param.StudentLifeForm;
 
+import java.util.List;
+
 /**
  * 机构学生服务
  * @author liutao
@@ -40,4 +42,10 @@ public interface AgencyStudentService {
      * @param studentLifeForm
      */
     void createStudentLife(StudentLifeForm studentLifeForm);
+
+//    /**
+//     * 获取学生信息
+//     * @return
+//     */
+//    List<AgencyStudent> getStudentByStudentName(String studentName);
 }

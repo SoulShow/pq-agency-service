@@ -1,6 +1,7 @@
 package com.pq.agency.mapper;
 
 import com.pq.agency.entity.ClassShowImg;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface ClassShowImgMapper {
     List<ClassShowImg> selectAll();
 
     int updateByPrimaryKey(ClassShowImg record);
+
+    List<String> selectByShowId(@Param("showId")Long showId);
 }

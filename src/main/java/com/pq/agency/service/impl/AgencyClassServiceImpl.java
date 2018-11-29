@@ -1,13 +1,17 @@
 package com.pq.agency.service.impl;
 
-import com.pq.agency.dto.AgencyUserDto;
+import com.pq.agency.dto.*;
 import com.pq.agency.entity.*;
+import com.pq.agency.exception.AgencyErrorCode;
 import com.pq.agency.exception.AgencyErrors;
 import com.pq.agency.exception.AgencyException;
+import com.pq.agency.feign.UserFeign;
 import com.pq.agency.mapper.*;
 import com.pq.agency.param.AgencyUserRegisterForm;
 import com.pq.agency.service.AgencyClassService;
+import com.pq.agency.utils.AgencyResult;
 import com.pq.common.constants.ParentRelationTypeEnum;
+import com.pq.common.exception.CommonErrors;
 import com.pq.common.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,18 +40,35 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     private AgencyUserMapper agencyUserMapper;
     @Autowired
     private AgencyMapper agencyMapper;
+    @Autowired
+    private ClassShowMapper classShowMapper;
+    @Autowired
+    private UserFeign userFeign;
+    @Autowired
+    private ClassShowImgMapper classShowImgMapper;
+    @Autowired
+    private AgencyShowMapper agencyShowMapper;
+
 
     @Override
-    public Boolean checkInvitationCode(Long agencyId,Long gradeId,Long classId,String invitationCode){
+    public void checkInvitationCodeAndStudent(String invitationCode,Long studentId, String studentName,String relation){
 
-        AgencyClass agencyClass = getAgencyClass(agencyId,gradeId,classId);
-        AgencyClassInvitationCode agencyClassInvitationCode = invitationCodeMapper.
-                selectByAgencyClassId(agencyClass.getId());
-        if(agencyClassInvitationCode==null
-                ||!invitationCode.equals(agencyClassInvitationCode.getCode())){
-            return false;
+        AgencyClassInvitationCode agencyClassInvitationCode = invitationCodeMapper.selectByCode(invitationCode);
+        if(agencyClassInvitationCode==null){
+            AgencyException.raise(AgencyErrors.INVITATION_CODE_ERROR);
         }
-        return true;
+        List<AgencyStudent> studentList = agencyStudentMapper.selectByAgencyClassIdAndName(agencyClassInvitationCode.getAgencyClassId(),studentName);
+        if(studentList==null||studentList.size()==0){
+            AgencyException.raise(AgencyErrors.AGENCY_STUDENT_NOT_EXIST_ERROR);
+        }
+        if(studentId==null){
+            studentId = studentList.get(0).getId();
+        }
+        AgencyUserStudent agencyUserStudent = agencyUserStudentMapper.selectByAgencycClassIdAndStudentIdAndRelation(agencyClassInvitationCode.getAgencyClassId(),
+                studentId,relation);
+        if(agencyUserStudent!=null){
+            AgencyException.raise(AgencyErrors.AGENCY_STUDENT_RELATION_IS_EXIST_ERROR);
+        }
     }
 
     @Override
@@ -98,12 +119,10 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createUser(AgencyUserRegisterForm registerForm){
-        AgencyClass agencyClass = getAgencyClass(registerForm.getAgencyId(),registerForm.getGradeId(),registerForm.getClassId());
-        if(agencyClass==null){
-            AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
-        }
+        AgencyStudent agencyStudent = agencyStudentMapper.selectByPrimaryKey(registerForm.getStudentId());
+
         AgencyUser agencyUser = new AgencyUser();
-        agencyUser.setAgencyClassId(agencyClass.getId());
+        agencyUser.setAgencyClassId(agencyStudent.getAgencyClassId());
         agencyUser.setUserId(registerForm.getUserId());
         agencyUser.setRole(registerForm.getRole());
         agencyUser.setState(true);
@@ -112,12 +131,13 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         agencyUserMapper.insert(agencyUser);
 
         AgencyUserStudent userStudent = new AgencyUserStudent();
-        userStudent.setAgencyClassId(agencyClass.getId());
+        userStudent.setAgencyClassId(agencyStudent.getAgencyClassId());
         userStudent.setUserId(registerForm.getUserId());
         userStudent.setAgencyUserId(agencyUser.getId());
         userStudent.setStudentId(registerForm.getStudentId());
         userStudent.setStudentName(agencyStudentMapper.selectByPrimaryKey(registerForm.getStudentId()).getName());
         userStudent.setState(true);
+        userStudent.setRelation(registerForm.getRelation());
         userStudent.setCreatedTime(DateUtil.currentTime());
         userStudent.setUpdatedTime(DateUtil.currentTime());
         agencyUserStudentMapper.insert(userStudent);
@@ -162,5 +182,49 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         return agencyUserMapper.selectClassIdByUserId(userId);
     }
 
+    @Override
+    public AgencyClassShowDto getAgencyClassShowList(Long agencyClassId,int offset,int size){
+        List<ClassShow> showList = classShowMapper.selectByClassId(agencyClassId, offset, size);
+        AgencyClassShowDto showDto = new AgencyClassShowDto();
+        List<AgencyClassShowDetailDto> list = new ArrayList<>();
+        for(ClassShow classShow:showList){
+            AgencyClassShowDetailDto showDetailDto = new AgencyClassShowDetailDto();
+            showDetailDto.setId(classShow.getId());
+            AgencyResult<UserDto> result = userFeign.getUserInfo(classShow.getUserId());
+            if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+            }
+            UserDto userDto = result.getData();
+            showDetailDto.setAvatar(userDto.getAvatar());
+            showDetailDto.setName(userDto.getName());
+            showDetailDto.setCreatedTime(DateUtil.formatDate(classShow.getCreatedTime(),DateUtil.DEFAULT_DATE_FORMAT));
+            showDetailDto.setContent(classShow.getContent());
+            List<String> imgList = classShowImgMapper.selectByShowId(classShow.getId());
+
+            showDetailDto.setImgList(imgList);
+            list.add(showDetailDto);
+        }
+        showDto.setShowList(list);
+        showDto.setClassName(agencyClassMapper.selectByPrimaryKey(agencyClassId).getName());
+
+        return showDto;
+    }
+
+    @Override
+    public List<AgencyShowDto> getAgencyShowList(Long agencyId, int isBanner,int offset,int size){
+        List<AgencyShow> list = agencyShowMapper.selectByAgencyId(agencyId, isBanner, offset, size);
+        List<AgencyShowDto> showDtoList = new ArrayList<>();
+        for(AgencyShow agencyShow : list){
+            AgencyShowDto agencyShowDto = new AgencyShowDto();
+            agencyShowDto.setId(agencyShow.getId());
+            agencyShowDto.setAuthor(agencyShow.getAuthor());
+            agencyShowDto.setContent(agencyShow.getContent());
+            agencyShowDto.setImg(agencyShow.getImg());
+            agencyShowDto.setReadCount(agencyShow.getReadCount());
+            agencyShowDto.setCreateTime(DateUtil.formatDate(agencyShow.getCreatedTime(),DateUtil.DEFAULT_DATE_FORMAT));
+            showDtoList.add(agencyShowDto);
+        }
+        return showDtoList;
+    }
 
 }
