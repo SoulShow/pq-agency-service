@@ -43,7 +43,8 @@ public class AgencyController {
 	@GetMapping(value = "/class/show")
 	@ResponseBody
 	public AgencyResult getClassShow(@RequestParam(value = "agencyClassId")Long agencyClassId,
-									 @RequestParam(value = "page")Integer page,@RequestParam(value = "size")Integer size) {
+									 @RequestParam(value = "page",required = false)Integer page,
+									 @RequestParam(value = "size",required = false)Integer size) {
 		if (page == null || page < 1) {
 			page = 1;
 		}
@@ -68,8 +69,10 @@ public class AgencyController {
 
 	@GetMapping(value = "/show")
 	@ResponseBody
-	public AgencyResult getClassShow(@RequestParam(value = "agencyClassId")Long agencyClassId,@RequestParam(value = "isBanner")int isBanner,
-									 @RequestParam(value = "page")Integer page,@RequestParam(value = "size")Integer size) {
+	public AgencyResult getClassShow(@RequestParam(value = "agencyClassId")Long agencyClassId,
+									 @RequestParam(value = "isBanner")int isBanner,
+									 @RequestParam(value = "page",required = false)Integer page,
+									 @RequestParam(value = "size",required = false)Integer size) {
 		if (page == null || page < 1) {
 			page = 1;
 		}
