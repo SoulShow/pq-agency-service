@@ -20,6 +20,6 @@ public interface UserFeign {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/info", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/info", method = RequestMethod.GET)
     AgencyResult<UserDto> getUserInfo(@RequestParam("userId")String userId);
 }
