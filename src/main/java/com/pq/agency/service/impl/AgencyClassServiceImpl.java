@@ -259,7 +259,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyNoticeDto.setCreatedTime(DateUtil.formatDate(agencyClassNotice.getCreatedTime(),DateUtil.DEFAULT_TIME_MINUTE));
             agencyNoticeDto.setContent(agencyClassNotice.getContent());
             agencyNoticeDto.setTitle(agencyClassNotice.getTitle());
-            agencyNoticeDto.setReadStatus(agencyClassNotice.getIsRead()==true?1:0);
+            agencyNoticeDto.setReadStatus(agencyClassNotice.getIsRead()?1:0);
             ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeId(agencyClassNotice.getId());
             if(noticeReceipt==null){
                 agencyNoticeDto.setReceiptStatus(Constants.CLASS_NOTICE_RECEIPT_STATUS_NO);
