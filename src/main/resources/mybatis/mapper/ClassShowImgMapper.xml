@@ -45,6 +45,5 @@
     from pq_class_show_img
     where show_id = #{showId}
     and state = 1
-    order by created_time desc
   </select>
 </mapper>
