@@ -100,6 +100,6 @@ public class AgencyClassNotice {
     }
 
     public void setIsRead(Boolean isRead) {
-        isRead = isRead;
+        this.isRead = isRead;
     }
 }
