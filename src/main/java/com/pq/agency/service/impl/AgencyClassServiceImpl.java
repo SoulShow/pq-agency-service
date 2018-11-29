@@ -211,8 +211,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     }
 
     @Override
-    public List<AgencyShowDto> getAgencyShowList(Long agencyId, int isBanner,int offset,int size){
-        List<AgencyShow> list = agencyShowMapper.selectByAgencyId(agencyId, isBanner, offset, size);
+    public List<AgencyShowDto> getAgencyShowList(Long agencyClassId, int isBanner,int offset,int size){
+        AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyClassId);
+        if(agencyClass==null){
+            AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
+        }
+        List<AgencyShow> list = agencyShowMapper.selectByAgencyId(agencyClass.getAgencyId(), isBanner, offset, size);
         List<AgencyShowDto> showDtoList = new ArrayList<>();
         for(AgencyShow agencyShow : list){
             AgencyShowDto agencyShowDto = new AgencyShowDto();
