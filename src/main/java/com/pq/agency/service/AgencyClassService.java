@@ -5,7 +5,10 @@ import com.pq.agency.dto.*;
 import com.pq.agency.entity.AgencyClass;
 import com.pq.agency.entity.AgencyStudent;
 import com.pq.agency.entity.Grade;
+import com.pq.agency.entity.UserNoticeFileCollection;
 import com.pq.agency.param.AgencyUserRegisterForm;
+import com.pq.agency.param.NoticeFileCollectionForm;
+import com.pq.agency.param.NoticeReceiptForm;
 
 import java.util.List;
 
@@ -129,5 +132,26 @@ public interface AgencyClassService {
      * @return
      */
     AgencyNoticeDetailDto getClassNoticeDetail(Long noticeId);
+
+    /**
+     * 通知回执
+     * @param noticeReceiptForm
+     * @return
+     */
+    void receiptNotice(NoticeReceiptForm noticeReceiptForm);
+
+    /**
+     * 通知文件收藏列表
+     * @param userId
+     * @return
+     */
+    List<UserNoticeFileCollection> getCollectList(String userId);
+
+    /**
+     * 收藏
+     * @param noticeFileCollectionForm
+     */
+    void noticeFileCollection(NoticeFileCollectionForm noticeFileCollectionForm);
+
 
 }

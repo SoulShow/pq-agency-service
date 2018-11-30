@@ -1,6 +1,8 @@
 package com.pq.agency.api;
 
 import com.pq.agency.exception.AgencyException;
+import com.pq.agency.param.NoticeFileCollectionForm;
+import com.pq.agency.param.NoticeReceiptForm;
 import com.pq.agency.service.AgencyClassService;
 import com.pq.agency.service.AgencyService;
 import com.pq.agency.utils.AgencyResult;
@@ -140,5 +142,56 @@ public class AgencyController {
 		return result;
 	}
 
+	@PostMapping(value = "/class/notice/receipt")
+	@ResponseBody
+	public AgencyResult createReceipt(@RequestBody NoticeReceiptForm noticeReceiptForm) {
+
+		AgencyResult result = new AgencyResult();
+		try {
+			agencyClassService.receiptNotice(noticeReceiptForm);
+		} catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
+	@GetMapping(value = "/user/collection/list")
+	@ResponseBody
+	public AgencyResult getCollectList(@RequestParam("userId")String userId) {
+
+		AgencyResult result = new AgencyResult();
+		try {
+			result.setData(agencyClassService.getCollectList(userId));
+		} catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
+	@PostMapping(value = "/user/collection")
+	@ResponseBody
+	public AgencyResult collection(@RequestBody NoticeFileCollectionForm collectionForm) {
+
+		AgencyResult result = new AgencyResult();
+		try {
+			agencyClassService.noticeFileCollection(collectionForm);
+		} catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
 
 }

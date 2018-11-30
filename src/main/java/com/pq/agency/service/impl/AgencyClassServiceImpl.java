@@ -8,6 +8,8 @@ import com.pq.agency.exception.AgencyException;
 import com.pq.agency.feign.UserFeign;
 import com.pq.agency.mapper.*;
 import com.pq.agency.param.AgencyUserRegisterForm;
+import com.pq.agency.param.NoticeFileCollectionForm;
+import com.pq.agency.param.NoticeReceiptForm;
 import com.pq.agency.service.AgencyClassService;
 import com.pq.agency.utils.AgencyResult;
 import com.pq.agency.utils.Constants;
@@ -56,7 +58,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     private ClassNoticeReceiptMapper noticeReceiptMapper;
     @Autowired
     private ClassNoticeFileMapper noticeFileMapper;
-
+    @Autowired
+    private UserNoticeFileCollectionMapper collectionMapper;
 
     @Override
     public void checkInvitationCodeAndStudent(String invitationCode,Long studentId, String studentName,String relation){
@@ -306,6 +309,34 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         return agencyNoticeDetailDto;
     }
 
+    @Override
+    public void receiptNotice(NoticeReceiptForm noticeReceiptForm){
+        ClassNoticeReceipt noticeReceipt = new ClassNoticeReceipt();
+        noticeReceipt.setNoticeId(noticeReceiptForm.getNoticeId());
+        noticeReceipt.setUserId(noticeReceiptForm.getUserId());
+        noticeReceipt.setName(noticeReceiptForm.getName());
+        noticeReceipt.setReceiptContent(noticeReceiptForm.getReceiptContent());
+        noticeReceipt.setState(true);
+        noticeReceipt.setUpdatedTime(DateUtil.currentTime());
+        noticeReceipt.setCreatedTime(DateUtil.currentTime());
+        noticeReceiptMapper.insert(noticeReceipt);
+    }
+    @Override
+    public List<UserNoticeFileCollection> getCollectList(String userId){
+        return collectionMapper.selectByUserId(userId);
+    }
 
+    @Override
+    public void noticeFileCollection(NoticeFileCollectionForm noticeFileCollectionForm){
+        UserNoticeFileCollection userNoticeFileCollection = new UserNoticeFileCollection();
+        userNoticeFileCollection.setNoticeId(noticeFileCollectionForm.getNoticeId());
+        userNoticeFileCollection.setFile(noticeFileCollectionForm.getFileUrl());
+        userNoticeFileCollection.setUserId(noticeFileCollectionForm.getUserId());
+        userNoticeFileCollection.setUserName(noticeFileCollectionForm.getName());
+        userNoticeFileCollection.setState(true);
+        userNoticeFileCollection.setCreatedTime(DateUtil.currentTime());
+        userNoticeFileCollection.setUpdatedTime(DateUtil.currentTime());
+        collectionMapper.insert(userNoticeFileCollection);
+    }
 
 }
