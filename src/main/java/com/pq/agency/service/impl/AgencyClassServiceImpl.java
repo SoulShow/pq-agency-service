@@ -310,6 +310,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void receiptNotice(NoticeReceiptForm noticeReceiptForm){
         ClassNoticeReceipt noticeReceipt = new ClassNoticeReceipt();
         noticeReceipt.setNoticeId(noticeReceiptForm.getNoticeId());
@@ -320,6 +321,11 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         noticeReceipt.setUpdatedTime(DateUtil.currentTime());
         noticeReceipt.setCreatedTime(DateUtil.currentTime());
         noticeReceiptMapper.insert(noticeReceipt);
+
+        AgencyClassNotice classNotice = noticeMapper.selectByPrimaryKey(noticeReceiptForm.getNoticeId());
+        classNotice.setIsReceipt(true);
+        classNotice.setUpdatedTime(DateUtil.currentTime());
+        noticeMapper.updateByPrimaryKey(classNotice);
     }
     @Override
     public List<UserNoticeFileCollection> getCollectList(String userId){
