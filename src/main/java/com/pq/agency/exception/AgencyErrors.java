@@ -23,5 +23,8 @@ public class AgencyErrors extends CommonErrors {
 
     public final static ErrorCode AGENCY_STUDENT_RELATION_IS_EXIST_ERROR = new AgencyErrorCode("0007", "该关系已存在");
 
+    public final static ErrorCode AGENCY_CLASS_NOTICE_IS_RECEIPT_ERROR = new AgencyErrorCode("0008", "改通知已回复");
+
+    public final static ErrorCode AGENCY_CLASS_NOTICE_NOT_EXIST_ERROR = new AgencyErrorCode("0009", "通知不存在");
 
 }

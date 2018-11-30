@@ -312,7 +312,15 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void receiptNotice(NoticeReceiptForm noticeReceiptForm){
-        ClassNoticeReceipt noticeReceipt = new ClassNoticeReceipt();
+        AgencyClassNotice classNotice = noticeMapper.selectByPrimaryKey(noticeReceiptForm.getNoticeId());
+        if(classNotice==null){
+            AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOTICE_NOT_EXIST_ERROR);
+        }
+        ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeId(classNotice.getId());
+        if(noticeReceipt!=null){
+            AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOTICE_IS_RECEIPT_ERROR);
+        }
+        noticeReceipt = new ClassNoticeReceipt();
         noticeReceipt.setNoticeId(noticeReceiptForm.getNoticeId());
         noticeReceipt.setUserId(noticeReceiptForm.getUserId());
         noticeReceipt.setName(noticeReceiptForm.getName());
@@ -322,7 +330,6 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         noticeReceipt.setCreatedTime(DateUtil.currentTime());
         noticeReceiptMapper.insert(noticeReceipt);
 
-        AgencyClassNotice classNotice = noticeMapper.selectByPrimaryKey(noticeReceiptForm.getNoticeId());
         classNotice.setIsReceipt(true);
         classNotice.setUpdatedTime(DateUtil.currentTime());
         noticeMapper.updateByPrimaryKey(classNotice);
