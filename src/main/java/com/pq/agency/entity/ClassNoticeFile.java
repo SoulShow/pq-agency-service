@@ -11,6 +11,8 @@ public class ClassNoticeFile {
 
     private String fileName;
 
+    private String fileSize;
+
     private int type;
 
     private Boolean state;
@@ -81,5 +83,13 @@ public class ClassNoticeFile {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public String getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(String fileSize) {
+        this.fileSize = fileSize;
     }
 }

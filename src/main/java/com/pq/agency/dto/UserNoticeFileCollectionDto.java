@@ -1,8 +1,6 @@
-package com.pq.agency.entity;
+package com.pq.agency.dto;
 
-import java.sql.Timestamp;
-
-public class UserNoticeFileCollection {
+public class UserNoticeFileCollectionDto {
     private Long id;
 
     private String userId;
@@ -11,17 +9,13 @@ public class UserNoticeFileCollection {
 
     private Long noticeId;
 
-    private String fileName;
-
     private String file;
+
+    private String fileName;
 
     private String fileSize;
 
-    private Boolean state;
-
-    private Timestamp updatedTime;
-
-    private Timestamp createdTime;
+    private String createTime;
 
     public Long getId() {
         return id;
@@ -63,30 +57,6 @@ public class UserNoticeFileCollection {
         this.file = file == null ? null : file.trim();
     }
 
-    public Boolean getState() {
-        return state;
-    }
-
-    public void setState(Boolean state) {
-        this.state = state;
-    }
-
-    public Timestamp getUpdatedTime() {
-        return updatedTime;
-    }
-
-    public void setUpdatedTime(Timestamp updatedTime) {
-        this.updatedTime = updatedTime;
-    }
-
-    public Timestamp getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(Timestamp createdTime) {
-        this.createdTime = createdTime;
-    }
-
     public String getFileName() {
         return fileName;
     }
@@ -101,5 +71,13 @@ public class UserNoticeFileCollection {
 
     public void setFileSize(String fileSize) {
         this.fileSize = fileSize;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }

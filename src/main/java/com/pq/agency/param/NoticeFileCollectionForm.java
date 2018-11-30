@@ -13,6 +13,8 @@ public class NoticeFileCollectionForm {
 
     private String fileName;
 
+    private String fileSize;
+
     public Long getNoticeId() {
         return noticeId;
     }
@@ -51,5 +53,13 @@ public class NoticeFileCollectionForm {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public String getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(String fileSize) {
+        this.fileSize = fileSize;
     }
 }

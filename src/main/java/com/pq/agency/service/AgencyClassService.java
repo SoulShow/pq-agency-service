@@ -145,7 +145,7 @@ public interface AgencyClassService {
      * @param userId
      * @return
      */
-    List<UserNoticeFileCollection> getCollectList(String userId);
+    List<UserNoticeFileCollectionDto> getCollectList(String userId);
 
     /**
      * 收藏

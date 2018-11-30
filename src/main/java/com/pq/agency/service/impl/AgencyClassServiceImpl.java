@@ -312,6 +312,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             if(classNoticeFile.getType()==2){
                 agencyNoticeDetailDto.setFileUrl(classNoticeFile.getFile());
                 agencyNoticeDetailDto.setFileName(classNoticeFile.getFileName());
+                agencyNoticeDetailDto.setFileSize(classNoticeFile.getFileSize());
             }else {
                 imgList.add(classNoticeFile.getFile());
             }
@@ -349,8 +350,27 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         noticeMapper.updateByPrimaryKey(classNotice);
     }
     @Override
-    public List<UserNoticeFileCollection> getCollectList(String userId){
-        return collectionMapper.selectByUserId(userId);
+    public List<UserNoticeFileCollectionDto> getCollectList(String userId){
+        List<UserNoticeFileCollection> list = collectionMapper.selectByUserId(userId);
+        List<UserNoticeFileCollectionDto> collectionDtoList = new ArrayList<>();
+        for(UserNoticeFileCollection collection:list){
+            UserNoticeFileCollectionDto collectionDto = new UserNoticeFileCollectionDto();
+            collectionDto.setId(collection.getId());
+            AgencyClassNotice notice = noticeMapper.selectByPrimaryKey(collection.getNoticeId());
+            AgencyResult<UserDto> result = userFeign.getUserInfo(notice.getUserId());
+            if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+            }
+            collectionDto.setUserId(notice.getUserId());
+            collectionDto.setUserName(result.getData().getName());
+            collectionDto.setNoticeId(collection.getNoticeId());
+            collectionDto.setFile(collection.getFile());
+            collectionDto.setFileName(collection.getFileName());
+            collectionDto.setFileSize(collection.getFileSize());
+            collectionDto.setCreateTime(DateUtil.formatDate(collection.getCreatedTime(),DateUtil.DEFAULT_DATETIME_FORMAT));
+            collectionDtoList.add(collectionDto);
+        }
+        return collectionDtoList;
     }
 
     @Override
@@ -359,6 +379,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         userNoticeFileCollection.setNoticeId(noticeFileCollectionForm.getNoticeId());
         userNoticeFileCollection.setFile(noticeFileCollectionForm.getFileUrl());
         userNoticeFileCollection.setFileName(noticeFileCollectionForm.getFileName());
+        userNoticeFileCollection.setFileSize(noticeFileCollectionForm.getFileSize());
         userNoticeFileCollection.setUserId(noticeFileCollectionForm.getUserId());
         userNoticeFileCollection.setUserName(noticeFileCollectionForm.getName());
         userNoticeFileCollection.setState(true);
