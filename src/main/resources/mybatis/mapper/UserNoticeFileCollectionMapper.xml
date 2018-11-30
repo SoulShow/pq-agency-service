@@ -7,6 +7,7 @@
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="notice_id" property="noticeId" jdbcType="BIGINT" />
     <result column="file" property="file" jdbcType="VARCHAR" />
+    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
     <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
@@ -20,11 +21,10 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into pq_user_notice_file_collection (user_id, user_name, notice_id, 
-      file, state, updated_time, 
-      created_time)
+      file, state, updated_time, created_time, file_name)
     values (#{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{noticeId,jdbcType=BIGINT}, 
       #{file,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, 
-      #{createdTime,jdbcType=TIMESTAMP})
+      #{createdTime,jdbcType=TIMESTAMP},#{fileName})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.UserNoticeFileCollection" >
     update pq_user_notice_file_collection
@@ -32,22 +32,23 @@
       user_name = #{userName,jdbcType=VARCHAR},
       notice_id = #{noticeId,jdbcType=BIGINT},
       file = #{file,jdbcType=VARCHAR},
+      file_name = #{fileName},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
       created_time = #{createdTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, user_id, user_name, notice_id, file, state, updated_time, created_time
+    select id, user_id, user_name, notice_id, file, state, updated_time, created_time, file_name
     from pq_user_notice_file_collection
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, user_id, user_name, notice_id, file, state, updated_time, created_time
+    select id, user_id, user_name, notice_id, file, state, updated_time, created_time, file_name
     from pq_user_notice_file_collection
   </select>
   <select id="selectByUserId" resultMap="BaseResultMap" >
-    select id, user_id, user_name, notice_id, file, state, updated_time, created_time
+    select id, user_id, user_name, notice_id, file, state, updated_time, created_time, file_name
     from pq_user_notice_file_collection
     where user_id = #{userId}
     and state = 1

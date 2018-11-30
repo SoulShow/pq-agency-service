@@ -11,6 +11,8 @@ public class UserNoticeFileCollection {
 
     private Long noticeId;
 
+    private String fileName;
+
     private String file;
 
     private Boolean state;
@@ -81,5 +83,13 @@ public class UserNoticeFileCollection {
 
     public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

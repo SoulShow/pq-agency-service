@@ -21,6 +21,8 @@ public class AgencyNoticeDetailDto {
 
     private String fileUrl;
 
+    private String fileName;
+
     private List<String> imgList;
 
     public String getAvatar() {
@@ -101,5 +103,13 @@ public class AgencyNoticeDetailDto {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

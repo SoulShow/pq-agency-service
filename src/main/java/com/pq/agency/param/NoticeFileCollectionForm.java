@@ -11,6 +11,8 @@ public class NoticeFileCollectionForm {
 
     private String fileUrl;
 
+    private String fileName;
+
     public Long getNoticeId() {
         return noticeId;
     }
@@ -41,5 +43,13 @@ public class NoticeFileCollectionForm {
 
     public void setFileUrl(String fileUrl) {
         this.fileUrl = fileUrl;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

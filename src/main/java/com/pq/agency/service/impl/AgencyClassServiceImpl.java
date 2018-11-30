@@ -297,7 +297,6 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         agencyNoticeDetailDto.setCreatedTime(DateUtil.formatDate(agencyClassNotice.getCreatedTime(),DateUtil.DEFAULT_TIME_MINUTE));
         agencyNoticeDetailDto.setContent(agencyClassNotice.getContent());
         agencyNoticeDetailDto.setTitle(agencyClassNotice.getTitle());
-
         AgencyResult<UserDto> result = userFeign.getUserInfo(agencyClassNotice.getUserId());
         if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
             throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
@@ -312,6 +311,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         for(ClassNoticeFile classNoticeFile:list){
             if(classNoticeFile.getType()==2){
                 agencyNoticeDetailDto.setFileUrl(classNoticeFile.getFile());
+                agencyNoticeDetailDto.setFileName(classNoticeFile.getFileName());
             }else {
                 imgList.add(classNoticeFile.getFile());
             }
@@ -358,6 +358,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         UserNoticeFileCollection userNoticeFileCollection = new UserNoticeFileCollection();
         userNoticeFileCollection.setNoticeId(noticeFileCollectionForm.getNoticeId());
         userNoticeFileCollection.setFile(noticeFileCollectionForm.getFileUrl());
+        userNoticeFileCollection.setFileName(noticeFileCollectionForm.getFileName());
         userNoticeFileCollection.setUserId(noticeFileCollectionForm.getUserId());
         userNoticeFileCollection.setUserName(noticeFileCollectionForm.getName());
         userNoticeFileCollection.setState(true);

@@ -9,6 +9,8 @@ public class ClassNoticeFile {
 
     private String file;
 
+    private String fileName;
+
     private int type;
 
     private Boolean state;
@@ -71,5 +73,13 @@ public class ClassNoticeFile {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }
