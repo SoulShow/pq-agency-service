@@ -270,6 +270,20 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 agencyNoticeDto.setReceiptStatus(Constants.CLASS_NOTICE_RECEIPT_STATUS_YES);
 
             }
+            int fileStatus = 0;
+            int imgStatus = 0;
+            List<ClassNoticeFile> fileList = noticeFileMapper.selectByNoticeId(agencyClassNotice.getId());
+            for(ClassNoticeFile classNoticeFile:fileList){
+                if(classNoticeFile.getType()==2){
+                    fileStatus = 1;
+                    continue;
+                }else {
+                    imgStatus = 1;
+                    continue;
+                }
+            }
+            agencyNoticeDto.setFileStatus(fileStatus);
+            agencyNoticeDto.setImgStatus(imgStatus);
             agencyNoticeDtoList.add(agencyNoticeDto);
         }
         return agencyNoticeDtoList;

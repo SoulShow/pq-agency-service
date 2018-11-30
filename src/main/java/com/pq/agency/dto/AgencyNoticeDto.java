@@ -13,6 +13,10 @@ public class AgencyNoticeDto {
 
     private int readStatus;
 
+    private int fileStatus;
+
+    private int imgStatus;
+
 
     public String getCreatedTime() {
         return createdTime;
@@ -60,5 +64,21 @@ public class AgencyNoticeDto {
 
     public void setReadStatus(int readStatus) {
         this.readStatus = readStatus;
+    }
+
+    public int getFileStatus() {
+        return fileStatus;
+    }
+
+    public void setFileStatus(int fileStatus) {
+        this.fileStatus = fileStatus;
+    }
+
+    public int getImgStatus() {
+        return imgStatus;
+    }
+
+    public void setImgStatus(int imgStatus) {
+        this.imgStatus = imgStatus;
     }
 }
