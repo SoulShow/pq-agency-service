@@ -440,7 +440,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                AgencyException.raise(new AgencyErrorCode(result.getStatus(),result.getMessage()));
             }
             UserDto userDto = result.getData();
-            classTaskDto.setUsername(userDto.getUsername());
+            classTaskDto.setUsername(userDto.getName());
             classTaskDto.setUserId(userDto.getUserId());
             classTaskDto.setAvatar(userDto.getAvatar());
             AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyClassId);
@@ -471,8 +471,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         classTaskDetailDto.setUserId(userDto.getUserId());
         classTaskDetailDto.setAvatar(userDto.getAvatar());
         classTaskDetailDto.setTitle(classTask.getTitle());
+        classTaskDetailDto.setContent(classTask.getContent());
         classTaskDetailDto.setCreateTime(DateUtil.formatDate(classTask.getCreatedTime(),
-                DateUtil.DATE_FORMAT_MONTH_DAY_TIME_LINE));
+                DateUtil.DEFAULT_DATETIME_FORMAT));
 
         List<String> list = new ArrayList<>();
         List<ClassTaskImg> taskImgList = classTaskImgMapper.selectByTaskId(taskId);
