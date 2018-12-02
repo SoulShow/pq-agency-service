@@ -2,18 +2,12 @@ package com.pq.agency.entity;
 
 import java.sql.Timestamp;
 
-public class AgencyClassNotice {
+public class ClassTaskReadLog {
     private Long id;
 
-    private Long agencyClassId;
+    private Long taskId;
 
     private String userId;
-
-    private String title;
-
-    private String content;
-
-    private Boolean isReceipt;
 
     private Boolean state;
 
@@ -29,12 +23,12 @@ public class AgencyClassNotice {
         this.id = id;
     }
 
-    public Long getAgencyClassId() {
-        return agencyClassId;
+    public Long getTaskId() {
+        return taskId;
     }
 
-    public void setAgencyClassId(Long agencyClassId) {
-        this.agencyClassId = agencyClassId;
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
     }
 
     public String getUserId() {
@@ -43,30 +37,6 @@ public class AgencyClassNotice {
 
     public void setUserId(String userId) {
         this.userId = userId == null ? null : userId.trim();
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title == null ? null : title.trim();
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
-    }
-
-    public Boolean getIsReceipt() {
-        return isReceipt;
-    }
-
-    public void setIsReceipt(Boolean isReceipt) {
-        this.isReceipt = isReceipt;
     }
 
     public Boolean getState() {

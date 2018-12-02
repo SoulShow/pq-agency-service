@@ -1,62 +1,61 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.pq.agency.mapper.AgencyClassNoticeMapper" >
-  <resultMap id="BaseResultMap" type="com.pq.agency.entity.AgencyClassNotice" >
+<mapper namespace="com.pq.agency.mapper.ClassTaskMapper" >
+  <resultMap id="BaseResultMap" type="com.pq.agency.entity.ClassTask" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="agency_class_id" property="agencyClassId" jdbcType="BIGINT" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="is_receipt" property="isReceipt" jdbcType="BIT" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
     <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from pq_agency_class_notice
+    delete from pq_agency_class_task
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.pq.agency.entity.AgencyClassNotice" >
+  <insert id="insert" parameterType="com.pq.agency.entity.ClassTask" >
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into pq_agency_class_notice (agency_class_id, user_id, title, 
-      content, is_receipt, state, 
-      updated_time, created_time)
+    insert into pq_agency_class_task (agency_class_id, user_id, title, 
+      content, state, updated_time,
+      created_time)
     values (#{agencyClassId,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
-      #{content,jdbcType=VARCHAR}, #{isReceipt,jdbcType=BIT}, #{state,jdbcType=BIT}, 
-      #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP})
+      #{content,jdbcType=VARCHAR},  #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP},
+      #{createdTime,jdbcType=TIMESTAMP})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.AgencyClassNotice" >
-    update pq_agency_class_notice
+  <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.ClassTask" >
+    update pq_agency_class_task
     set agency_class_id = #{agencyClassId,jdbcType=BIGINT},
       user_id = #{userId,jdbcType=VARCHAR},
       title = #{title,jdbcType=VARCHAR},
       content = #{content,jdbcType=VARCHAR},
-      is_receipt = #{isReceipt,jdbcType=BIT},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
       created_time = #{createdTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time,
+    select id, agency_class_id, user_id, title, content, state, updated_time,
     created_time
-    from pq_agency_class_notice
+    from pq_agency_class_task
     where id = #{id,jdbcType=BIGINT}
+    and state = 1
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time,
+    select id, agency_class_id, user_id, title, content, state, updated_time,
     created_time
-    from pq_agency_class_notice
+    from pq_agency_class_task
   </select>
-  <select id="selectByClassIdAndIsReceipt" resultMap="BaseResultMap" >
-    select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time,
+
+  <select id="selectByClassId" resultMap="BaseResultMap" >
+    select id, agency_class_id, user_id, title, content, state, updated_time,
     created_time
-    from pq_agency_class_notice
-    where agency_class_id = #{agencyClassId}
-    and is_receipt = #{isReceipt}
-    and state = 1
+    from pq_agency_class_task
+    where state = 1
+    and agency_class_id = #{agencyClassId}
     order by created_time desc
     limit #{offset},#{size}
   </select>

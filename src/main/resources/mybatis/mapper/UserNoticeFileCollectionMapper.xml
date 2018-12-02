@@ -44,6 +44,7 @@
     select id, user_id, user_name, notice_id, file, state, updated_time, created_time, file_name,file_size
     from pq_user_notice_file_collection
     where id = #{id,jdbcType=BIGINT}
+    and state = 1
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select id, user_id, user_name, notice_id, file, state, updated_time, created_time, file_name,file_size

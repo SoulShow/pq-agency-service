@@ -2,10 +2,7 @@ package com.pq.agency.service;
 
 
 import com.pq.agency.dto.*;
-import com.pq.agency.entity.AgencyClass;
-import com.pq.agency.entity.AgencyStudent;
-import com.pq.agency.entity.Grade;
-import com.pq.agency.entity.UserNoticeFileCollection;
+import com.pq.agency.entity.*;
 import com.pq.agency.param.AgencyUserRegisterForm;
 import com.pq.agency.param.NoticeFileCollectionForm;
 import com.pq.agency.param.NoticeReceiptForm;
@@ -118,20 +115,22 @@ public interface AgencyClassService {
     /**
      * 获取班级通知
      * @param agencyClassId
+     * @param userId
      * @param isReceipt
      * @param offset
      * @param size
      * @return
      */
-    List<AgencyNoticeDto> getClassNoticeList(Long agencyClassId, int isReceipt, int offset, int size);
+    List<AgencyNoticeDto> getClassNoticeList(Long agencyClassId, String userId, int isReceipt, int offset, int size);
 
 
     /**
      * 通知详情
      * @param noticeId
+     * @param userId
      * @return
      */
-    AgencyNoticeDetailDto getClassNoticeDetail(Long noticeId);
+    AgencyNoticeDetailDto getClassNoticeDetail(Long noticeId,String userId);
 
     /**
      * 通知回执
@@ -152,6 +151,39 @@ public interface AgencyClassService {
      * @param noticeFileCollectionForm
      */
     void noticeFileCollection(NoticeFileCollectionForm noticeFileCollectionForm);
+
+    /**
+     * 删除收藏
+     * @param id
+     * @param userId
+     */
+    void deleteCollection(Long id,String userId);
+
+    /**
+     * 获取班级课程表
+     * @param agencyClassId
+     * @return
+     */
+    List<AgencyClassSchedule> getScheduleList(Long agencyClassId);
+
+
+    /**
+     * 获取任务列表
+     * @param agencyClassId
+     * @param userId
+     * @param offset
+     * @param size
+     * @return
+     */
+    List<ClassTaskDto> getTaskList(Long agencyClassId,String userId, int offset, int size);
+
+    /**
+     * 获取班级任务详情
+     * @param taskId
+     * @param userId
+     * @return
+     */
+    ClassTaskDetailDto getTaskDetail(Long taskId,String userId);
 
 
 }

@@ -2,7 +2,7 @@ package com.pq.agency.entity;
 
 import java.sql.Timestamp;
 
-public class AgencyClassNotice {
+public class ClassTask {
     private Long id;
 
     private Long agencyClassId;
@@ -12,8 +12,6 @@ public class AgencyClassNotice {
     private String title;
 
     private String content;
-
-    private Boolean isReceipt;
 
     private Boolean state;
 
@@ -59,14 +57,6 @@ public class AgencyClassNotice {
 
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
-    }
-
-    public Boolean getIsReceipt() {
-        return isReceipt;
-    }
-
-    public void setIsReceipt(Boolean isReceipt) {
-        this.isReceipt = isReceipt;
     }
 
     public Boolean getState() {

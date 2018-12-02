@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pq.agency.mapper.ClassTaskImgMapper" >
+  <resultMap id="BaseResultMap" type="com.pq.agency.entity.ClassTaskImg" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="task_id" property="taskId" jdbcType="BIGINT" />
+    <result column="img" property="img" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="BIT" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pq_class_task_img
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pq.agency.entity.ClassTaskImg" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pq_class_task_img (task_id, img, state, 
+      created_time, updated_time)
+    values (#{taskId,jdbcType=BIGINT}, #{img,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{updatedTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.ClassTaskImg" >
+    update pq_class_task_img
+    set task_id = #{taskId,jdbcType=BIGINT},
+      img = #{img,jdbcType=VARCHAR},
+      state = #{state,jdbcType=BIT},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, task_id, img, state, created_time, updated_time
+    from pq_class_task_img
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, task_id, img, state, created_time, updated_time
+    from pq_class_task_img
+  </select>
+
+  <select id="selectByTaskId" resultMap="BaseResultMap" >
+    select id, task_id, img, state, created_time, updated_time
+    from pq_class_task_img
+    where task_id = #{taskId}
+    and state = 1
+  </select>
+</mapper>

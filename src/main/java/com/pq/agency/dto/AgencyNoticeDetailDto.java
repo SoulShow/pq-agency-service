@@ -27,6 +27,8 @@ public class AgencyNoticeDetailDto {
 
     private List<String> imgList;
 
+    private int receiptStatus;
+
     public String getAvatar() {
         return avatar;
     }
@@ -121,5 +123,13 @@ public class AgencyNoticeDetailDto {
 
     public void setFileSize(String fileSize) {
         this.fileSize = fileSize;
+    }
+
+    public int getReceiptStatus() {
+        return receiptStatus;
+    }
+
+    public void setReceiptStatus(int receiptStatus) {
+        this.receiptStatus = receiptStatus;
     }
 }

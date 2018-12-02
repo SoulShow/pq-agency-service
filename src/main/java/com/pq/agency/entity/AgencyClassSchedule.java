@@ -2,18 +2,14 @@ package com.pq.agency.entity;
 
 import java.sql.Timestamp;
 
-public class AgencyClassNotice {
+public class AgencyClassSchedule {
     private Long id;
 
     private Long agencyClassId;
 
-    private String userId;
+    private Integer week;
 
-    private String title;
-
-    private String content;
-
-    private Boolean isReceipt;
+    private String schedule;
 
     private Boolean state;
 
@@ -37,36 +33,20 @@ public class AgencyClassNotice {
         this.agencyClassId = agencyClassId;
     }
 
-    public String getUserId() {
-        return userId;
+    public Integer getWeek() {
+        return week;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId == null ? null : userId.trim();
+    public void setWeek(Integer week) {
+        this.week = week;
     }
 
-    public String getTitle() {
-        return title;
+    public String getSchedule() {
+        return schedule;
     }
 
-    public void setTitle(String title) {
-        this.title = title == null ? null : title.trim();
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
-    }
-
-    public Boolean getIsReceipt() {
-        return isReceipt;
-    }
-
-    public void setIsReceipt(Boolean isReceipt) {
-        this.isReceipt = isReceipt;
+    public void setSchedule(String schedule) {
+        this.schedule = schedule == null ? null : schedule.trim();
     }
 
     public Boolean getState() {

@@ -27,4 +27,7 @@ public class AgencyErrors extends CommonErrors {
 
     public final static ErrorCode AGENCY_CLASS_NOTICE_NOT_EXIST_ERROR = new AgencyErrorCode("0009", "通知不存在");
 
+    public final static ErrorCode AGENCY_COLLECTION_NOT_EXIST_ERROR = new AgencyErrorCode("0010", "该收藏不存在");
+
+
 }

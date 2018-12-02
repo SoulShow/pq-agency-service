@@ -78,7 +78,12 @@
             <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
             <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
         <!--</table>-->
-        <table tableName="pq_user_notice_file_collection" domainObjectName="UserNoticeFileCollection">
+        <table tableName="pq_class_task_read_log" domainObjectName="ClassTaskReadLog">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
+            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
+        </table>
+        <table tableName="pq_class_notice_read_log" domainObjectName="ClassNoticeReadLog">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
             <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>

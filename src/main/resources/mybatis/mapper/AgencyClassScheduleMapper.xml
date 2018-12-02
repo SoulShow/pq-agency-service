@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pq.agency.mapper.AgencyClassScheduleMapper" >
+  <resultMap id="BaseResultMap" type="com.pq.agency.entity.AgencyClassSchedule" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="agency_class_id" property="agencyClassId" jdbcType="BIGINT" />
+    <result column="week" property="week" jdbcType="INTEGER" />
+    <result column="schedule" property="schedule" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="BIT" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pq_agency_class_schedule
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pq.agency.entity.AgencyClassSchedule" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pq_agency_class_schedule (agency_class_id, week, schedule, 
+      state, updated_time, created_time
+      )
+    values (#{agencyClassId,jdbcType=BIGINT}, #{week,jdbcType=INTEGER}, #{schedule,jdbcType=VARCHAR}, 
+      #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.AgencyClassSchedule" >
+    update pq_agency_class_schedule
+    set agency_class_id = #{agencyClassId,jdbcType=BIGINT},
+      week = #{week,jdbcType=INTEGER},
+      schedule = #{schedule,jdbcType=VARCHAR},
+      state = #{state,jdbcType=BIT},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      created_time = #{createdTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, agency_class_id, week, schedule, state, updated_time, created_time
+    from pq_agency_class_schedule
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, agency_class_id, week, schedule, state, updated_time, created_time
+    from pq_agency_class_schedule
+  </select>
+
+  <select id="selectByClassId" resultMap="BaseResultMap" >
+    select id, agency_class_id, week, schedule, state, updated_time, created_time
+    from pq_agency_class_schedule
+    and agency_class_id = #{agencyClassId}
+    and state = 1
+  </select>
+</mapper>

@@ -60,6 +60,16 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     private ClassNoticeFileMapper noticeFileMapper;
     @Autowired
     private UserNoticeFileCollectionMapper collectionMapper;
+    @Autowired
+    private AgencyClassScheduleMapper classScheduleMapper;
+    @Autowired
+    private ClassTaskMapper classTaskMapper;
+    @Autowired
+    private ClassTaskImgMapper classTaskImgMapper;
+    @Autowired
+    private ClassNoticeReadLogMapper noticeReadLogMapper;
+    @Autowired
+    private ClassTaskReadLogMapper taskReadLogMapper;
 
     @Override
     public void checkInvitationCodeAndStudent(String invitationCode,Long studentId, String studentName,String relation){
@@ -253,7 +263,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     }
 
     @Override
-    public List<AgencyNoticeDto> getClassNoticeList(Long agencyClassId, int isReceipt, int offset, int size){
+    public List<AgencyNoticeDto> getClassNoticeList(Long agencyClassId, String userId, int isReceipt, int offset, int size){
         List<AgencyClassNotice> list = noticeMapper.selectByClassIdAndIsReceipt(agencyClassId,isReceipt,offset,size);
         List<AgencyNoticeDto> agencyNoticeDtoList = new ArrayList<>();
         for(AgencyClassNotice agencyClassNotice:list){
@@ -262,7 +272,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyNoticeDto.setCreatedTime(DateUtil.formatDate(agencyClassNotice.getCreatedTime(),DateUtil.DEFAULT_TIME_MINUTE));
             agencyNoticeDto.setContent(agencyClassNotice.getContent());
             agencyNoticeDto.setTitle(agencyClassNotice.getTitle());
-            agencyNoticeDto.setReadStatus(agencyClassNotice.getIsRead()?1:0);
+            ClassNoticeReadLog readLog = noticeReadLogMapper.selectByUserIdAndNoticeId(userId,agencyClassNotice.getId());
+            agencyNoticeDto.setReadStatus(readLog!=null?0:1);
             ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeId(agencyClassNotice.getId());
             if(noticeReceipt==null){
                 agencyNoticeDto.setReceiptStatus(Constants.CLASS_NOTICE_RECEIPT_STATUS_NO);
@@ -290,7 +301,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     }
 
     @Override
-    public AgencyNoticeDetailDto getClassNoticeDetail(Long noticeId){
+    public AgencyNoticeDetailDto getClassNoticeDetail(Long noticeId,String userId){
         AgencyNoticeDetailDto agencyNoticeDetailDto = new AgencyNoticeDetailDto();
         AgencyClassNotice agencyClassNotice = noticeMapper.selectByPrimaryKey(noticeId);
         agencyNoticeDetailDto.setId(agencyClassNotice.getId());
@@ -317,10 +328,24 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 imgList.add(classNoticeFile.getFile());
             }
         }
+        ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeId(agencyClassNotice.getId());
+        if(noticeReceipt==null){
+            agencyNoticeDetailDto.setReceiptStatus(Constants.CLASS_NOTICE_RECEIPT_STATUS_NO);
+        }else {
+            agencyNoticeDetailDto.setReceiptStatus(Constants.CLASS_NOTICE_RECEIPT_STATUS_YES);
+
+        }
         agencyNoticeDetailDto.setImgList(imgList);
-        agencyClassNotice.setIsRead(true);
-        agencyClassNotice.setUpdatedTime(DateUtil.currentTime());
-        noticeMapper.updateByPrimaryKey(agencyClassNotice);
+
+        ClassNoticeReadLog readLog = noticeReadLogMapper.selectByUserIdAndNoticeId(userId,noticeId);
+        if(readLog==null){
+            readLog = new ClassNoticeReadLog();
+            readLog.setUserId(userId);
+            readLog.setNoticeId(noticeId); readLog.setState(true);
+            readLog.setUpdatedTime(DateUtil.currentTime());
+            readLog.setCreatedTime(DateUtil.currentTime());
+            noticeReadLogMapper.insert(readLog);
+        }
         return agencyNoticeDetailDto;
     }
 
@@ -387,5 +412,84 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         userNoticeFileCollection.setUpdatedTime(DateUtil.currentTime());
         collectionMapper.insert(userNoticeFileCollection);
     }
+    @Override
+    public void deleteCollection(Long id,String userId){
+        UserNoticeFileCollection collection = collectionMapper.selectByPrimaryKey(id);
+        if(collection==null||!userId.equals(collection.getUserId())){
+            AgencyException.raise(AgencyErrors.AGENCY_COLLECTION_NOT_EXIST_ERROR);
+        }
+        collection.setState(false);
+        collection.setUpdatedTime(DateUtil.currentTime());
+        collectionMapper.updateByPrimaryKey(collection);
+    }
 
+    @Override
+    public List<AgencyClassSchedule> getScheduleList(Long agencyClassId){
+        return classScheduleMapper.selectByClassId(agencyClassId);
+    }
+
+    @Override
+    public List<ClassTaskDto> getTaskList(Long agencyClassId,String userId, int offset, int size){
+        List<ClassTask> list = classTaskMapper.selectByClassId(agencyClassId,offset,size);
+        List<ClassTaskDto> taskDtoList = new ArrayList<>();
+        for(ClassTask classTask:list){
+            ClassTaskDto classTaskDto = new ClassTaskDto();
+            classTaskDto.setId(classTask.getId());
+            AgencyResult<UserDto> result = userFeign.getUserInfo(classTask.getUserId());
+            if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+               AgencyException.raise(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+            }
+            UserDto userDto = result.getData();
+            classTaskDto.setUsername(userDto.getUsername());
+            classTaskDto.setUserId(userDto.getUserId());
+            classTaskDto.setAvatar(userDto.getAvatar());
+            AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyClassId);
+            if(agencyClass==null) {
+                AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
+            }
+            classTaskDto.setClassName(agencyClass.getName());
+            classTaskDto.setTitle(classTask.getTitle());
+            classTaskDto.setCreateTime(DateUtil.formatDate(classTask.getCreatedTime(),DateUtil.DATE_FORMAT_MONTH_DAY_TIME_LINE));
+            ClassTaskReadLog readLog = taskReadLogMapper.selectByUserIdAndTaskId(userId,classTask.getId());
+            classTaskDto.setIsRead(readLog==null?0:1);
+            taskDtoList.add(classTaskDto);
+        }
+        return taskDtoList;
+    }
+
+    @Override
+    public ClassTaskDetailDto getTaskDetail(Long taskId,String userId){
+        ClassTask classTask = classTaskMapper.selectByPrimaryKey(taskId);
+        ClassTaskDetailDto classTaskDetailDto = new ClassTaskDetailDto();
+        classTaskDetailDto.setId(classTask.getId());
+        AgencyResult<UserDto> result = userFeign.getUserInfo(classTask.getUserId());
+        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+            AgencyException.raise(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+        }
+        UserDto userDto = result.getData();
+        classTaskDetailDto.setUsername(userDto.getUsername());
+        classTaskDetailDto.setUserId(userDto.getUserId());
+        classTaskDetailDto.setAvatar(userDto.getAvatar());
+        classTaskDetailDto.setTitle(classTask.getTitle());
+        classTaskDetailDto.setCreateTime(DateUtil.formatDate(classTask.getCreatedTime(),
+                DateUtil.DATE_FORMAT_MONTH_DAY_TIME_LINE));
+
+        List<String> list = new ArrayList<>();
+        List<ClassTaskImg> taskImgList = classTaskImgMapper.selectByTaskId(taskId);
+        for(ClassTaskImg taskImg:taskImgList){
+            list.add(taskImg.getImg());
+        }
+        classTaskDetailDto.setImgList(list);
+        ClassTaskReadLog readLog = taskReadLogMapper.selectByUserIdAndTaskId(userId,classTask.getId());
+        if(readLog==null){
+            readLog = new ClassTaskReadLog();
+            readLog.setTaskId(taskId);
+            readLog.setUserId(userId);
+            readLog.setState(true);
+            readLog.setCreatedTime(DateUtil.currentTime());
+            readLog.setUpdatedTime(DateUtil.currentTime());
+            taskReadLogMapper.insert(readLog);
+        }
+        return classTaskDetailDto;
+    }
 }
