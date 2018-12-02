@@ -48,7 +48,7 @@
   <select id="selectByClassId" resultMap="BaseResultMap" >
     select id, agency_class_id, week, schedule, state, updated_time, created_time
     from pq_agency_class_schedule
-    and agency_class_id = #{agencyClassId}
+    where agency_class_id = #{agencyClassId}
     and state = 1
   </select>
 </mapper>
