@@ -273,7 +273,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyNoticeDto.setContent(agencyClassNotice.getContent());
             agencyNoticeDto.setTitle(agencyClassNotice.getTitle());
             ClassNoticeReadLog readLog = noticeReadLogMapper.selectByUserIdAndNoticeId(userId,agencyClassNotice.getId());
-            agencyNoticeDto.setReadStatus(readLog!=null?0:1);
+            agencyNoticeDto.setReadStatus(readLog==null?0:1);
             ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeId(agencyClassNotice.getId());
             if(noticeReceipt==null){
                 agencyNoticeDto.setReceiptStatus(Constants.CLASS_NOTICE_RECEIPT_STATUS_NO);
