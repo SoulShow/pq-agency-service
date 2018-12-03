@@ -405,8 +405,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         noticeMapper.updateByPrimaryKey(classNotice);
     }
     @Override
-    public List<UserNoticeFileCollectionDto> getCollectList(String userId){
-        List<UserNoticeFileCollection> list = collectionMapper.selectByUserId(userId);
+    public List<UserNoticeFileCollectionDto> getCollectList(String userId,int offset,int size){
+        List<UserNoticeFileCollection> list = collectionMapper.selectByUserId(userId,offset,size);
         List<UserNoticeFileCollectionDto> collectionDtoList = new ArrayList<>();
         for(UserNoticeFileCollection collection:list){
             UserNoticeFileCollectionDto collectionDto = new UserNoticeFileCollectionDto();

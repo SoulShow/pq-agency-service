@@ -141,9 +141,11 @@ public interface AgencyClassService {
     /**
      * 通知文件收藏列表
      * @param userId
+     * @param offset
+     * @param size
      * @return
      */
-    List<UserNoticeFileCollectionDto> getCollectList(String userId);
+    List<UserNoticeFileCollectionDto> getCollectList(String userId,int offset,int size);
 
     /**
      * 收藏

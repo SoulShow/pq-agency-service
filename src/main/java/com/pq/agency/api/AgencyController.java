@@ -164,11 +164,20 @@ public class AgencyController {
 	}
 	@GetMapping(value = "/user/collection/list")
 	@ResponseBody
-	public AgencyResult getCollectList(@RequestParam("userId")String userId) {
+	public AgencyResult getCollectList(@RequestParam("userId")String userId,
+									   @RequestParam(value = "page",required = false)Integer page,
+									   @RequestParam(value = "size",required = false)Integer size) {
 
 		AgencyResult result = new AgencyResult();
 		try {
-			result.setData(agencyClassService.getCollectList(userId));
+			if (page == null || page < 1) {
+				page = 1;
+			}
+			if (size == null || size < 1) {
+				size = 20;
+			}
+			int offset = (page - 1) * size;
+			result.setData(agencyClassService.getCollectList(userId,offset,size));
 		} catch (AgencyException e){
 			result.setStatus(e.getErrorCode().getErrorCode());
 			result.setMessage(e.getErrorCode().getErrorMsg());
