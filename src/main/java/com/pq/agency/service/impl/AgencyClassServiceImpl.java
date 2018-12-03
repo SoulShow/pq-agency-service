@@ -481,7 +481,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             }
             classTaskDto.setClassName(agencyClass.getName());
             classTaskDto.setTitle(classTask.getTitle());
-            classTaskDto.setCreateTime(DateUtil.formatDate(classTask.getCreatedTime(),DateUtil.DATE_FORMAT_MONTH_DAY_TIME_LINE));
+            classTaskDto.setCreateTime(DateUtil.formatDate(classTask.getCreatedTime(),DateUtil.DEFAULT_DATETIME_FORMAT));
             ClassTaskReadLog readLog = taskReadLogMapper.selectByUserIdAndTaskId(userId,classTask.getId());
             classTaskDto.setIsRead(readLog==null?0:1);
             taskDtoList.add(classTaskDto);
