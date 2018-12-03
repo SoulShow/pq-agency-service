@@ -26,7 +26,7 @@
       file, state, updated_time, created_time, file_name,file_size,suffix)
     values (#{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{noticeId,jdbcType=BIGINT}, 
       #{file,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, 
-      #{createdTime,jdbcType=TIMESTAMP},#{fileName},#{fileSize}),#{suffix}
+      #{createdTime,jdbcType=TIMESTAMP},#{fileName},#{fileSize},#{suffix})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.UserNoticeFileCollection" >
     update pq_user_notice_file_collection
