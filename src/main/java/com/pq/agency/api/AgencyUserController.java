@@ -48,7 +48,7 @@ public class AgencyUserController {
 									@RequestParam("studentName")String studentName) {
 		AgencyResult result = new AgencyResult();
 		try{
-			agencyClassService.getUserStudentRelation(invitationCode,studentName);
+			result.setData(agencyClassService.getUserStudentRelation(invitationCode,studentName));
 		}catch (AgencyException a){
 			result.setStatus(a.getErrorCode().getErrorCode());
 			result.setMessage(a.getErrorCode().getErrorMsg());
