@@ -13,6 +13,8 @@ public class ClassNoticeFile {
 
     private String fileSize;
 
+    private String suffix;
+
     private int type;
 
     private Boolean state;
@@ -91,5 +93,13 @@ public class ClassNoticeFile {
 
     public void setFileSize(String fileSize) {
         this.fileSize = fileSize;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
     }
 }

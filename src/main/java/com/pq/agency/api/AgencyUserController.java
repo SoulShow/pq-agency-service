@@ -25,16 +25,33 @@ public class AgencyUserController {
     @Autowired
 	private AgencyClassService agencyClassService;
 
-	@PostMapping(value = "/check")
+	@PostMapping(value = "/student/check")
 	@ResponseBody
 	public AgencyResult checkUserInfo(@RequestBody AgencyUserRegisterCheckForm registerCheckForm) {
 		AgencyResult result = new AgencyResult();
 		try{
-			agencyClassService.checkInvitationCodeAndStudent(registerCheckForm.getInvitationCode(),registerCheckForm.getStudentId(),
-					registerCheckForm.getStudentName(),registerCheckForm.getRelation());
+			agencyClassService.checkInvitationCodeAndStudent(registerCheckForm.getPhone(),registerCheckForm.getInvitationCode(),
+					registerCheckForm.getStudentName());
 		}catch (AgencyException a){
-			result.setStatus(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR.getErrorCode());
-			result.setMessage(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR.getErrorMsg());
+			result.setStatus(a.getErrorCode().getErrorCode());
+			result.setMessage(a.getErrorCode().getErrorMsg());
+		}catch (Exception e){
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
+
+	@PostMapping(value = "/student/relation")
+	@ResponseBody
+	public AgencyResult getRelation(@RequestParam("invitationCode") String invitationCode,
+									@RequestParam("studentName")String studentName) {
+		AgencyResult result = new AgencyResult();
+		try{
+			agencyClassService.getUserStudentRelation(invitationCode,studentName);
+		}catch (AgencyException a){
+			result.setStatus(a.getErrorCode().getErrorCode());
+			result.setMessage(a.getErrorCode().getErrorMsg());
 		}catch (Exception e){
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
@@ -54,8 +71,8 @@ public class AgencyUserController {
 				result.setMessage(AgencyErrors.AGENCY_USER_STUDENT_NOT_EXIST_ERROR.getErrorMsg());
 			}
 		}catch (AgencyException a){
-			result.setStatus(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR.getErrorCode());
-			result.setMessage(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR.getErrorMsg());
+			result.setStatus(a.getErrorCode().getErrorCode());
+			result.setMessage(a.getErrorCode().getErrorMsg());
 		}catch (Exception e){
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
@@ -69,8 +86,8 @@ public class AgencyUserController {
 		try{
 			agencyClassService.createUser(userRegisterForm);
 		}catch (AgencyException a){
-			result.setStatus(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR.getErrorCode());
-			result.setMessage(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR.getErrorMsg());
+			result.setStatus(a.getErrorCode().getErrorCode());
+			result.setMessage(a.getErrorCode().getErrorMsg());
 		}catch (Exception e){
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
@@ -85,8 +102,8 @@ public class AgencyUserController {
 		try{
 			result.setData(agencyClassService.getAgencyUserInfo(userId));
 		}catch (AgencyException a){
-			result.setStatus(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorCode());
-			result.setMessage(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorMsg());
+			result.setStatus(a.getErrorCode().getErrorCode());
+			result.setMessage(a.getErrorCode().getErrorMsg());
 		}catch (Exception e){
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());

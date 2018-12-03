@@ -15,6 +15,8 @@ public class UserNoticeFileCollectionDto {
 
     private String fileSize;
 
+    private String suffix;
+
     private String createTime;
 
     public Long getId() {
@@ -79,5 +81,13 @@ public class UserNoticeFileCollectionDto {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
     }
 }

@@ -1,13 +1,12 @@
 package com.pq.agency.param;
 
 public class AgencyUserRegisterCheckForm {
-    private Long studentId;
+
+    private String phone;
 
     private String studentName;
 
     private String invitationCode;
-
-    private String relation;
 
     private int role;
 
@@ -27,7 +26,6 @@ public class AgencyUserRegisterCheckForm {
         this.role = role;
     }
 
-
     public String getStudentName() {
         return studentName;
     }
@@ -36,19 +34,11 @@ public class AgencyUserRegisterCheckForm {
         this.studentName = studentName;
     }
 
-    public String getRelation() {
-        return relation;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setRelation(String relation) {
-        this.relation = relation;
-    }
-
-    public Long getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

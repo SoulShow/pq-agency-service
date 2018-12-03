@@ -13,16 +13,21 @@ import com.pq.agency.param.NoticeReceiptForm;
 import com.pq.agency.service.AgencyClassService;
 import com.pq.agency.utils.AgencyResult;
 import com.pq.agency.utils.Constants;
+import com.pq.common.constants.CacheKeyConstants;
 import com.pq.common.constants.CommonConstants;
 import com.pq.common.constants.ParentRelationTypeEnum;
 import com.pq.common.exception.CommonErrors;
 import com.pq.common.util.DateUtil;
+import com.pq.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author liutao
@@ -70,10 +75,35 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     private ClassNoticeReadLogMapper noticeReadLogMapper;
     @Autowired
     private ClassTaskReadLogMapper taskReadLogMapper;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
-    public void checkInvitationCodeAndStudent(String invitationCode,Long studentId, String studentName,String relation){
+    public void checkInvitationCodeAndStudent(String phone, String invitationCode, String studentName){
 
+        AgencyClassInvitationCode agencyClassInvitationCode = invitationCodeMapper.selectByCode(invitationCode);
+        if(agencyClassInvitationCode==null){
+            AgencyException.raise(AgencyErrors.INVITATION_CODE_ERROR);
+        }
+        Integer count = 0;
+        String cacheKey = CacheKeyConstants.PREFIX_USER_REGISTER_STUDENT_NAME+phone+invitationCode;
+        if(redisTemplate.hasKey(cacheKey)){
+            count = (Integer) redisTemplate.opsForValue().get(cacheKey);
+            if(count>=3){
+                AgencyException.raise(AgencyErrors.AGENCY_STUDENT_NAME_MORE_THREE_ERROR);
+            }
+        }
+        if(studentName==null){
+            AgencyException.raise(AgencyErrors.AGENCY_STUDENT_NOT_NULL_ERROR);
+        }
+        List<AgencyStudent> studentList = agencyStudentMapper.selectByAgencyClassIdAndName(agencyClassInvitationCode.getAgencyClassId(),studentName);
+        if(studentList==null||studentList.size()==0){
+            redisTemplate.opsForValue().set(cacheKey,count+1,1800L,TimeUnit.SECONDS);
+            AgencyException.raise(AgencyErrors.AGENCY_STUDENT_NOT_EXIST_ERROR);
+        }
+    }
+    @Override
+    public List<String> getUserStudentRelation(String invitationCode,String studentName){
         AgencyClassInvitationCode agencyClassInvitationCode = invitationCodeMapper.selectByCode(invitationCode);
         if(agencyClassInvitationCode==null){
             AgencyException.raise(AgencyErrors.INVITATION_CODE_ERROR);
@@ -82,15 +112,15 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         if(studentList==null||studentList.size()==0){
             AgencyException.raise(AgencyErrors.AGENCY_STUDENT_NOT_EXIST_ERROR);
         }
-        if(studentId==null){
-            studentId = studentList.get(0).getId();
+        List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.selectByAgencycClassIdAndStudentId(agencyClassInvitationCode.getAgencyClassId(),
+                studentList.get(0).getId());
+        List<String> relationList = new ArrayList<>();
+        for(AgencyUserStudent userStudent : userStudentList){
+            relationList.add(userStudent.getRelation());
         }
-        AgencyUserStudent agencyUserStudent = agencyUserStudentMapper.selectByAgencycClassIdAndStudentIdAndRelation(agencyClassInvitationCode.getAgencyClassId(),
-                studentId,relation);
-        if(agencyUserStudent!=null){
-            AgencyException.raise(AgencyErrors.AGENCY_STUDENT_RELATION_IS_EXIST_ERROR);
-        }
+        return relationList;
     }
+
 
     @Override
     public List<Grade> getAgencyGradeList(Long agencyId){
@@ -324,6 +354,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 agencyNoticeDetailDto.setFileUrl(classNoticeFile.getFile());
                 agencyNoticeDetailDto.setFileName(classNoticeFile.getFileName());
                 agencyNoticeDetailDto.setFileSize(classNoticeFile.getFileSize());
+                agencyNoticeDetailDto.setSuffix(classNoticeFile.getSuffix());
             }else {
                 imgList.add(classNoticeFile.getFile());
             }
@@ -336,7 +367,6 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
         }
         agencyNoticeDetailDto.setImgList(imgList);
-
         ClassNoticeReadLog readLog = noticeReadLogMapper.selectByUserIdAndNoticeId(userId,noticeId);
         if(readLog==null){
             readLog = new ClassNoticeReadLog();
@@ -392,6 +422,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             collectionDto.setFile(collection.getFile());
             collectionDto.setFileName(collection.getFileName());
             collectionDto.setFileSize(collection.getFileSize());
+            collectionDto.setSuffix(collection.getSuffix());
             collectionDto.setCreateTime(DateUtil.formatDate(collection.getCreatedTime(),DateUtil.DEFAULT_DATETIME_FORMAT));
             collectionDtoList.add(collectionDto);
         }
@@ -407,6 +438,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         userNoticeFileCollection.setFileSize(noticeFileCollectionForm.getFileSize());
         userNoticeFileCollection.setUserId(noticeFileCollectionForm.getUserId());
         userNoticeFileCollection.setUserName(noticeFileCollectionForm.getName());
+        userNoticeFileCollection.setSuffix(noticeFileCollectionForm.getSuffix());
         userNoticeFileCollection.setState(true);
         userNoticeFileCollection.setCreatedTime(DateUtil.currentTime());
         userNoticeFileCollection.setUpdatedTime(DateUtil.currentTime());

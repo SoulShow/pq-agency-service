@@ -25,6 +25,8 @@ public class AgencyNoticeDetailDto {
 
     private String fileSize;
 
+    private String suffix;
+
     private List<String> imgList;
 
     private int receiptStatus;
@@ -131,5 +133,13 @@ public class AgencyNoticeDetailDto {
 
     public void setReceiptStatus(int receiptStatus) {
         this.receiptStatus = receiptStatus;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
     }
 }

@@ -17,14 +17,13 @@ public interface AgencyClassService {
 
 
     /**
-     * check邀请码、学生、关系
+     * check邀请码、学生
      * @param studentName
-     * @param relation
      * @param invitationCode
-     * @param studentId
+     * @param phone
      * @return
      */
-    void checkInvitationCodeAndStudent(String invitationCode,Long studentId,String studentName,String relation);
+    void checkInvitationCodeAndStudent(String phone, String invitationCode,String studentName);
 
 
     /**
@@ -184,6 +183,15 @@ public interface AgencyClassService {
      * @return
      */
     ClassTaskDetailDto getTaskDetail(Long taskId,String userId);
+
+
+    /**
+     * 获取关系列表
+     * @param invitationCode
+     * @param studentName
+     * @return
+     */
+    List<String> getUserStudentRelation(String invitationCode,String studentName);
 
 
 }

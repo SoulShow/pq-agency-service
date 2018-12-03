@@ -7,6 +7,7 @@
     <result column="file" property="file" jdbcType="VARCHAR" />
     <result column="file_name" property="fileName" jdbcType="VARCHAR" />
     <result column="file_size" property="fileSize" jdbcType="VARCHAR" />
+    <result column="suffix" property="suffix" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
@@ -21,11 +22,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into pq_class_notice_file (notice_id, file, type, 
-      state, updated_time, created_time, file_name,file_size
+      state, updated_time, created_time, file_name,file_size,suffix
       )
     values (#{noticeId,jdbcType=BIGINT}, #{file,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
       #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP},
-    #{fileName}, #{fileSize}
+    #{fileName}, #{fileSize},#{suffix}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.ClassNoticeFile" >
@@ -34,6 +35,7 @@
       file = #{file,jdbcType=VARCHAR},
       file_name = #{fileName},
       file_size = #{fileSize},
+      suffix = #{suffix},
       type = #{type,jdbcType=INTEGER},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
@@ -41,17 +43,17 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, notice_id, file, type, state, updated_time, created_time, file_name, file_size
+    select id, notice_id, file, type, state, updated_time, created_time, file_name, file_size, suffix
     from pq_class_notice_file
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, notice_id, file, type, state, updated_time, created_time, file_name, file_size
+    select id, notice_id, file, type, state, updated_time, created_time, file_name, file_size, suffix
     from pq_class_notice_file
   </select>
 
   <select id="selectByNoticeId" resultMap="BaseResultMap" >
-    select id, notice_id, file, type, state, updated_time, created_time,file_name, file_size
+    select id, notice_id, file, type, state, updated_time, created_time,file_name, file_size, suffix
     from pq_class_notice_file
     where notice_id = #{noticeId}
     and state = 1

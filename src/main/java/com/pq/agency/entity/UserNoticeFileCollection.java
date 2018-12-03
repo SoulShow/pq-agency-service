@@ -17,6 +17,8 @@ public class UserNoticeFileCollection {
 
     private String fileSize;
 
+    private String suffix;
+
     private Boolean state;
 
     private Timestamp updatedTime;
@@ -101,5 +103,13 @@ public class UserNoticeFileCollection {
 
     public void setFileSize(String fileSize) {
         this.fileSize = fileSize;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
     }
 }

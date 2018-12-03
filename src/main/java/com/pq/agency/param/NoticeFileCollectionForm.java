@@ -15,6 +15,8 @@ public class NoticeFileCollectionForm {
 
     private String fileSize;
 
+    private String suffix;
+
     public Long getNoticeId() {
         return noticeId;
     }
@@ -61,5 +63,13 @@ public class NoticeFileCollectionForm {
 
     public void setFileSize(String fileSize) {
         this.fileSize = fileSize;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
     }
 }
