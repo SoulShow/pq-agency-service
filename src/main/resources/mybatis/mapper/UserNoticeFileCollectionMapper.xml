@@ -23,7 +23,7 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into pq_user_notice_file_collection (user_id, user_name, notice_id, 
-      file, state, updated_time, created_time, file_name,file_size)
+      file, state, updated_time, created_time, file_name,file_size,suffix)
     values (#{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{noticeId,jdbcType=BIGINT}, 
       #{file,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, 
       #{createdTime,jdbcType=TIMESTAMP},#{fileName},#{fileSize}),#{suffix}
