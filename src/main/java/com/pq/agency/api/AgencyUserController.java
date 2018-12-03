@@ -42,7 +42,7 @@ public class AgencyUserController {
 		return result;
 	}
 
-	@PostMapping(value = "/student/relation")
+	@GetMapping(value = "/student/relation")
 	@ResponseBody
 	public AgencyResult getRelation(@RequestParam("invitationCode") String invitationCode,
 									@RequestParam("studentName")String studentName) {
