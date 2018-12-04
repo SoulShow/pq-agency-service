@@ -625,8 +625,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         List<VoteOptionDetailDto> options = new ArrayList<>();
         for(ClassVoteOption option : optionList){
             VoteOptionDetailDto optionDto = new VoteOptionDetailDto();
-            optionDto.setOption(option.getOption());
-            Integer count = voteSelectedOptionMapper.selectCountByVoteIdAndOption(voteId,option.getOption());
+            optionDto.setOption(option.getItem());
+            Integer count = voteSelectedOptionMapper.selectCountByVoteIdAndOption(voteId,option.getItem());
             optionDto.setCount(count==null?0:count);
             options.add(optionDto);
         }
@@ -647,7 +647,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         voteSelectedMapper.insert(classVoteSelected);
         for(String option:voteSelectedForm.getOptions()){
             ClassVoteSelectedOption selectedOption = new ClassVoteSelectedOption();
-            selectedOption.setOption(option);
+            selectedOption.setItem(option);
             selectedOption.setSelectedId(classVoteSelected.getId());
             selectedOption.setVoteId(voteSelectedForm.getVoteId());
             selectedOption.setState(true);
@@ -663,12 +663,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         List<ClassVoteOption> optionList = voteOptionMapper.selectByVoteId(voteId);
         for(ClassVoteOption option : optionList){
             VoteOptionDto optionDto = new VoteOptionDto();
-            optionDto.setOption(option.getOption());
-            Integer count = voteSelectedOptionMapper.selectCountByVoteIdAndOption(voteId,option.getOption());
+            optionDto.setOption(option.getItem());
+            Integer count = voteSelectedOptionMapper.selectCountByVoteIdAndOption(voteId,option.getItem());
             optionDto.setCount(count==null?0:count);
 
             List<OptionUserDto> userDtos = new ArrayList<>();
-            List<ClassVoteSelected> selectedList = voteSelectedMapper.selectByOptionAndVoteId(option.getOption(),option.getVoteId());
+            List<ClassVoteSelected> selectedList = voteSelectedMapper.selectByOptionAndVoteId(option.getItem(),option.getVoteId());
             for(ClassVoteSelected voteSelected: selectedList){
                 OptionUserDto optionUserDto = new OptionUserDto();
                 optionUserDto.setUserId(voteSelected.getUserId());

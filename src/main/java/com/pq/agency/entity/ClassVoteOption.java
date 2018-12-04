@@ -7,7 +7,7 @@ public class ClassVoteOption {
 
     private Long voteId;
 
-    private String option;
+    private String item;
 
     private Boolean state;
 
@@ -29,14 +29,6 @@ public class ClassVoteOption {
 
     public void setVoteId(Long voteId) {
         this.voteId = voteId;
-    }
-
-    public String getOption() {
-        return option;
-    }
-
-    public void setOption(String option) {
-        this.option = option == null ? null : option.trim();
     }
 
     public Boolean getState() {
@@ -61,5 +53,13 @@ public class ClassVoteOption {
 
     public void setUpdatedTime(Timestamp updatedTime) {
         this.updatedTime = updatedTime;
+    }
+
+    public String getItem() {
+        return item;
+    }
+
+    public void setItem(String item) {
+        this.item = item;
     }
 }
