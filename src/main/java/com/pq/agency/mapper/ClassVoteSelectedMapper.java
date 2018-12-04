@@ -22,5 +22,5 @@ public interface ClassVoteSelectedMapper {
                                                           @Param("userId") String userId,
                                                           @Param("studentId")Long studentId);
 
-    List<ClassVoteSelected> selectByOptionAndVoteId(@Param("option")String option,@Param("voteId")Long voteId);
+    List<ClassVoteSelected> selectByOptionAndVoteId(@Param("item")String item,@Param("voteId")Long voteId);
 }

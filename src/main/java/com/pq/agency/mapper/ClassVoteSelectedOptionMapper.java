@@ -16,5 +16,5 @@ public interface ClassVoteSelectedOptionMapper {
 
     int updateByPrimaryKey(ClassVoteSelectedOption record);
 
-    Integer selectCountByVoteIdAndOption(@Param("voteId")Long voteId,@Param("option")String option);
+    Integer selectCountByVoteIdAndOption(@Param("voteId")Long voteId,@Param("item")String item);
 }
