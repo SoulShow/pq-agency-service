@@ -4,6 +4,7 @@ import com.pq.agency.exception.AgencyException;
 import com.pq.agency.param.CollectionDeleteForm;
 import com.pq.agency.param.NoticeFileCollectionForm;
 import com.pq.agency.param.NoticeReceiptForm;
+import com.pq.agency.param.VoteSelectedForm;
 import com.pq.agency.service.AgencyClassService;
 import com.pq.agency.service.AgencyService;
 import com.pq.agency.utils.AgencyResult;
@@ -289,6 +290,89 @@ public class AgencyController {
         }
         return result;
     }
+	@GetMapping(value = "/class/vote/list")
+	@ResponseBody
+	public AgencyResult getClassVoteList(@RequestParam(value = "agencyClassId")Long agencyClassId,
+									 @RequestParam(value = "userId")String userId,
+									 @RequestParam(value = "studentId",required = false) Long studentId,
+									 @RequestParam(value = "page",required = false)Integer page,
+									 @RequestParam(value = "size",required = false)Integer size) {
+		if (page == null || page < 1) {
+			page = 1;
+		}
+		if (size == null || size < 1) {
+			size = 20;
+		}
+		int offset = (page - 1) * size;
 
+		AgencyResult result = new AgencyResult();
+		try {
+			result.setData(agencyClassService.getVoteList(agencyClassId,userId,studentId,offset,size));
+		} catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
+
+	@GetMapping(value = "/class/vote/detail")
+	@ResponseBody
+	public AgencyResult getClassVoteDetail(@RequestParam(value = "voteId")Long voteId,
+										 @RequestParam(value = "userId")String userId,
+										 @RequestParam(value = "studentId",required = false) Long studentId) {
+
+		AgencyResult result = new AgencyResult();
+		try {
+			result.setData(agencyClassService.getVoteDetail(voteId,userId,studentId));
+		} catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
+
+	@PostMapping(value = "/class/vote/selected")
+	@ResponseBody
+	public AgencyResult classVoteSelect(@RequestBody VoteSelectedForm voteSelectedForm) {
+
+		AgencyResult result = new AgencyResult();
+		try {
+			agencyClassService.voteSelected(voteSelectedForm);
+		} catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
+
+	@GetMapping(value = "/class/vote/statistics")
+	@ResponseBody
+	public AgencyResult getClassVoteStatistics(@RequestParam(value = "voteId")Long voteId) {
+
+		AgencyResult result = new AgencyResult();
+		try {
+			result.setData(agencyClassService.getVoteStatistics(voteId));
+		} catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
 
 }

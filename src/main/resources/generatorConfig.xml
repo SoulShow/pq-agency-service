@@ -78,12 +78,28 @@
             <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
             <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
         <!--</table>-->
-        <table tableName="pq_class_task_read_log" domainObjectName="ClassTaskReadLog">
+        <table tableName="pq_agency_class_vote" domainObjectName="AgencyClassVote">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <columnOverride column="deadline" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
+            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
+            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
+        </table>
+        <table tableName="pq_class_vote_img" domainObjectName="ClassVoteImg">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
             <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
         </table>
-        <table tableName="pq_class_notice_read_log" domainObjectName="ClassNoticeReadLog">
+        <table tableName="pq_class_vote_option" domainObjectName="ClassVoteOption">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
+            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
+        </table>
+        <table tableName="pq_class_vote_selected" domainObjectName="ClassVoteSelected">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
+            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
+        </table>
+        <table tableName="pq_class_vote_selected_option" domainObjectName="ClassVoteSelectedOption">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
             <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>

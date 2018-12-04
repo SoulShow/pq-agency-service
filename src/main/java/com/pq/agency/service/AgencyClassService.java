@@ -6,6 +6,7 @@ import com.pq.agency.entity.*;
 import com.pq.agency.param.AgencyUserRegisterForm;
 import com.pq.agency.param.NoticeFileCollectionForm;
 import com.pq.agency.param.NoticeReceiptForm;
+import com.pq.agency.param.VoteSelectedForm;
 
 import java.util.List;
 
@@ -197,6 +198,40 @@ public interface AgencyClassService {
      * @return
      */
     List<String> getUserStudentRelation(String invitationCode,String studentName);
+
+
+    /**
+     * 获取投票列表
+     * @param agencyClassId
+     * @param userId
+     * @param studentId
+     * @param offset
+     * @param size
+     * @return
+     */
+    List<AgencyVoteDto> getVoteList(Long agencyClassId,String userId,Long studentId,int offset,int size);
+
+    /**
+     * 获取投票详情
+     * @param voteId
+     * @param userId
+     * @param studentId
+     * @return
+     */
+    AgencyVoteDetailDto getVoteDetail(Long voteId,String userId,Long studentId);
+
+    /**
+     * 投票
+     * @param voteSelectedForm
+     */
+    void voteSelected(VoteSelectedForm voteSelectedForm);
+
+    /**
+     * 投票详情
+     * @param voteId
+     * @return
+     */
+    List<VoteOptionDto> getVoteStatistics(Long voteId);
 
 
 }

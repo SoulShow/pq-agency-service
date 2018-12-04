@@ -10,24 +10,18 @@ import com.pq.agency.mapper.*;
 import com.pq.agency.param.AgencyUserRegisterForm;
 import com.pq.agency.param.NoticeFileCollectionForm;
 import com.pq.agency.param.NoticeReceiptForm;
+import com.pq.agency.param.VoteSelectedForm;
 import com.pq.agency.service.AgencyClassService;
 import com.pq.agency.utils.AgencyResult;
 import com.pq.agency.utils.Constants;
-import com.pq.common.constants.CacheKeyConstants;
-import com.pq.common.constants.CommonConstants;
-import com.pq.common.constants.ParentRelationTypeEnum;
 import com.pq.common.exception.CommonErrors;
 import com.pq.common.util.DateUtil;
-import com.pq.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author liutao
@@ -75,6 +69,16 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     private ClassNoticeReadLogMapper noticeReadLogMapper;
     @Autowired
     private ClassTaskReadLogMapper taskReadLogMapper;
+    @Autowired
+    private AgencyClassVoteMapper classVoteMapper;
+    @Autowired
+    private ClassVoteImgMapper voteImgMapper;
+    @Autowired
+    private ClassVoteOptionMapper voteOptionMapper;
+    @Autowired
+    private ClassVoteSelectedMapper voteSelectedMapper;
+    @Autowired
+    private ClassVoteSelectedOptionMapper voteSelectedOptionMapper;
 
     @Override
     public void checkInvitationCodeAndStudent(String phone, String invitationCode, String studentName){
@@ -208,7 +212,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
            agencyUserDto.setStudentName(agencyUserStudent.getStudentName());
            agencyUserDto.setName(agencyUserStudent.getStudentName()+ agencyUserStudent.getRelation());
            AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyUserStudent.getAgencyClassId());
-           if(agencyUser==null){
+           if(agencyClass==null){
                AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
            }
            Agency agency = agencyMapper.selectByPrimaryKey(agencyClass.getAgencyId());
@@ -527,4 +531,162 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
         return classTaskDetailDto;
     }
+
+    @Override
+    public List<AgencyVoteDto> getVoteList(Long agencyClassId,String userId,Long studentId,int offset,int size){
+        List<AgencyClassVote> voteList = classVoteMapper.selectByClassId(agencyClassId,offset,size);
+        List<AgencyVoteDto> list = new ArrayList<>();
+        for(AgencyClassVote classVote: voteList){
+            AgencyVoteDto agencyVoteDto = new AgencyVoteDto();
+
+            AgencyResult<UserDto> result = userFeign.getUserInfo(classVote.getUserId());
+            if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+            }
+
+            UserDto userDto = result.getData();
+            agencyVoteDto.setUserId(classVote.getUserId());
+            agencyVoteDto.setAvatar(userDto.getAvatar());
+            agencyVoteDto.setUsername(userDto.getName());
+            AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyClassId);
+            if(agencyClass==null){
+                AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
+            }
+            agencyVoteDto.setClassName(agencyClass.getName());
+            agencyVoteDto.setContent(classVote.getTitle());
+            agencyVoteDto.setCreateTime(DateUtil.formatDate(classVote.getCreatedTime(),DateUtil.DEFAULT_DATETIME_FORMAT));
+            agencyVoteDto.setIsVoted(0);
+            agencyVoteDto.setIsSecret(classVote.getIsSecret());
+
+            Integer count = voteSelectedMapper.selectCountByVoteId(classVote.getId());
+            agencyVoteDto.setVotedCount(count);
+
+            ClassVoteSelected voteSelected = voteSelectedMapper.selectByVoteIdAndUserIdAndStudentId(classVote.getId(), userId, studentId);
+            if(voteSelected != null){
+                //已经投过票
+                agencyVoteDto.setIsVoted(1);
+            }
+            if(DateUtil.currentTimeMillis()>classVote.getDeadline().getTime()){
+                //未过期
+                agencyVoteDto.setVoteStatus(0);
+            }else {
+                //过期
+                agencyVoteDto.setVoteStatus(1);
+            }
+            list.add(agencyVoteDto);
+        }
+        return list;
+    }
+    @Override
+    public AgencyVoteDetailDto getVoteDetail(Long voteId,String userId,Long studentId){
+        AgencyClassVote classVote = classVoteMapper.selectByPrimaryKey(voteId);
+        AgencyVoteDetailDto  agencyVoteDetailDto = new AgencyVoteDetailDto();
+
+        AgencyResult<UserDto> result = userFeign.getUserInfo(classVote.getUserId());
+        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+            throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+        }
+        UserDto userDto = result.getData();
+        agencyVoteDetailDto.setUserId(classVote.getUserId());
+        agencyVoteDetailDto.setAvatar(userDto.getAvatar());
+        agencyVoteDetailDto.setUsername(userDto.getName());
+        AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(classVote.getAgencyClassId());
+        if(agencyClass==null){
+            AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
+        }
+        agencyVoteDetailDto.setContent(classVote.getTitle());
+        agencyVoteDetailDto.setDeadLine(DateUtil.formatDate(classVote.getDeadline(),DateUtil.DEFAULT_DATETIME_FORMAT));
+        agencyVoteDetailDto.setIsVoted(0);
+        agencyVoteDetailDto.setIsSecret(classVote.getIsSecret());
+
+        Integer totalCount = voteSelectedMapper.selectCountByVoteId(classVote.getId());
+        agencyVoteDetailDto.setVotedCount(totalCount==null?0:totalCount);
+
+        ClassVoteSelected voteSelected = voteSelectedMapper.selectByVoteIdAndUserIdAndStudentId(classVote.getId(), userId, studentId);
+        if(voteSelected != null){
+            //已经投过票
+            agencyVoteDetailDto.setIsVoted(1);
+        }
+        if(DateUtil.currentTimeMillis()>classVote.getDeadline().getTime()){
+            //未过期
+            agencyVoteDetailDto.setVoteStatus(0);
+        }else {
+            //过期
+            agencyVoteDetailDto.setVoteStatus(1);
+        }
+        List<ClassVoteImg> imgList = voteImgMapper.selectByVoteId(voteId);
+        List<String> imgs = new ArrayList<>();
+        for(ClassVoteImg voteImg: imgList){
+            imgs.add(voteImg.getImg());
+        }
+        agencyVoteDetailDto.setImgList(imgs);
+
+        List<ClassVoteOption> optionList = voteOptionMapper.selectByVoteId(voteId);
+        List<VoteOptionDetailDto> options = new ArrayList<>();
+        for(ClassVoteOption option : optionList){
+            VoteOptionDetailDto optionDto = new VoteOptionDetailDto();
+            optionDto.setOption(option.getOption());
+            Integer count = voteSelectedOptionMapper.selectCountByVoteIdAndOption(voteId,option.getOption());
+            optionDto.setCount(count==null?0:count);
+            options.add(optionDto);
+        }
+        agencyVoteDetailDto.setOptionList(options);
+        return agencyVoteDetailDto;
+    }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void voteSelected(VoteSelectedForm voteSelectedForm){
+        ClassVoteSelected classVoteSelected = new ClassVoteSelected();
+        classVoteSelected.setVoteId(voteSelectedForm.getVoteId());
+        classVoteSelected.setUserId(voteSelectedForm.getUserId());
+        classVoteSelected.setStudentId(voteSelectedForm.getStudentId());
+        classVoteSelected.setState(true);
+        classVoteSelected.setName(voteSelectedForm.getName());
+        classVoteSelected.setCreatedTime(DateUtil.currentTime());
+        classVoteSelected.setUpdatedTime(DateUtil.currentTime());
+        voteSelectedMapper.insert(classVoteSelected);
+        for(String option:voteSelectedForm.getOptions()){
+            ClassVoteSelectedOption selectedOption = new ClassVoteSelectedOption();
+            selectedOption.setOption(option);
+            selectedOption.setSelectedId(classVoteSelected.getId());
+            selectedOption.setVoteId(voteSelectedForm.getVoteId());
+            selectedOption.setState(true);
+            selectedOption.setCreatedTime(DateUtil.currentTime());
+            selectedOption.setUpdatedTime(DateUtil.currentTime());
+            voteSelectedOptionMapper.insert(selectedOption);
+        }
+    }
+
+    @Override
+    public List<VoteOptionDto> getVoteStatistics(Long voteId){
+        List<VoteOptionDto> list = new ArrayList<>();
+        List<ClassVoteOption> optionList = voteOptionMapper.selectByVoteId(voteId);
+        for(ClassVoteOption option : optionList){
+            VoteOptionDto optionDto = new VoteOptionDto();
+            optionDto.setOption(option.getOption());
+            Integer count = voteSelectedOptionMapper.selectCountByVoteIdAndOption(voteId,option.getOption());
+            optionDto.setCount(count==null?0:count);
+
+            List<OptionUserDto> userDtos = new ArrayList<>();
+            List<ClassVoteSelected> selectedList = voteSelectedMapper.selectByOptionAndVoteId(option.getOption(),option.getVoteId());
+            for(ClassVoteSelected voteSelected: selectedList){
+                OptionUserDto optionUserDto = new OptionUserDto();
+                optionUserDto.setUserId(voteSelected.getUserId());
+                optionUserDto.setUsername(voteSelected.getName());
+                AgencyResult<UserDto> result = userFeign.getUserInfo(voteSelected.getUserId());
+                if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                    throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+                }
+                UserDto userDto = result.getData();
+                optionUserDto.setAvatar(userDto.getAvatar());
+                userDtos.add(optionUserDto);
+            }
+            optionDto.setList(userDtos);
+            list.add(optionDto);
+        }
+        return list;
+    }
+
+
+
 }

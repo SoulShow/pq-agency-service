@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pq.agency.mapper.ClassVoteSelectedMapper" >
+  <resultMap id="BaseResultMap" type="com.pq.agency.entity.ClassVoteSelected" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="vote_id" property="voteId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="student_id" property="studentId" jdbcType="BIGINT" />
+    <result column="state" property="state" jdbcType="BIT" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pq_class_vote_selected
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pq.agency.entity.ClassVoteSelected" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pq_class_vote_selected (vote_id, user_id,
+      student_id, state, created_time, updated_time,name)
+    values (#{voteId,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR},
+      #{studentId,jdbcType=BIGINT}, #{state,jdbcType=BIT}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{updatedTime,jdbcType=TIMESTAMP},#{name})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.ClassVoteSelected" >
+    update pq_class_vote_selected
+    set vote_id = #{voteId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=VARCHAR},
+      student_id = #{studentId,jdbcType=BIGINT},
+      state = #{state,jdbcType=BIT},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      name = #{name}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, vote_id, user_id, student_id, state, created_time, updated_time,name
+    from pq_class_vote_selected
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, vote_id, user_id, student_id, state, created_time, updated_time,name
+    from pq_class_vote_selected
+  </select>
+
+  <select id="selectCountByVoteId" resultType="java.lang.Integer" >
+    select count(id)
+    from pq_class_vote_selected
+    where vote_id = #{voteId}
+    and state = 1
+  </select>
+
+  <select id="selectByClassId" resultMap="BaseResultMap" >
+    select id, vote_id, user_id, student_id, state, created_time, updated_time,name
+    from pq_class_vote_selected
+    where state = 1
+    and vote_id = #{voteId}
+    and user_id = #{userId}
+    and student_id = #{studentId}
+  </select>
+
+  <select id="selectByOptionAndVoteId" resultMap="BaseResultMap" >
+    select s.*
+    from pq_class_vote_selected s, pq_class_vote_selected_option o
+    where s.id = o.selected_id
+    and o.option = #{option}
+    and o.vote_id = s.vote_id
+    and o.vote_id = #{voteId}
+    and s.state = 1
+    order by s.created_time asc
+  </select>
+</mapper>

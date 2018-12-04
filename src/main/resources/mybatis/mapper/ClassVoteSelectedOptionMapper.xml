@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pq.agency.mapper.ClassVoteSelectedOptionMapper" >
+  <resultMap id="BaseResultMap" type="com.pq.agency.entity.ClassVoteSelectedOption" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="selected_id" property="selectedId" jdbcType="BIGINT" />
+    <result column="vote_id" property="voteId" jdbcType="BIGINT" />
+    <result column="option" property="option" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="BIT" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pq_class_vote_selected_option
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.pq.agency.entity.ClassVoteSelectedOption" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pq_class_vote_selected_option (selected_id, option, state, 
+      created_time, updated_time,vote_id)
+    values (#{selectedId,jdbcType=BIGINT}, #{option,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{updatedTime,jdbcType=TIMESTAMP},#{voteId})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.ClassVoteSelectedOption" >
+    update pq_class_vote_selected_option
+    set selected_id = #{selectedId,jdbcType=BIGINT},
+      option = #{option,jdbcType=VARCHAR},
+      state = #{state,jdbcType=BIT},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      vote_id = #{voteId}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, selected_id, option, state, created_time, updated_time, vote_id
+    from pq_class_vote_selected_option
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, selected_id, option, state, created_time, updated_time, vote_id
+    from pq_class_vote_selected_option
+  </select>
+
+  <select id="selectCountByVoteIdAndOption" resultType="java.lang.Integer" >
+    select count(id)
+    from pq_class_vote_selected_option
+    where vote_id = #{voteId}
+    and option = #{option}
+    and state = 1
+  </select>
+</mapper>
