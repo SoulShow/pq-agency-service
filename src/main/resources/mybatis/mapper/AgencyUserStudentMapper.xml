@@ -22,7 +22,7 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into pq_agency_user_student (agency_class_id, user_id, agency_user_id, 
-      student_id, state, updated_time, created_time,student_name)
+      student_id, state, updated_time, created_time,student_name,relation)
     values (#{agencyClassId,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{agencyUserId,jdbcType=BIGINT}, 
       #{studentId,jdbcType=BIGINT}, #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, 
       #{createdTime,jdbcType=TIMESTAMP},#{studentName},#{relation})

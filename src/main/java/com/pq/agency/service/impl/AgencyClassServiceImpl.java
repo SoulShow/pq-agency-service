@@ -170,10 +170,18 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createUser(AgencyUserRegisterForm registerForm){
-        AgencyStudent agencyStudent = agencyStudentMapper.selectByPrimaryKey(registerForm.getStudentId());
+        AgencyClassInvitationCode agencyClassInvitationCode = invitationCodeMapper.selectByCode(registerForm.getInvitationCode());
+        if(agencyClassInvitationCode==null){
+            AgencyException.raise(AgencyErrors.INVITATION_CODE_ERROR);
+        }
+        List<AgencyStudent> studentList = agencyStudentMapper.selectByAgencyClassIdAndName(agencyClassInvitationCode.getAgencyClassId(),
+                registerForm.getStudentName());
 
+        if(studentList==null||studentList.size()==0){
+            AgencyException.raise(AgencyErrors.AGENCY_STUDENT_NOT_EXIST_ERROR);
+        }
         AgencyUser agencyUser = new AgencyUser();
-        agencyUser.setAgencyClassId(agencyStudent.getAgencyClassId());
+        agencyUser.setAgencyClassId(agencyClassInvitationCode.getAgencyClassId());
         agencyUser.setUserId(registerForm.getUserId());
         agencyUser.setRole(registerForm.getRole());
         agencyUser.setState(true);
@@ -182,11 +190,11 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         agencyUserMapper.insert(agencyUser);
 
         AgencyUserStudent userStudent = new AgencyUserStudent();
-        userStudent.setAgencyClassId(agencyStudent.getAgencyClassId());
+        userStudent.setAgencyClassId(agencyClassInvitationCode.getAgencyClassId());
         userStudent.setUserId(registerForm.getUserId());
         userStudent.setAgencyUserId(agencyUser.getId());
-        userStudent.setStudentId(registerForm.getStudentId());
-        userStudent.setStudentName(agencyStudentMapper.selectByPrimaryKey(registerForm.getStudentId()).getName());
+        userStudent.setStudentId(studentList.get(0).getId());
+        userStudent.setStudentName(registerForm.getStudentName());
         userStudent.setState(true);
         userStudent.setRelation(registerForm.getRelation());
         userStudent.setCreatedTime(DateUtil.currentTime());
