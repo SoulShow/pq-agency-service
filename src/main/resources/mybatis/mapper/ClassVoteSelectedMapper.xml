@@ -53,7 +53,7 @@
     and state = 1
   </select>
 
-  <select id="selectByClassId" resultMap="BaseResultMap" >
+  <select id="selectByVoteIdAndUserIdAndStudentId" resultMap="BaseResultMap" >
     select id, vote_id, user_id, student_id, state, created_time, updated_time,name
     from pq_class_vote_selected
     where state = 1
