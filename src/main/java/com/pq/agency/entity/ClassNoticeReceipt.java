@@ -9,6 +9,8 @@ public class ClassNoticeReceipt {
 
     private String userId;
 
+    private Long studentId;
+
     private String name;
 
     private String receiptContent;
@@ -81,5 +83,13 @@ public class ClassNoticeReceipt {
 
     public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
 }

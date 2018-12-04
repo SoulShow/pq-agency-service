@@ -102,6 +102,7 @@ public class AgencyController {
 	@ResponseBody
 	public AgencyResult getClassNotice(@RequestParam(value = "agencyClassId")Long agencyClassId,
                                        @RequestParam(value = "userId")String userId,
+									   @RequestParam(value = "studentId")Long studentId,
                                        @RequestParam(value = "isReceipt")int isReceipt,
                                        @RequestParam(value = "page",required = false)Integer page,
                                        @RequestParam(value = "size",required = false)Integer size) {
@@ -115,7 +116,7 @@ public class AgencyController {
 
 		AgencyResult result = new AgencyResult();
 		try {
-			result.setData(agencyClassService.getClassNoticeList(agencyClassId,userId,isReceipt,offset,size));
+			result.setData(agencyClassService.getClassNoticeList(agencyClassId,userId,studentId,isReceipt,offset,size));
 		} catch (AgencyException e){
 			result.setStatus(e.getErrorCode().getErrorCode());
 			result.setMessage(e.getErrorCode().getErrorMsg());
@@ -129,11 +130,12 @@ public class AgencyController {
 	@GetMapping(value = "/class/notice/detail")
 	@ResponseBody
 	public AgencyResult getClassNoticeDetail(@RequestParam(value = "noticeId")Long noticeId,
-                                             @RequestParam(value = "userId")String userId) {
+                                             @RequestParam(value = "userId")String userId,
+											 @RequestParam(value = "studentId")Long studentId) {
 
 		AgencyResult result = new AgencyResult();
 		try {
-			result.setData(agencyClassService.getClassNoticeDetail(noticeId,userId));
+			result.setData(agencyClassService.getClassNoticeDetail(noticeId,userId,studentId));
 		} catch (AgencyException e){
 			result.setStatus(e.getErrorCode().getErrorCode());
 			result.setMessage(e.getErrorCode().getErrorMsg());
@@ -165,6 +167,7 @@ public class AgencyController {
 	@GetMapping(value = "/user/collection/list")
 	@ResponseBody
 	public AgencyResult getCollectList(@RequestParam("userId")String userId,
+									   @RequestParam(value = "studentId")Long studentId,
 									   @RequestParam(value = "page",required = false)Integer page,
 									   @RequestParam(value = "size",required = false)Integer size) {
 
@@ -177,7 +180,7 @@ public class AgencyController {
 				size = 20;
 			}
 			int offset = (page - 1) * size;
-			result.setData(agencyClassService.getCollectList(userId,offset,size));
+			result.setData(agencyClassService.getCollectList(userId, studentId, offset, size));
 		} catch (AgencyException e){
 			result.setStatus(e.getErrorCode().getErrorCode());
 			result.setMessage(e.getErrorCode().getErrorMsg());
@@ -211,7 +214,7 @@ public class AgencyController {
 
 		AgencyResult result = new AgencyResult();
 		try {
-			agencyClassService.deleteCollection(deleteForm.getCollectionId(),deleteForm.getUserId());
+			agencyClassService.deleteCollection(deleteForm.getCollectionId(),deleteForm.getUserId(),deleteForm.getStudentId());
 		} catch (AgencyException e){
 			result.setStatus(e.getErrorCode().getErrorCode());
 			result.setMessage(e.getErrorCode().getErrorMsg());

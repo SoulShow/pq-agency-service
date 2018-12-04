@@ -16,5 +16,7 @@ public interface ClassNoticeReceiptMapper {
 
     int updateByPrimaryKey(ClassNoticeReceipt record);
 
-    ClassNoticeReceipt selectByNoticeId(@Param("noticeId") Long noticeId);
+    ClassNoticeReceipt selectByNoticeIdAndUserIdAndStudentId(@Param("noticeId") Long noticeId,
+                                                             @Param("userId") String userId,
+                                                             @Param("studentId") Long studentId);
 }

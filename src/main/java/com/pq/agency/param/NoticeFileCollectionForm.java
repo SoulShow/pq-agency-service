@@ -7,6 +7,8 @@ public class NoticeFileCollectionForm {
 
     private String userId;
 
+    private Long studentId;
+
     private String name;
 
     private String fileUrl;
@@ -71,5 +73,13 @@ public class NoticeFileCollectionForm {
 
     public void setSuffix(String suffix) {
         this.suffix = suffix;
+    }
+
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
 }

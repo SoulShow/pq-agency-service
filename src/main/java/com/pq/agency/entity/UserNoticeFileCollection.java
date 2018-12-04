@@ -11,6 +11,8 @@ public class UserNoticeFileCollection {
 
     private Long noticeId;
 
+    private Long studentId;
+
     private String fileName;
 
     private String file;
@@ -111,5 +113,13 @@ public class UserNoticeFileCollection {
 
     public void setSuffix(String suffix) {
         this.suffix = suffix;
+    }
+
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
 }

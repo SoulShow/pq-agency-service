@@ -7,6 +7,7 @@ public class CollectionDeleteForm {
 
     private String userId;
 
+    private Long studentId;
 
     public Long getCollectionId() {
         return collectionId;
@@ -22,5 +23,13 @@ public class CollectionDeleteForm {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
 }

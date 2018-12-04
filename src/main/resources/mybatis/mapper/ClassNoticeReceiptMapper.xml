@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="notice_id" property="noticeId" jdbcType="BIGINT" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="student_id" property="studentId" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="receipt_content" property="receiptContent" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="BIT" />
@@ -20,11 +21,10 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into pq_class_notice_receipt (notice_id, user_id, name, 
-      receipt_content, state, updated_time, 
-      created_time)
+      receipt_content, state, updated_time, created_time, student_id)
     values (#{noticeId,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{receiptContent,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, 
-      #{createdTime,jdbcType=TIMESTAMP})
+      #{createdTime,jdbcType=TIMESTAMP},#{studentId})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.ClassNoticeReceipt" >
     update pq_class_notice_receipt
@@ -34,23 +34,26 @@
       receipt_content = #{receiptContent,jdbcType=VARCHAR},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
-      created_time = #{createdTime,jdbcType=TIMESTAMP}
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      student_id = #{studentId}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, notice_id, user_id, name, receipt_content, state, updated_time, created_time
+    select id, notice_id, user_id, name, receipt_content, state, updated_time, created_time, student_id
     from pq_class_notice_receipt
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, notice_id, user_id, name, receipt_content, state, updated_time, created_time
+    select id, notice_id, user_id, name, receipt_content, state, updated_time, created_time, student_id
     from pq_class_notice_receipt
   </select>
 
-  <select id="selectByNoticeId" resultMap="BaseResultMap" >
-    select id, notice_id, user_id, name, receipt_content, state, updated_time, created_time
+  <select id="selectByNoticeIdAndUserIdAndStudentId" resultMap="BaseResultMap" >
+    select id, notice_id, user_id, name, receipt_content, state, updated_time, created_time, student_id
     from pq_class_notice_receipt
     where notice_id = #{noticeId}
+    and user_id = #{userId}
+    and student_id = #{studentId}
     and state = 1
   </select>
 </mapper>

@@ -75,8 +75,6 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     private ClassNoticeReadLogMapper noticeReadLogMapper;
     @Autowired
     private ClassTaskReadLogMapper taskReadLogMapper;
-    @Autowired
-    private RedisTemplate redisTemplate;
 
     @Override
     public void checkInvitationCodeAndStudent(String phone, String invitationCode, String studentName){
@@ -85,20 +83,11 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         if(agencyClassInvitationCode==null){
             AgencyException.raise(AgencyErrors.INVITATION_CODE_ERROR);
         }
-        Integer count = 0;
-        String cacheKey = CacheKeyConstants.PREFIX_USER_REGISTER_STUDENT_NAME+phone+invitationCode;
-        if(redisTemplate.hasKey(cacheKey)){
-            count = (Integer) redisTemplate.opsForValue().get(cacheKey);
-            if(count>=3){
-                AgencyException.raise(AgencyErrors.AGENCY_STUDENT_NAME_MORE_THREE_ERROR);
-            }
-        }
         if(studentName==null){
             AgencyException.raise(AgencyErrors.AGENCY_STUDENT_NOT_NULL_ERROR);
         }
         List<AgencyStudent> studentList = agencyStudentMapper.selectByAgencyClassIdAndName(agencyClassInvitationCode.getAgencyClassId(),studentName);
         if(studentList==null||studentList.size()==0){
-            redisTemplate.opsForValue().set(cacheKey,count+1,1800L,TimeUnit.SECONDS);
             AgencyException.raise(AgencyErrors.AGENCY_STUDENT_NOT_EXIST_ERROR);
         }
     }
@@ -301,7 +290,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     }
 
     @Override
-    public List<AgencyNoticeDto> getClassNoticeList(Long agencyClassId, String userId, int isReceipt, int offset, int size){
+    public List<AgencyNoticeDto> getClassNoticeList(Long agencyClassId, String userId, Long studentId, int isReceipt, int offset, int size){
         List<AgencyClassNotice> list = noticeMapper.selectByClassIdAndIsReceipt(agencyClassId,isReceipt,offset,size);
         List<AgencyNoticeDto> agencyNoticeDtoList = new ArrayList<>();
         for(AgencyClassNotice agencyClassNotice:list){
@@ -312,7 +301,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyNoticeDto.setTitle(agencyClassNotice.getTitle());
             ClassNoticeReadLog readLog = noticeReadLogMapper.selectByUserIdAndNoticeId(userId,agencyClassNotice.getId());
             agencyNoticeDto.setReadStatus(readLog==null?0:1);
-            ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeId(agencyClassNotice.getId());
+            ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeIdAndUserIdAndStudentId(agencyClassNotice.getId(),
+                    userId,studentId);
             if(noticeReceipt==null){
                 agencyNoticeDto.setReceiptStatus(Constants.CLASS_NOTICE_RECEIPT_STATUS_NO);
             }else {
@@ -339,7 +329,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     }
 
     @Override
-    public AgencyNoticeDetailDto getClassNoticeDetail(Long noticeId,String userId){
+    public AgencyNoticeDetailDto getClassNoticeDetail(Long noticeId,String userId,Long studentId){
         AgencyNoticeDetailDto agencyNoticeDetailDto = new AgencyNoticeDetailDto();
         AgencyClassNotice agencyClassNotice = noticeMapper.selectByPrimaryKey(noticeId);
         agencyNoticeDetailDto.setId(agencyClassNotice.getId());
@@ -367,7 +357,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 imgList.add(classNoticeFile.getFile());
             }
         }
-        ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeId(agencyClassNotice.getId());
+        ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeIdAndUserIdAndStudentId(agencyClassNotice.getId(),
+                userId, studentId);
         if(noticeReceipt==null){
             agencyNoticeDetailDto.setReceiptStatus(Constants.CLASS_NOTICE_RECEIPT_STATUS_NO);
         }else {
@@ -394,7 +385,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         if(classNotice==null){
             AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOTICE_NOT_EXIST_ERROR);
         }
-        ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeId(classNotice.getId());
+        ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeIdAndUserIdAndStudentId(classNotice.getId(),
+                noticeReceiptForm.getUserId(), noticeReceiptForm.getStudentId());
         if(noticeReceipt!=null){
             AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOTICE_IS_RECEIPT_ERROR);
         }
@@ -403,6 +395,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         noticeReceipt.setUserId(noticeReceiptForm.getUserId());
         noticeReceipt.setName(noticeReceiptForm.getName());
         noticeReceipt.setReceiptContent(noticeReceiptForm.getReceiptContent());
+        noticeReceipt.setStudentId(noticeReceiptForm.getStudentId());
         noticeReceipt.setState(true);
         noticeReceipt.setUpdatedTime(DateUtil.currentTime());
         noticeReceipt.setCreatedTime(DateUtil.currentTime());
@@ -413,8 +406,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         noticeMapper.updateByPrimaryKey(classNotice);
     }
     @Override
-    public List<UserNoticeFileCollectionDto> getCollectList(String userId,int offset,int size){
-        List<UserNoticeFileCollection> list = collectionMapper.selectByUserId(userId,offset,size);
+    public List<UserNoticeFileCollectionDto> getCollectList(String userId,Long studentId, int offset,int size){
+        List<UserNoticeFileCollection> list = collectionMapper.selectByUserIdAndStudentId(userId,studentId,offset,size);
         List<UserNoticeFileCollectionDto> collectionDtoList = new ArrayList<>();
         for(UserNoticeFileCollection collection:list){
             UserNoticeFileCollectionDto collectionDto = new UserNoticeFileCollectionDto();
@@ -445,6 +438,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         userNoticeFileCollection.setFileName(noticeFileCollectionForm.getFileName());
         userNoticeFileCollection.setFileSize(noticeFileCollectionForm.getFileSize());
         userNoticeFileCollection.setUserId(noticeFileCollectionForm.getUserId());
+        userNoticeFileCollection.setStudentId(noticeFileCollectionForm.getStudentId());
         userNoticeFileCollection.setUserName(noticeFileCollectionForm.getName());
         userNoticeFileCollection.setSuffix(noticeFileCollectionForm.getSuffix());
         userNoticeFileCollection.setState(true);
@@ -453,9 +447,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         collectionMapper.insert(userNoticeFileCollection);
     }
     @Override
-    public void deleteCollection(Long id,String userId){
+    public void deleteCollection(Long id,String userId,Long studentId){
         UserNoticeFileCollection collection = collectionMapper.selectByPrimaryKey(id);
-        if(collection==null||!userId.equals(collection.getUserId())){
+        if(collection==null||!userId.equals(collection.getUserId())|| !studentId.equals(collection.getStudentId())){
             AgencyException.raise(AgencyErrors.AGENCY_COLLECTION_NOT_EXIST_ERROR);
         }
         collection.setState(false);

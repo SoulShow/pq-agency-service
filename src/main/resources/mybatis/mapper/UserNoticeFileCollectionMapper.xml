@@ -6,6 +6,7 @@
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="notice_id" property="noticeId" jdbcType="BIGINT" />
+    <result column="student_id" property="studentId" jdbcType="BIGINT" />
     <result column="file" property="file" jdbcType="VARCHAR" />
     <result column="file_name" property="fileName" jdbcType="VARCHAR" />
     <result column="file_size" property="fileSize" jdbcType="VARCHAR" />
@@ -23,10 +24,10 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into pq_user_notice_file_collection (user_id, user_name, notice_id, 
-      file, state, updated_time, created_time, file_name,file_size,suffix)
+      file, state, updated_time, created_time, file_name,file_size,suffix,student_id)
     values (#{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{noticeId,jdbcType=BIGINT}, 
       #{file,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, 
-      #{createdTime,jdbcType=TIMESTAMP},#{fileName},#{fileSize},#{suffix})
+      #{createdTime,jdbcType=TIMESTAMP},#{fileName},#{fileSize},#{suffix},#{studentId})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.UserNoticeFileCollection" >
     update pq_user_notice_file_collection
@@ -37,26 +38,28 @@
       file_name = #{fileName},
       file_size = #{fileSize},
       suffix = #{suffix},
+      student_id = #{studentId},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
       created_time = #{createdTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, user_id, user_name, notice_id, file, state, updated_time, created_time, file_name,file_size,suffix
+    select id, user_id, user_name, notice_id, file, state, updated_time, created_time, file_name,file_size,suffix,student_id
     from pq_user_notice_file_collection
     where id = #{id,jdbcType=BIGINT}
     and state = 1
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, user_id, user_name, notice_id, file, state, updated_time, created_time, file_name,file_size,suffix
+    select id, user_id, user_name, notice_id, file, state, updated_time, created_time, file_name,file_size,suffix,student_id
     from pq_user_notice_file_collection
   </select>
-  <select id="selectByUserId" resultMap="BaseResultMap" >
-    select id, user_id, user_name, notice_id, file, state, updated_time, created_time, file_name,file_size,suffix
+  <select id="selectByUserIdAndStudentId" resultMap="BaseResultMap" >
+    select id, user_id, user_name, notice_id, file, state, updated_time, created_time, file_name,file_size,suffix,student_id
     from pq_user_notice_file_collection
     where user_id = #{userId}
     and state = 1
+    and student_id = #{studentId}
     order by created_time desc
     limit #{offset},#{size}
   </select>

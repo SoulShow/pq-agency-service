@@ -120,16 +120,17 @@ public interface AgencyClassService {
      * @param size
      * @return
      */
-    List<AgencyNoticeDto> getClassNoticeList(Long agencyClassId, String userId, int isReceipt, int offset, int size);
+    List<AgencyNoticeDto> getClassNoticeList(Long agencyClassId, String userId, Long studentId, int isReceipt, int offset, int size);
 
 
     /**
      * 通知详情
      * @param noticeId
      * @param userId
+     * @param studentId
      * @return
      */
-    AgencyNoticeDetailDto getClassNoticeDetail(Long noticeId,String userId);
+    AgencyNoticeDetailDto getClassNoticeDetail(Long noticeId,String userId, Long studentId);
 
     /**
      * 通知回执
@@ -141,11 +142,12 @@ public interface AgencyClassService {
     /**
      * 通知文件收藏列表
      * @param userId
+     * @param studentId
      * @param offset
      * @param size
      * @return
      */
-    List<UserNoticeFileCollectionDto> getCollectList(String userId,int offset,int size);
+    List<UserNoticeFileCollectionDto> getCollectList(String userId,Long studentId,int offset,int size);
 
     /**
      * 收藏
@@ -157,8 +159,9 @@ public interface AgencyClassService {
      * 删除收藏
      * @param id
      * @param userId
+     * @param studentId
      */
-    void deleteCollection(Long id,String userId);
+    void deleteCollection(Long id,String userId, Long studentId);
 
     /**
      * 获取班级课程表

@@ -17,7 +17,8 @@ public interface UserNoticeFileCollectionMapper {
 
     int updateByPrimaryKey(UserNoticeFileCollection record);
 
-    List<UserNoticeFileCollection> selectByUserId(@Param("userId")String userId,
+    List<UserNoticeFileCollection> selectByUserIdAndStudentId(@Param("userId")String userId,
+                                                  @Param("studentId")Long studentId,
                                                   @Param(value = "offset")Integer offset,
                                                   @Param(value = "size")Integer size);
 }
