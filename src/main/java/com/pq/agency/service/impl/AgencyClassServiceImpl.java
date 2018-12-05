@@ -575,7 +575,13 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 //过期
                 agencyVoteDto.setVoteStatus(1);
             }
-            agencyVoteDto.setList(sortOptions(getOptions(classVote.getId())));
+            List<VoteOptionDetailDto> detailDtos = sortOptions(getOptions(classVote.getId()));
+            if(detailDtos!=null && detailDtos.size()>3){
+                agencyVoteDto.setList(detailDtos.subList(0,3));
+            }else {
+                agencyVoteDto.setList(detailDtos);
+
+            }
             list.add(agencyVoteDto);
         }
         return list;
