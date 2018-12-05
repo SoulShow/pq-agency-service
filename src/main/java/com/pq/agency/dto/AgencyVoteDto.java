@@ -3,6 +3,7 @@ package com.pq.agency.dto;
 import java.util.List;
 
 public class AgencyVoteDto {
+    private Long id;
 
     private String userId;
 
@@ -113,5 +114,13 @@ public class AgencyVoteDto {
 
     public void setList(List<VoteOptionDetailDto> list) {
         this.list = list;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

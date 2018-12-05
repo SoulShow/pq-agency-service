@@ -559,7 +559,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyVoteDto.setCreateTime(DateUtil.formatDate(classVote.getCreatedTime(),DateUtil.DEFAULT_DATETIME_FORMAT));
             agencyVoteDto.setIsVoted(0);
             agencyVoteDto.setIsSecret(classVote.getIsSecret());
-
+            agencyVoteDto.setId(classVote.getId());
             Integer count = voteSelectedMapper.selectCountByVoteId(classVote.getId());
             agencyVoteDto.setVotedCount(count);
 
@@ -597,6 +597,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
         }
         UserDto userDto = result.getData();
+        agencyVoteDetailDto.setId(classVote.getId());
         agencyVoteDetailDto.setUserId(classVote.getUserId());
         agencyVoteDetailDto.setAvatar(userDto.getAvatar());
         agencyVoteDetailDto.setUsername(userDto.getName());

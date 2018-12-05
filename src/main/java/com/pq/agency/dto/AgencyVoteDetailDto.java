@@ -4,6 +4,8 @@ import java.util.List;
 
 public class AgencyVoteDetailDto {
 
+    private Long id;
+
     private String userId;
 
     private String username;
@@ -113,5 +115,13 @@ public class AgencyVoteDetailDto {
 
     public void setOptionList(List<VoteOptionDetailDto> optionList) {
         this.optionList = optionList;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
