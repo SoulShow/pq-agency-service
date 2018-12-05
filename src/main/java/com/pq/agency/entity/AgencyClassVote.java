@@ -13,7 +13,7 @@ public class AgencyClassVote {
 
     private Timestamp deadline;
 
-    private Boolean type;
+    private Integer type;
 
     private Integer isSecret;
 
@@ -63,14 +63,6 @@ public class AgencyClassVote {
         this.deadline = deadline;
     }
 
-    public Boolean getType() {
-        return type;
-    }
-
-    public void setType(Boolean type) {
-        this.type = type;
-    }
-
     public Integer getIsSecret() {
         return isSecret;
     }
@@ -101,5 +93,13 @@ public class AgencyClassVote {
 
     public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

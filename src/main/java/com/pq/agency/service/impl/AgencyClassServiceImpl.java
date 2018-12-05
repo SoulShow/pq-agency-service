@@ -609,7 +609,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         agencyVoteDetailDto.setDeadLine(DateUtil.formatDate(classVote.getDeadline(),DateUtil.DEFAULT_DATETIME_FORMAT));
         agencyVoteDetailDto.setIsVoted(0);
         agencyVoteDetailDto.setIsSecret(classVote.getIsSecret());
-
+        agencyVoteDetailDto.setType(classVote.getType());
         Integer totalCount = voteSelectedMapper.selectCountByVoteId(classVote.getId());
         agencyVoteDetailDto.setVotedCount(totalCount==null?0:totalCount);
 

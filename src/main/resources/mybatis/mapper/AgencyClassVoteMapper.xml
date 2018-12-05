@@ -7,7 +7,7 @@
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="deadline" property="deadline" jdbcType="TIMESTAMP" />
-    <result column="type" property="type" jdbcType="BIT" />
+    <result column="type" property="type" jdbcType="INTEGER" />
     <result column="is_secret" property="isSecret" jdbcType="INTEGER" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
@@ -26,7 +26,7 @@
       state, updated_time, created_time
       )
     values (#{agencyClassId,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
-      #{deadline,jdbcType=TIMESTAMP}, #{type,jdbcType=BIT}, #{isSecret,jdbcType=INTEGER}, 
+      #{deadline,jdbcType=TIMESTAMP}, #{type,jdbcType=INTEGER}, #{isSecret,jdbcType=INTEGER},
       #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -36,7 +36,7 @@
       user_id = #{userId,jdbcType=VARCHAR},
       title = #{title,jdbcType=VARCHAR},
       deadline = #{deadline,jdbcType=TIMESTAMP},
-      type = #{type,jdbcType=BIT},
+      type = #{type,jdbcType=INTEGER},
       is_secret = #{isSecret,jdbcType=INTEGER},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},

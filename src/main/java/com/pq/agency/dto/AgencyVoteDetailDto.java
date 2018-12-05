@@ -24,6 +24,8 @@ public class AgencyVoteDetailDto {
 
     private int isSecret;
 
+    private int type;
+
     private List<VoteOptionDetailDto> optionList;
 
     private List<String> imgList;
@@ -123,5 +125,13 @@ public class AgencyVoteDetailDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }
