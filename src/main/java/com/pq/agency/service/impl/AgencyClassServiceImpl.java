@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -573,10 +575,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 //过期
                 agencyVoteDto.setVoteStatus(1);
             }
+            agencyVoteDto.setList(sortOptions(getOptions(classVote.getId())));
             list.add(agencyVoteDto);
         }
         return list;
     }
+
     @Override
     public AgencyVoteDetailDto getVoteDetail(Long voteId,String userId,Long studentId){
         AgencyClassVote classVote = classVoteMapper.selectByPrimaryKey(voteId);
@@ -621,6 +625,11 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
         agencyVoteDetailDto.setImgList(imgs);
 
+        agencyVoteDetailDto.setOptionList(getOptions(voteId));
+        return agencyVoteDetailDto;
+    }
+
+    private List<VoteOptionDetailDto> getOptions(Long voteId){
         List<ClassVoteOption> optionList = voteOptionMapper.selectByVoteId(voteId);
         List<VoteOptionDetailDto> options = new ArrayList<>();
         for(ClassVoteOption option : optionList){
@@ -630,8 +639,25 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             optionDto.setCount(count==null?0:count);
             options.add(optionDto);
         }
-        agencyVoteDetailDto.setOptionList(options);
-        return agencyVoteDetailDto;
+        return options;
+    }
+
+    private List<VoteOptionDetailDto> sortOptions(List<VoteOptionDetailDto> list){
+        Collections.sort(list, new Comparator<VoteOptionDetailDto>() {
+            @Override
+            public int compare(VoteOptionDetailDto arg0, VoteOptionDetailDto arg1) {
+                int hits0 = arg0.getCount();
+                int hits1 = arg1.getCount();
+                if (hits1 > hits0) {
+                    return 1;
+                } else if (hits1 == hits0) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            }
+        });
+        return list;
     }
     @Override
     @Transactional(rollbackFor = Exception.class)

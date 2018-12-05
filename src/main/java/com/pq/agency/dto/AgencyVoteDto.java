@@ -1,5 +1,7 @@
 package com.pq.agency.dto;
 
+import java.util.List;
+
 public class AgencyVoteDto {
 
     private String userId;
@@ -21,6 +23,8 @@ public class AgencyVoteDto {
     private int voteStatus;
 
     private int isSecret;
+
+    private List<VoteOptionDetailDto> list;
 
 
     public String getUserId() {
@@ -101,5 +105,13 @@ public class AgencyVoteDto {
 
     public void setIsSecret(int isSecret) {
         this.isSecret = isSecret;
+    }
+
+    public List<VoteOptionDetailDto> getList() {
+        return list;
+    }
+
+    public void setList(List<VoteOptionDetailDto> list) {
+        this.list = list;
     }
 }
