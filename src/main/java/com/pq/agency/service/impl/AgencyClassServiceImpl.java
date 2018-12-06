@@ -805,6 +805,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             classUserInfoDto.setRole(userDto.getRole());
             classUserInfoDto.setSex(userDto.getGender());
             classUserInfoDto.setUserId(agencyUser.getUserId());
+            classUserInfoDto.setHuanxinId(userDto.getUsername()+userDto.getRole());
             list.add(classUserInfoDto);
         }
 

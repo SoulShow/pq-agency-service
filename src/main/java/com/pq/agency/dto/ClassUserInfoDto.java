@@ -15,6 +15,8 @@ public class ClassUserInfoDto {
 
     private String sex;
 
+    private String huanxinId;
+
     private List<ParentDto> parentList;
 
     public String getName() {
@@ -71,5 +73,13 @@ public class ClassUserInfoDto {
 
     public void setParentList(List<ParentDto> parentList) {
         this.parentList = parentList;
+    }
+
+    public String getHuanxinId() {
+        return huanxinId;
+    }
+
+    public void setHuanxinId(String huanxinId) {
+        this.huanxinId = huanxinId;
     }
 }
