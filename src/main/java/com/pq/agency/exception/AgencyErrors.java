@@ -35,4 +35,7 @@ public class AgencyErrors extends CommonErrors {
 
     public final static ErrorCode AGENCY_CLASS_VOTE_EXIST_ERROR = new AgencyErrorCode("0013", "请不要重复投票");
 
+    public final static ErrorCode AGENCY_USER_ADD_GROUP_ERROR = new AgencyErrorCode("0014", "环信加入群组失败");
+
+
 }

@@ -1,5 +1,6 @@
 package com.pq.agency.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.pq.agency.dto.*;
 import com.pq.agency.entity.*;
 import com.pq.agency.exception.AgencyErrorCode;
@@ -16,14 +17,13 @@ import com.pq.agency.utils.AgencyResult;
 import com.pq.agency.utils.Constants;
 import com.pq.common.exception.CommonErrors;
 import com.pq.common.util.DateUtil;
+import com.pq.common.util.HttpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author liutao
@@ -81,6 +81,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     private ClassVoteSelectedMapper voteSelectedMapper;
     @Autowired
     private ClassVoteSelectedOptionMapper voteSelectedOptionMapper;
+    @Value("${php.url}")
+    private String phpUrl;
 
     @Override
     public void checkInvitationCodeAndStudent(String phone, String invitationCode, String studentName){
@@ -195,6 +197,25 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         userStudent.setCreatedTime(DateUtil.currentTime());
         userStudent.setUpdatedTime(DateUtil.currentTime());
         agencyUserStudentMapper.insert(userStudent);
+
+        HashMap<String, String> paramMap = new HashMap<>();
+        AgencyResult<UserDto> result = userFeign.getUserInfo(registerForm.getUserId());
+        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+            throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+        }
+        UserDto userDto = result.getData();
+        paramMap.put("hxGroupId", agencyClassMapper.selectByPrimaryKey(agencyClassInvitationCode.getAgencyClassId()).getGroupId().toString());
+        paramMap.put("userHxId", userDto.getUsername());
+        try {
+            String huanxResult = HttpUtil.sendJson(phpUrl+"addHxGroup",new HashMap<>(),JSON.toJSONString(paramMap));
+            AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
+            if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
+                AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
+        }
     }
     @Override
     public List<AgencyUserDto> getAgencyUserInfo(String userId){
@@ -217,6 +238,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
            if(agencyClass==null){
                AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
            }
+           agencyUserDto.setGroupId(agencyClass.getGroupId());
            Agency agency = agencyMapper.selectByPrimaryKey(agencyClass.getAgencyId());
            if(agency==null){
                AgencyException.raise(AgencyErrors.AGENCY_NOT_EXIST_ERROR);
@@ -350,7 +372,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         agencyNoticeDetailDto.setName(userDto.getName());
         agencyNoticeDetailDto.setUserId(userDto.getUserId());
         agencyNoticeDetailDto.setAvatar(userDto.getAvatar());
-        agencyNoticeDetailDto.setGroupId(agencyClassMapper.selectByPrimaryKey(agencyClassNotice.getAgencyClassId()).getGroupId());
+        agencyNoticeDetailDto.setGroupId(agencyClassMapper.selectByPrimaryKey(agencyClassNotice.getAgencyClassId()).getGroupId().toString());
         List<ClassNoticeFile> list = noticeFileMapper.selectByNoticeId(agencyClassNotice.getId());
         List<String> imgList = new ArrayList<>();
         for(ClassNoticeFile classNoticeFile:list){

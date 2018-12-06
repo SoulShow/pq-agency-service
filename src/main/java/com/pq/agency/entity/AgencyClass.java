@@ -11,7 +11,7 @@ public class AgencyClass {
 
     private Long classId;
 
-    private String groupId;
+    private Long groupId;
 
     private String name;
 
@@ -85,11 +85,11 @@ public class AgencyClass {
         this.createdTime = createdTime;
     }
 
-    public String getGroupId() {
+    public Long getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(String groupId) {
+    public void setGroupId(Long groupId) {
         this.groupId = groupId;
     }
 }
