@@ -575,12 +575,11 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 //过期
                 agencyVoteDto.setVoteStatus(1);
             }
-            List<VoteOptionDetailDto> detailDtos = sortOptions(getOptions(classVote.getId()));
+            List<VoteOptionDetailDto> detailDtos = sortOptions(getOptions(classVote.getId(),voteSelected.getId()));
             if(detailDtos!=null && detailDtos.size()>3){
                 agencyVoteDto.setList(detailDtos.subList(0,3));
             }else {
                 agencyVoteDto.setList(detailDtos);
-
             }
             list.add(agencyVoteDto);
         }
@@ -632,11 +631,11 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
         agencyVoteDetailDto.setImgList(imgs);
 
-        agencyVoteDetailDto.setOptionList(getOptions(voteId));
+        agencyVoteDetailDto.setOptionList(getOptions(voteId,voteSelected.getId()));
         return agencyVoteDetailDto;
     }
 
-    private List<VoteOptionDetailDto> getOptions(Long voteId){
+    private List<VoteOptionDetailDto> getOptions(Long voteId,Long selectedId){
         List<ClassVoteOption> optionList = voteOptionMapper.selectByVoteId(voteId);
         List<VoteOptionDetailDto> options = new ArrayList<>();
         for(ClassVoteOption option : optionList){
@@ -644,6 +643,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             optionDto.setOption(option.getItem());
             Integer count = voteSelectedOptionMapper.selectCountByVoteIdAndOption(voteId,option.getItem());
             optionDto.setCount(count==null?0:count);
+            ClassVoteSelectedOption selectedOption = voteSelectedOptionMapper.selectByVoteIdAndSelectedId(voteId,selectedId);
+            if(selectedOption!=null&&selectedOption.getItem().equals(option.getItem())){
+                optionDto.setIsVoted(1);
+            }else {
+                optionDto.setIsVoted(0);
+            }
             options.add(optionDto);
         }
         return options;
@@ -669,7 +674,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void voteSelected(VoteSelectedForm voteSelectedForm){
-        ClassVoteSelected classVoteSelected = new ClassVoteSelected();
+        ClassVoteSelected classVoteSelected = voteSelectedMapper.selectByVoteIdAndUserIdAndStudentId(voteSelectedForm.getVoteId(),
+                voteSelectedForm.getUserId(),voteSelectedForm.getStudentId());
+        if(classVoteSelected!=null){
+            AgencyException.raise(AgencyErrors.AGENCY_CLASS_VOTE_EXIST_ERROR);
+        }
+        classVoteSelected = new ClassVoteSelected();
         classVoteSelected.setVoteId(voteSelectedForm.getVoteId());
         classVoteSelected.setUserId(voteSelectedForm.getUserId());
         classVoteSelected.setStudentId(voteSelectedForm.getStudentId());

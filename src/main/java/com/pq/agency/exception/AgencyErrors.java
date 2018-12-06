@@ -33,5 +33,6 @@ public class AgencyErrors extends CommonErrors {
 
     public final static ErrorCode AGENCY_STUDENT_NAME_MORE_THREE_ERROR = new AgencyErrorCode("0012", "学生姓名输入错误次数大于三次");
 
+    public final static ErrorCode AGENCY_CLASS_VOTE_EXIST_ERROR = new AgencyErrorCode("0013", "请不要重复投票");
 
 }

@@ -6,6 +6,8 @@ public class VoteOptionDetailDto {
 
     private String option;
 
+    private int isVoted;
+
     public int getCount() {
         return count;
     }
@@ -20,5 +22,13 @@ public class VoteOptionDetailDto {
 
     public void setOption(String option) {
         this.option = option;
+    }
+
+    public int getIsVoted() {
+        return isVoted;
+    }
+
+    public void setIsVoted(int isVoted) {
+        this.isVoted = isVoted;
     }
 }

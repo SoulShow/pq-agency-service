@@ -50,4 +50,12 @@
     and item = #{item}
     and state = 1
   </select>
+
+  <select id="selectByVoteIdAndSelectedId" resultMap="BaseResultMap" >
+    select id, selected_id, item, state, created_time, updated_time, vote_id
+    from pq_class_vote_selected_option
+    where vote_id = #{voteId}
+    and selected_id = #{selectedId}
+    and state = 1
+  </select>
 </mapper>
