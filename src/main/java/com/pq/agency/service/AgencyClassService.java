@@ -234,4 +234,20 @@ public interface AgencyClassService {
     List<VoteOptionDto> getVoteStatistics(Long voteId);
 
 
+    /**
+     * 获取班级信息
+     * @param userId
+     * @param agencyClassId
+     * @return
+     */
+    List<AgencyClassInfoDto> getClassInfo(String userId,Long agencyClassId);
+
+
+    /**
+     * 获取班级成员信息
+     * @param agencyClassId
+     * @return
+     */
+    AgencyClassInfoDto getClassUserInfo(Long agencyClassId);
+
 }

@@ -49,5 +49,32 @@
     select  agency_class_id
     from pq_agency_user
     where user_id = #{userId}
+    and state = 1
+  </select>
+
+  <select id="selectByUserAndClassId" resultMap="BaseResultMap" >
+    select  id, agency_class_id, user_id, role, state, updated_time, created_time
+    from pq_agency_user
+    where user_id = #{userId}
+    <if test="agencyClassId!=null and agencyClassId!='' ">
+      and agency_class_id = #{agencyClassId}
+    </if>
+    and state = 1
+  </select>
+
+  <select id="selectCountByClassIdAndRole" resultType="java.lang.Integer" >
+    select  count(id)
+    from pq_agency_user
+    where agency_class_id = #{agencyClassId}
+    and role = #{role}
+    and state = 1
+  </select>
+
+  <select id="selectByClassIdAndRole" resultMap="BaseResultMap">
+    select  id, agency_class_id, user_id, role, state, updated_time, created_time
+    from pq_agency_user
+    where agency_class_id = #{agencyClassId}
+    and role = #{role}
+    and state = 1
   </select>
 </mapper>

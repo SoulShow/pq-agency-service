@@ -20,4 +20,9 @@ public interface AgencyStudentMapper {
 
     List<AgencyStudent> selectByAgencyClassIdAndName(@Param("agencyClassId")Long agencyClassId,@Param("name")String name);
 
+    Integer selectCountByAgencyClassId(@Param("agencyClassId")Long agencyClassId);
+
+    List<AgencyStudent> selectByAgencyClassId(@Param("agencyClassId")Long agencyClassId);
+
+
 }

@@ -15,6 +15,7 @@ import com.pq.agency.param.VoteSelectedForm;
 import com.pq.agency.service.AgencyClassService;
 import com.pq.agency.utils.AgencyResult;
 import com.pq.agency.utils.Constants;
+import com.pq.common.constants.CommonConstants;
 import com.pq.common.exception.CommonErrors;
 import com.pq.common.util.DateUtil;
 import com.pq.common.util.HttpUtil;
@@ -752,6 +753,89 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         return list;
     }
 
+    @Override
+    public List<AgencyClassInfoDto> getClassInfo(String userId,Long agencyClassId){
+        List<AgencyUser> list = agencyUserMapper.selectByUserAndClassId(userId,agencyClassId);
+        List<AgencyClassInfoDto> classInfoDtos = new ArrayList<>();
+        for(AgencyUser agencyUser:list){
+            AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyUser.getAgencyClassId());
+            AgencyClassInfoDto agencyClassInfoDto = new AgencyClassInfoDto();
+            agencyClassInfoDto.setId(agencyClass.getId());
+            agencyClassInfoDto.setGroupId(agencyClass.getGroupId());
+            agencyClassInfoDto.setImg(agencyClass.getImg());
+            agencyClassInfoDto.setName(agencyClass.getName());
 
+            Integer teacherCount = agencyUserMapper.selectCountByClassIdAndRole(agencyClassId,CommonConstants.PQ_LOGIN_ROLE_TEACHER);
+            if(teacherCount==null){
+                teacherCount=0;
+            }
+            Integer studentCount = agencyStudentMapper.selectCountByAgencyClassId(agencyClassId);
+            if(studentCount==null){
+                studentCount=0;
+            }
+            agencyClassInfoDto.setCount(teacherCount+studentCount);
+            classInfoDtos.add(agencyClassInfoDto);
+        }
+        return classInfoDtos;
+    }
+    @Override
+    public  AgencyClassInfoDto getClassUserInfo(Long agencyClassId){
+
+        AgencyClassInfoDto agencyClassInfoDto = new AgencyClassInfoDto();
+        AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyClassId);
+
+        agencyClassInfoDto.setId(agencyClass.getId());
+        agencyClassInfoDto.setName(agencyClass.getName());
+        agencyClassInfoDto.setImg(agencyClass.getImg());
+
+        List<ClassUserInfoDto> list = new ArrayList<>();
+        List<AgencyUser> teacherList = agencyUserMapper.selectByClassIdAndRole(agencyClassId,CommonConstants.PQ_LOGIN_ROLE_TEACHER);
+
+        List<AgencyStudent> studentList = agencyStudentMapper.selectByAgencyClassId(agencyClassId);
+        for(AgencyUser agencyUser : teacherList){
+            ClassUserInfoDto classUserInfoDto = new ClassUserInfoDto();
+
+            AgencyResult<UserDto> result = userFeign.getUserInfo(agencyUser.getUserId());
+            if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+            }
+            UserDto userDto = result.getData();
+            classUserInfoDto.setAvatar(userDto.getAvatar());
+            classUserInfoDto.setName(userDto.getName());
+            classUserInfoDto.setRole(userDto.getRole());
+            classUserInfoDto.setSex(userDto.getGender());
+            classUserInfoDto.setUserId(agencyUser.getUserId());
+            list.add(classUserInfoDto);
+        }
+
+        for(AgencyStudent agencyStudent : studentList){
+            ClassUserInfoDto classUserInfoDto = new ClassUserInfoDto();
+            classUserInfoDto.setStudentId(agencyStudent.getId());
+            classUserInfoDto.setAvatar(agencyStudent.getAvatar());
+            classUserInfoDto.setName(agencyStudent.getName());
+            classUserInfoDto.setSex(agencyStudent.getSex()==1?"男":"女");
+
+            List<ParentDto> parentList = new ArrayList<>();
+            List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
+                    selectByAgencycClassIdAndStudentId(agencyClassId,agencyStudent.getId());
+            for(AgencyUserStudent userStudent : userStudentList){
+                ParentDto parentDto = new ParentDto();
+                parentDto.setUserId(userStudent.getUserId());
+                parentDto.setName(agencyStudent.getName()+userStudent.getRelation());
+
+                AgencyResult<UserDto> result = userFeign.getUserInfo(userStudent.getUserId());
+                if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                    throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+                }
+                UserDto userDto = result.getData();
+                parentDto.setHuanxinId(userDto.getUsername()+userDto.getRole());
+                parentList.add(parentDto);
+            }
+            classUserInfoDto.setParentList(parentList);
+            list.add(classUserInfoDto);
+        }
+        agencyClassInfoDto.setList(list);
+        return agencyClassInfoDto;
+    }
 
 }

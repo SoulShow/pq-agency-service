@@ -62,4 +62,18 @@
     and name = #{name}
     and state = 1
   </select>
+
+  <select id="selectCountByAgencyClassId" resultType="java.lang.Integer" >
+    select count(id)
+    from pq_agency_student
+    where agency_class_id =#{agencyClassId}
+    and state = 1
+  </select>
+
+  <select id="selectByAgencyClassId" resultMap="BaseResultMap">
+    select id, agency_class_id, name, sex, avatar, state, updated_time, created_time
+    from pq_agency_student
+    where agency_class_id =#{agencyClassId}
+    and state = 1
+  </select>
 </mapper>

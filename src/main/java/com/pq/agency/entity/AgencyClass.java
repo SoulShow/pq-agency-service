@@ -15,6 +15,8 @@ public class AgencyClass {
 
     private String name;
 
+    private String img;
+
     private Boolean state;
 
     private Timestamp updatedTime;
@@ -91,5 +93,13 @@ public class AgencyClass {
 
     public void setGroupId(Long groupId) {
         this.groupId = groupId;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }
