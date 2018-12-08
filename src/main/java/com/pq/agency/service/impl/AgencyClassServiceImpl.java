@@ -805,7 +805,6 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 classUserInfoDto.setSex(userDto.getGender());
                 classUserInfoDto.setUserId(groupMember.getUserId());
                 classUserInfoDto.setHuanxinId(userDto.getUsername()+userDto.getRole());
-                list.add(classUserInfoDto);
             }
             if(groupMember.getUserId()==null && groupMember.getStudentId()!=null){
                 AgencyStudent agencyStudent =agencyStudentMapper.selectByPrimaryKey(groupMember.getStudentId());
@@ -831,8 +830,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                     parentList.add(parentDto);
                 }
                 classUserInfoDto.setParentList(parentList);
-                list.add(classUserInfoDto);
             }
+            list.add(classUserInfoDto);
         }
         agencyClassInfoDto.setList(list);
         return agencyClassInfoDto;
