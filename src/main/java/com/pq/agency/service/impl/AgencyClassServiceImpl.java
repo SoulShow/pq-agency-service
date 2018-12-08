@@ -19,6 +19,7 @@ import com.pq.common.constants.CommonConstants;
 import com.pq.common.exception.CommonErrors;
 import com.pq.common.util.DateUtil;
 import com.pq.common.util.HttpUtil;
+import com.pq.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -793,7 +794,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
         for(AgencyGroupMember groupMember : memberList){
             ClassUserInfoDto classUserInfoDto = new ClassUserInfoDto();
-            if(groupMember.getUserId()!=null && groupMember.getStudentId()==null){
+            if(!StringUtil.isEmpty(groupMember.getUserId()) && groupMember.getStudentId()==null){
                 AgencyResult<UserDto> result = userFeign.getUserInfo(groupMember.getUserId());
                 if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
                     throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
@@ -806,7 +807,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 classUserInfoDto.setUserId(groupMember.getUserId());
                 classUserInfoDto.setHuanxinId(userDto.getUsername()+userDto.getRole());
             }
-            if(groupMember.getUserId()==null && groupMember.getStudentId()!=null){
+            if(StringUtil.isEmpty(groupMember.getUserId()) && groupMember.getStudentId()!=null){
                 AgencyStudent agencyStudent =agencyStudentMapper.selectByPrimaryKey(groupMember.getStudentId());
                 classUserInfoDto.setStudentId(agencyStudent.getId());
                 classUserInfoDto.setAvatar(agencyStudent.getAvatar());
