@@ -64,6 +64,6 @@
     from pq_agency_group_member
     where student_id = #{studentId}
     or user_id= #{userId}
-    and status = 1
+    and state = 1
   </select>
 </mapper>
