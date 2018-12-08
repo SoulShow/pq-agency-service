@@ -6,7 +6,7 @@
     <result column="agency_id" property="agencyId" jdbcType="BIGINT" />
     <result column="grade_id" property="gradeId" jdbcType="BIGINT" />
     <result column="class_id" property="classId" jdbcType="BIGINT" />
-    <result column="group_id" property="groupId" jdbcType="BIGINT" />
+    <result column="group_id" property="groupId" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="img" property="img" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="BIT" />

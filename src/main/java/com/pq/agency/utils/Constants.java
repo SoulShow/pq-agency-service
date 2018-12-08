@@ -12,6 +12,10 @@ public class Constants {
     public static final int CLASS_NOTICE_RECEIPT_STATUS_YES = 1;
     public static final int CLASS_NOTICE_RECEIPT_STATUS_NO = 0;
 
-
+    /**
+     * 通知回执状态 1-班级 2-群组
+     */
+    public static final int AGENCY_GROUP_TYPE_CLASS = 1;
+    public static final int AGENCY_GROUP_TYPE_GROUP = 2;
 
 }

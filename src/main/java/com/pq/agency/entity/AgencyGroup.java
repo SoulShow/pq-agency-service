@@ -2,16 +2,12 @@ package com.pq.agency.entity;
 
 import java.sql.Timestamp;
 
-public class AgencyClass {
+public class AgencyGroup {
     private Long id;
-
-    private Long agencyId;
-
-    private Long gradeId;
 
     private Long classId;
 
-    private String groupId;
+    private String hxGroupId;
 
     private String name;
 
@@ -31,28 +27,12 @@ public class AgencyClass {
         this.id = id;
     }
 
-    public Long getAgencyId() {
-        return agencyId;
+    public String getHxGroupId() {
+        return hxGroupId;
     }
 
-    public void setAgencyId(Long agencyId) {
-        this.agencyId = agencyId;
-    }
-
-    public Long getGradeId() {
-        return gradeId;
-    }
-
-    public void setGradeId(Long gradeId) {
-        this.gradeId = gradeId;
-    }
-
-    public Long getClassId() {
-        return classId;
-    }
-
-    public void setClassId(Long classId) {
-        this.classId = classId;
+    public void setHxGroupId(String hxGroupId) {
+        this.hxGroupId = hxGroupId == null ? null : hxGroupId.trim();
     }
 
     public String getName() {
@@ -61,6 +41,14 @@ public class AgencyClass {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img == null ? null : img.trim();
     }
 
     public Boolean getState() {
@@ -87,19 +75,11 @@ public class AgencyClass {
         this.createdTime = createdTime;
     }
 
-    public String getImg() {
-        return img;
+    public Long getClassId() {
+        return classId;
     }
 
-    public void setImg(String img) {
-        this.img = img;
-    }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
+    public void setClassId(Long classId) {
+        this.classId = classId;
     }
 }

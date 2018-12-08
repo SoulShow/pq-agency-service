@@ -4,7 +4,7 @@ public class AgencyUserDto {
 
     private Long agencyClassId;
 
-    private Long groupId;
+    private String hxGroupId;
 
     private String userId;
 
@@ -115,11 +115,11 @@ public class AgencyUserDto {
         this.relation = relation;
     }
 
-    public Long getGroupId() {
-        return groupId;
+    public String getHxGroupId() {
+        return hxGroupId;
     }
 
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
+    public void setHxGroupId(String hxGroupId) {
+        this.hxGroupId = hxGroupId;
     }
 }

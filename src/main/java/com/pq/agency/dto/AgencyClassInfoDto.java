@@ -4,10 +4,11 @@ import java.util.List;
 
 public class AgencyClassInfoDto {
     private Long id;
-    private Long groupId;
+    private String groupId;
     private String img;
     private String name;
     private int count;
+    private int type;
     private List<ClassUserInfoDto> list;
 
     public Long getId() {
@@ -16,14 +17,6 @@ public class AgencyClassInfoDto {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
     }
 
     public String getImg() {
@@ -56,5 +49,21 @@ public class AgencyClassInfoDto {
 
     public void setList(List<ClassUserInfoDto> list) {
         this.list = list;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

@@ -237,17 +237,17 @@ public interface AgencyClassService {
     /**
      * 获取班级信息
      * @param userId
-     * @param agencyClassId
+     * @param studentId
      * @return
      */
-    List<AgencyClassInfoDto> getClassInfo(String userId,Long agencyClassId);
+    List<AgencyClassInfoDto> getClassInfo(String userId,Long studentId);
 
 
     /**
      * 获取班级成员信息
-     * @param agencyClassId
+     * @param groupId
      * @return
      */
-    AgencyClassInfoDto getClassUserInfo(Long agencyClassId);
+    AgencyClassInfoDto getClassUserInfo(Long groupId);
 
 }

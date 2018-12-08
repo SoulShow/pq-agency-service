@@ -352,18 +352,18 @@ public class AgencyController {
 
 	@GetMapping(value = "/class")
 	@ResponseBody
-	public AgencyResult getAgencyClassInfo(@RequestParam(value = "agencyClassId",required = false)Long agencyClassId,
+	public AgencyResult getAgencyClassInfo(@RequestParam(value = "studentId",required = false)Long studentId,
 										   @RequestParam(value = "userId")String userId) {
 		AgencyResult result = new AgencyResult();
-		result.setData(agencyClassService.getClassInfo(userId,agencyClassId));
+		result.setData(agencyClassService.getClassInfo(userId,studentId));
 		return result;
 	}
 
 	@GetMapping(value = "/class/user")
 	@ResponseBody
-	public AgencyResult getAgencyClassUserInfo(@RequestParam(value = "agencyClassId")Long agencyClassId) {
+	public AgencyResult getAgencyClassUserInfo(@RequestParam(value = "groupId")Long groupId) {
 		AgencyResult result = new AgencyResult();
-		result.setData(agencyClassService.getClassUserInfo(agencyClassId));
+		result.setData(agencyClassService.getClassUserInfo(groupId));
 		return result;
 	}
 
