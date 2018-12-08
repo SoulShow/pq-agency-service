@@ -350,7 +350,7 @@ public class AgencyController {
 		return result;
 	}
 
-	@GetMapping(value = "/class")
+	@GetMapping(value = "/group")
 	@ResponseBody
 	public AgencyResult getAgencyClassInfo(@RequestParam(value = "studentId",required = false)Long studentId,
 										   @RequestParam(value = "userId")String userId) {
@@ -359,7 +359,7 @@ public class AgencyController {
 		return result;
 	}
 
-	@GetMapping(value = "/class/user")
+	@GetMapping(value = "/group/user")
 	@ResponseBody
 	public AgencyResult getAgencyClassUserInfo(@RequestParam(value = "groupId")Long groupId) {
 		AgencyResult result = new AgencyResult();
