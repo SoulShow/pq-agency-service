@@ -8,10 +8,7 @@ import com.pq.agency.exception.AgencyErrors;
 import com.pq.agency.exception.AgencyException;
 import com.pq.agency.feign.UserFeign;
 import com.pq.agency.mapper.*;
-import com.pq.agency.param.AgencyUserRegisterForm;
-import com.pq.agency.param.NoticeFileCollectionForm;
-import com.pq.agency.param.NoticeReceiptForm;
-import com.pq.agency.param.VoteSelectedForm;
+import com.pq.agency.param.*;
 import com.pq.agency.service.AgencyClassService;
 import com.pq.agency.utils.AgencyResult;
 import com.pq.agency.utils.Constants;
@@ -495,6 +492,32 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     public List<AgencyClassSchedule> getScheduleList(Long agencyClassId){
         return classScheduleMapper.selectByClassId(agencyClassId);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public  void createTask(TaskCreateForm taskCreateForm){
+        ClassTask classTask = new ClassTask();
+        classTask.setUserId(taskCreateForm.getUserId());
+        classTask.setAgencyClassId(taskCreateForm.getClassId());
+        classTask.setTitle(taskCreateForm.getTitle());
+        classTask.setContent(taskCreateForm.getContent());
+        classTask.setState(true);
+        classTask.setCreatedTime(DateUtil.currentTime());
+        classTask.setUpdatedTime(DateUtil.currentTime());
+        classTaskMapper.insert(classTask);
+        for(String img : taskCreateForm.getImgList()){
+            ClassTaskImg taskImg = new ClassTaskImg();
+            taskImg.setTaskId(classTask.getId());
+            taskImg.setImg(img);
+            taskImg.setState(true);
+            taskImg.setCreatedTime(DateUtil.currentTime());
+            taskImg.setUpdatedTime(DateUtil.currentTime());
+            classTaskImgMapper.insert(taskImg);
+        }
+
+
+    }
+
 
     @Override
     public List<ClassTaskDto> getTaskList(Long agencyClassId,String userId, Long studentId,int offset, int size){

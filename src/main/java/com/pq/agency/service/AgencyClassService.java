@@ -3,10 +3,7 @@ package com.pq.agency.service;
 
 import com.pq.agency.dto.*;
 import com.pq.agency.entity.*;
-import com.pq.agency.param.AgencyUserRegisterForm;
-import com.pq.agency.param.NoticeFileCollectionForm;
-import com.pq.agency.param.NoticeReceiptForm;
-import com.pq.agency.param.VoteSelectedForm;
+import com.pq.agency.param.*;
 
 import java.util.List;
 
@@ -171,6 +168,12 @@ public interface AgencyClassService {
      */
     List<AgencyClassSchedule> getScheduleList(Long agencyClassId);
 
+    /**
+     * 老师创建班级任务
+     * @param taskCreateForm
+     * @return
+     */
+    void createTask(TaskCreateForm taskCreateForm);
 
     /**
      * 家长任务列表

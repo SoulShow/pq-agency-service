@@ -1,10 +1,7 @@
 package com.pq.agency.api;
 
 import com.pq.agency.exception.AgencyException;
-import com.pq.agency.param.CollectionDeleteForm;
-import com.pq.agency.param.NoticeFileCollectionForm;
-import com.pq.agency.param.NoticeReceiptForm;
-import com.pq.agency.param.VoteSelectedForm;
+import com.pq.agency.param.*;
 import com.pq.agency.service.AgencyClassService;
 import com.pq.agency.utils.AgencyResult;
 import com.pq.common.exception.CommonErrors;
@@ -51,6 +48,24 @@ public class AgencyTeacherController {
         AgencyResult result = new AgencyResult();
         try {
             result.setData(agencyClassService.getTaskReadInfo(taskId));
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/class/task")
+    @ResponseBody
+    public AgencyResult getClassTaskCreate(@RequestBody TaskCreateForm createForm) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            agencyClassService.createTask(createForm);
         } catch (AgencyException e){
             result.setStatus(e.getErrorCode().getErrorCode());
             result.setMessage(e.getErrorCode().getErrorMsg());
