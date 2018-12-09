@@ -77,4 +77,21 @@ public class AgencyTeacherController {
         return result;
     }
 
+    @GetMapping(value = "/class")
+    @ResponseBody
+    public AgencyResult getClass(@RequestParam(value = "userId")String userId) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            result.setData(agencyClassService.getTeacherClassList(userId));
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
 }

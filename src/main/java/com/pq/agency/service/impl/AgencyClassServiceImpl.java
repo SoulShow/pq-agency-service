@@ -919,4 +919,16 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         return agencyClassInfoDto;
     }
 
+    @Override
+    public List<AgencyClass> getTeacherClassList(String userId){
+        List<Long> list = agencyUserMapper.selectClassIdByUserId(userId);
+        List<AgencyClass> classList = new ArrayList<>();
+        for(Long classId : list){
+            AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(classId);
+            classList.add(agencyClass);
+        }
+        return classList;
+    }
+
+
 }

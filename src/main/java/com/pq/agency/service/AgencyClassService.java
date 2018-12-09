@@ -271,4 +271,10 @@ public interface AgencyClassService {
      */
     AgencyClassInfoDto getClassUserInfo(Long groupId);
 
+    /**
+     * 获取老师班级
+     * @param userId
+     * @return
+     */
+    List<AgencyClass> getTeacherClassList(String userId);
 }
