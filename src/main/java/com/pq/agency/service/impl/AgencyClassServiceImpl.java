@@ -497,36 +497,52 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     }
 
     @Override
-    public List<ClassTaskDto> getTaskList(Long agencyClassId,String userId, int offset, int size){
+    public List<ClassTaskDto> getTaskList(Long agencyClassId,String userId, Long studentId,int offset, int size){
         List<ClassTask> list = classTaskMapper.selectByClassId(agencyClassId,offset,size);
         List<ClassTaskDto> taskDtoList = new ArrayList<>();
         for(ClassTask classTask:list){
-            ClassTaskDto classTaskDto = new ClassTaskDto();
-            classTaskDto.setId(classTask.getId());
-            AgencyResult<UserDto> result = userFeign.getUserInfo(classTask.getUserId());
-            if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
-               AgencyException.raise(new AgencyErrorCode(result.getStatus(),result.getMessage()));
-            }
-            UserDto userDto = result.getData();
-            classTaskDto.setUsername(userDto.getName());
-            classTaskDto.setUserId(userDto.getUserId());
-            classTaskDto.setAvatar(userDto.getAvatar());
-            AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyClassId);
-            if(agencyClass==null) {
-                AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
-            }
-            classTaskDto.setClassName(agencyClass.getName());
-            classTaskDto.setTitle(classTask.getTitle());
-            classTaskDto.setCreateTime(DateUtil.formatDate(classTask.getCreatedTime(),DateUtil.DEFAULT_DATETIME_FORMAT));
-            ClassTaskReadLog readLog = taskReadLogMapper.selectByUserIdAndTaskId(userId,classTask.getId());
-            classTaskDto.setIsRead(readLog==null?0:1);
-            taskDtoList.add(classTaskDto);
+            taskDtoList.add(getClassTaskDto(classTask,userId,studentId));
+        }
+        return taskDtoList;
+    }
+    @Override
+    public List<ClassTaskDto> getTaskList(String userId, int offset, int size){
+        List<Long> classIdList = agencyUserMapper.selectClassIdByUserId(userId);
+        List<ClassTaskDto> taskDtoList = new ArrayList<>();
+        List<ClassTask> taskList = classTaskMapper.selectByClassIdList(classIdList,offset,size);
+        for(ClassTask classTask:taskList){
+            taskDtoList.add(getClassTaskDto(classTask,userId,null));
         }
         return taskDtoList;
     }
 
+    private ClassTaskDto getClassTaskDto(ClassTask classTask,String userId,Long studentId){
+        ClassTaskDto classTaskDto = new ClassTaskDto();
+        classTaskDto.setId(classTask.getId());
+        AgencyResult<UserDto> result = userFeign.getUserInfo(classTask.getUserId());
+        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+            AgencyException.raise(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+        }
+        UserDto userDto = result.getData();
+        classTaskDto.setUsername(userDto.getName());
+        classTaskDto.setUserId(userDto.getUserId());
+        classTaskDto.setAvatar(userDto.getAvatar());
+        AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(classTask.getAgencyClassId());
+        if(agencyClass==null) {
+            AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
+        }
+        classTaskDto.setClassName(agencyClass.getName());
+        classTaskDto.setTitle(classTask.getTitle());
+        classTaskDto.setCreateTime(DateUtil.formatDate(classTask.getCreatedTime(),DateUtil.DEFAULT_DATETIME_FORMAT));
+        if(studentId !=null){
+            ClassTaskReadLog readLog = taskReadLogMapper.selectByUserIdAndStudentIdAndTaskId(userId,studentId,classTask.getId());
+            classTaskDto.setIsRead(readLog==null?0:1);
+        }
+        return classTaskDto;
+    }
+
     @Override
-    public ClassTaskDetailDto getTaskDetail(Long taskId,String userId){
+    public ClassTaskDetailDto getTaskDetail(Long taskId,Long studentId,String userId){
         ClassTask classTask = classTaskMapper.selectByPrimaryKey(taskId);
         ClassTaskDetailDto classTaskDetailDto = new ClassTaskDetailDto();
         classTaskDetailDto.setId(classTask.getId());
@@ -549,17 +565,59 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             list.add(taskImg.getImg());
         }
         classTaskDetailDto.setImgList(list);
-        ClassTaskReadLog readLog = taskReadLogMapper.selectByUserIdAndTaskId(userId,classTask.getId());
-        if(readLog==null){
-            readLog = new ClassTaskReadLog();
-            readLog.setTaskId(taskId);
-            readLog.setUserId(userId);
-            readLog.setState(true);
-            readLog.setCreatedTime(DateUtil.currentTime());
-            readLog.setUpdatedTime(DateUtil.currentTime());
-            taskReadLogMapper.insert(readLog);
+
+        if(studentId!=null){
+            ClassTaskReadLog readLog = taskReadLogMapper.selectByUserIdAndStudentIdAndTaskId(userId,studentId,classTask.getId());
+            if(readLog==null){
+                readLog = new ClassTaskReadLog();
+                readLog.setTaskId(taskId);
+                readLog.setUserId(userId);
+                readLog.setStudentId(studentId);
+                readLog.setState(true);
+                readLog.setCreatedTime(DateUtil.currentTime());
+                readLog.setUpdatedTime(DateUtil.currentTime());
+                taskReadLogMapper.insert(readLog);
+            }
         }
         return classTaskDetailDto;
+    }
+    @Override
+    public List<AgencyStudentDto> getTaskReadInfo(Long taskId){
+        ClassTask classTask = classTaskMapper.selectByPrimaryKey(taskId);
+        List<AgencyStudentDto> studentDtos = new ArrayList<>();
+        List<AgencyStudent> list = agencyStudentMapper.selectByAgencyClassId(classTask.getAgencyClassId());
+        for(AgencyStudent student: list){
+
+            List<ClassTaskReadLog> readLogList = taskReadLogMapper.selectByStudentIdAndTaskId(student.getId(),classTask.getId());
+            if(readLogList!=null||readLogList.size()>0){
+                continue;
+            }
+            AgencyStudentDto agencyStudentDto = new AgencyStudentDto();
+            agencyStudentDto.setStudentId(student.getId());
+            agencyStudentDto.setName(student.getName());
+            agencyStudentDto.setAvatar(student.getAvatar());
+            agencyStudentDto.setSex(student.getSex());
+            List<ParentDto> parentList = new ArrayList<>();
+
+            List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
+                    selectByAgencycClassIdAndStudentId(classTask.getAgencyClassId(),student.getId());
+            for(AgencyUserStudent userStudent : userStudentList){
+                ParentDto parentDto = new ParentDto();
+                parentDto.setUserId(userStudent.getUserId());
+                parentDto.setName(student.getName()+userStudent.getRelation());
+                AgencyResult<UserDto> result = userFeign.getUserInfo(userStudent.getUserId());
+                if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                    throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+                }
+                UserDto userDto = result.getData();
+                parentDto.setPhone(userDto.getUsername());
+                parentDto.setHuanxinId(userDto.getUsername()+userDto.getRole());
+                parentList.add(parentDto);
+            }
+            agencyStudentDto.setParentList(parentList);
+            studentDtos.add(agencyStudentDto);
+        }
+        return studentDtos;
     }
 
     @Override

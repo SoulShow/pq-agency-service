@@ -9,6 +9,8 @@ public class ClassTaskReadLog {
 
     private String userId;
 
+    private Long studentId;
+
     private Boolean state;
 
     private Timestamp updatedTime;
@@ -61,5 +63,13 @@ public class ClassTaskReadLog {
 
     public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
 }

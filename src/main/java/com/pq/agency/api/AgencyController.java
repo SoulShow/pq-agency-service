@@ -223,9 +223,10 @@ public class AgencyController {
     @GetMapping(value = "/class/task")
     @ResponseBody
     public AgencyResult getClassTask(@RequestParam(value = "agencyClassId")Long agencyClassId,
-                                       @RequestParam(value = "userId")String userId,
-                                       @RequestParam(value = "page",required = false)Integer page,
-                                       @RequestParam(value = "size",required = false)Integer size) {
+									 @RequestParam(value = "userId")String userId,
+									 @RequestParam(value = "studentId")Long studentId,
+									 @RequestParam(value = "page",required = false)Integer page,
+									 @RequestParam(value = "size",required = false)Integer size) {
         if (page == null || page < 1) {
             page = 1;
         }
@@ -236,7 +237,7 @@ public class AgencyController {
 
         AgencyResult result = new AgencyResult();
         try {
-            result.setData(agencyClassService.getTaskList(agencyClassId,userId,offset,size));
+            result.setData(agencyClassService.getTaskList(agencyClassId,userId,studentId,offset,size));
         } catch (AgencyException e){
             result.setStatus(e.getErrorCode().getErrorCode());
             result.setMessage(e.getErrorCode().getErrorMsg());
@@ -250,11 +251,12 @@ public class AgencyController {
     @GetMapping(value = "/class/task/detail")
     @ResponseBody
     public AgencyResult getClassTaskDetail(@RequestParam(value = "taskId")Long taskId,
-                                             @RequestParam(value = "userId")String userId) {
+										   @RequestParam(value = "studentId",required = false)Long studentId,
+										   @RequestParam(value = "userId")String userId) {
 
         AgencyResult result = new AgencyResult();
         try {
-            result.setData(agencyClassService.getTaskDetail(taskId,userId));
+            result.setData(agencyClassService.getTaskDetail(taskId,studentId,userId));
         } catch (AgencyException e){
             result.setStatus(e.getErrorCode().getErrorCode());
             result.setMessage(e.getErrorCode().getErrorMsg());

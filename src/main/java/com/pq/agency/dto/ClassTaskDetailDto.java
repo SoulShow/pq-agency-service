@@ -19,6 +19,7 @@ public class ClassTaskDetailDto {
 
     private List<String> imgList;
 
+
     public Long getId() {
         return id;
     }

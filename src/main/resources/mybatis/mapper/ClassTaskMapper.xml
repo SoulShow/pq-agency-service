@@ -59,4 +59,15 @@
     order by created_time desc
     limit #{offset},#{size}
   </select>
+
+  <select id="selectByClassIdList" resultMap="BaseResultMap" >
+    select id, agency_class_id, user_id, title, content, state, updated_time,
+    created_time
+    from pq_agency_class_task
+    where state = 1
+    and agency_class_id in
+    <foreach item="item" collection="classIds" separator="," open="(" close=")">#{item}</foreach>
+    order by created_time desc
+    limit #{offset},#{size}
+  </select>
 </mapper>

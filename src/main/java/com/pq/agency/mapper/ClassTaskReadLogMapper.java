@@ -16,6 +16,7 @@ public interface ClassTaskReadLogMapper {
 
     int updateByPrimaryKey(ClassTaskReadLog record);
 
-    ClassTaskReadLog selectByUserIdAndTaskId(@Param("userId") String userId, @Param("taskId") Long taskId);
+    ClassTaskReadLog selectByUserIdAndStudentIdAndTaskId(@Param("userId") String userId, @Param("studentId")Long studentId, @Param("taskId") Long taskId);
 
+    List<ClassTaskReadLog> selectByStudentIdAndTaskId(@Param("studentId")Long studentId, @Param("taskId") Long taskId);
 }

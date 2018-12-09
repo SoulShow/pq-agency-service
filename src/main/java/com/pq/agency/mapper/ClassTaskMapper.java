@@ -19,4 +19,9 @@ public interface ClassTaskMapper {
     List<ClassTask> selectByClassId(@Param("agencyClassId")Long agencyClassId,
                                     @Param("offset")int offset,
                                     @Param("size") int size);
+
+    List<ClassTask> selectByClassIdList(@Param("classIds")List<Long> classIds,
+                                    @Param("offset")int offset,
+                                    @Param("size") int size);
 }
+

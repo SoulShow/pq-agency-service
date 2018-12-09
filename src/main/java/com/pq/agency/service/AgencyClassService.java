@@ -173,23 +173,41 @@ public interface AgencyClassService {
 
 
     /**
-     * 获取任务列表
+     * 家长任务列表
      * @param agencyClassId
      * @param userId
      * @param offset
      * @param size
      * @return
      */
-    List<ClassTaskDto> getTaskList(Long agencyClassId,String userId, int offset, int size);
+    List<ClassTaskDto> getTaskList(Long agencyClassId,String userId,Long studentId ,int offset, int size);
+
+    /**
+     * 老师班级任务
+     * @param userId
+     * @param offset
+     * @param size
+     * @return
+     */
+    List<ClassTaskDto> getTaskList(String userId, int offset, int size);
+
 
     /**
      * 获取班级任务详情
      * @param taskId
      * @param userId
+     * @param studentId
      * @return
      */
-    ClassTaskDetailDto getTaskDetail(Long taskId,String userId);
+    ClassTaskDetailDto getTaskDetail(Long taskId,Long studentId,String userId);
 
+
+    /**
+     * 获取任务未阅读信息
+     * @param taskId
+     * @return
+     */
+    List<AgencyStudentDto> getTaskReadInfo(Long taskId);
 
     /**
      * 获取关系列表

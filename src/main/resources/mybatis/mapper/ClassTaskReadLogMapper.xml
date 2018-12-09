@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="task_id" property="taskId" jdbcType="BIGINT" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="student_id" property="studentId" jdbcType="BIGINT" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
     <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
@@ -18,34 +19,44 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into pq_class_task_read_log (task_id, user_id, state, 
-      updated_time, created_time)
+      updated_time, created_time, student_id)
     values (#{taskId,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, 
-      #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP})
+      #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP}, #{studentId})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.ClassTaskReadLog" >
     update pq_class_task_read_log
     set task_id = #{taskId,jdbcType=BIGINT},
       user_id = #{userId,jdbcType=VARCHAR},
+      student_id = #{studentId,jdbcType=BIGINT},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
       created_time = #{createdTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, task_id, user_id, state, updated_time, created_time
+    select id, task_id, user_id, state, updated_time, created_time,student_id
     from pq_class_task_read_log
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, task_id, user_id, state, updated_time, created_time
+    select id, task_id, user_id, state, updated_time, created_time,student_id
     from pq_class_task_read_log
   </select>
 
-  <select id="selectByUserIdAndTaskId" resultMap="BaseResultMap" >
-    select id, task_id, user_id, state, updated_time, created_time
+  <select id="selectByUserIdAndStudentIdAndTaskId" resultMap="BaseResultMap" >
+    select id, task_id, user_id, state, updated_time, created_time,student_id
     from pq_class_task_read_log
     where task_id = #{taskId}
     and user_id = #{userId}
+    and student_id = #{studentId}
+    and state = 1
+  </select>
+
+  <select id="selectByStudentIdAndTaskId" resultMap="BaseResultMap" >
+    select id, task_id, user_id, state, updated_time, created_time,student_id
+    from pq_class_task_read_log
+    where task_id = #{taskId}
+    and student_id = #{studentId}
     and state = 1
   </select>
 </mapper>
