@@ -589,7 +589,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         for(AgencyStudent student: list){
 
             List<ClassTaskReadLog> readLogList = taskReadLogMapper.selectByStudentIdAndTaskId(student.getId(),classTask.getId());
-            if(readLogList!=null||readLogList.size()>0){
+            if(readLogList!=null&&readLogList.size()>0){
                 continue;
             }
             AgencyStudentDto agencyStudentDto = new AgencyStudentDto();
