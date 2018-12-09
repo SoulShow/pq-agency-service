@@ -77,7 +77,7 @@ public class AgencyTeacherController {
         return result;
     }
 
-    @GetMapping(value = "/class")
+    @GetMapping(value = "/class/list")
     @ResponseBody
     public AgencyResult getClass(@RequestParam(value = "userId")String userId) {
 
