@@ -52,7 +52,7 @@ public class UserDto implements Serializable {
 
     private Integer level;
 
-    private String huanXinId;
+    private String huanxinId;
 
     public Long getId() {
         return id;
@@ -230,11 +230,11 @@ public class UserDto implements Serializable {
         this.address = address;
     }
 
-    public String getHuanXinId() {
-        return huanXinId;
+    public String getHuanxinId() {
+        return huanxinId;
     }
 
-    public void setHuanXinId(String huanXinId) {
-        this.huanXinId = huanXinId;
+    public void setHuanxinId(String huanxinId) {
+        this.huanxinId = huanxinId;
     }
 }

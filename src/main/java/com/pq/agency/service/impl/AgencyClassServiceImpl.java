@@ -210,9 +210,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
         }
         UserDto userDto = result.getData();
-        LOGGER.info("环信id————————————"+userDto.getHuanXinId());
+        LOGGER.info("环信id————————————"+userDto.getHuanxinId());
         paramMap.put("hxGroupId", agencyClassMapper.selectByPrimaryKey(agencyClassInvitationCode.getAgencyClassId()).getGroupId());
-        paramMap.put("userHxId", userDto.getHuanXinId());
+        paramMap.put("userHxId", userDto.getHuanxinId());
         try {
             String huanxResult = HttpUtil.sendJson(phpUrl+"addHxGroup",new HashMap<>(),JSON.toJSONString(paramMap));
             AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
@@ -638,7 +638,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 }
                 UserDto userDto = result.getData();
                 parentDto.setPhone(userDto.getUsername());
-                parentDto.setHuanxinId(userDto.getHuanXinId());
+                parentDto.setHuanxinId(userDto.getHuanxinId());
                 parentList.add(parentDto);
             }
             agencyStudentDto.setParentList(parentList);
@@ -892,7 +892,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 classUserInfoDto.setRole(userDto.getRole());
                 classUserInfoDto.setSex(userDto.getGender());
                 classUserInfoDto.setUserId(groupMember.getUserId());
-                classUserInfoDto.setHuanxinId(userDto.getHuanXinId());
+                classUserInfoDto.setHuanxinId(userDto.getHuanxinId());
             }
             if(StringUtil.isEmpty(groupMember.getUserId()) && groupMember.getStudentId()!=null){
                 AgencyStudent agencyStudent =agencyStudentMapper.selectByPrimaryKey(groupMember.getStudentId());
@@ -914,7 +914,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                         throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
                     }
                     UserDto userDto = result.getData();
-                    parentDto.setHuanxinId(userDto.getHuanXinId());
+                    parentDto.setHuanxinId(userDto.getHuanxinId());
                     parentList.add(parentDto);
                 }
                 classUserInfoDto.setParentList(parentList);
