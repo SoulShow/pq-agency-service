@@ -52,6 +52,8 @@ public class UserDto implements Serializable {
 
     private Integer level;
 
+    private String huanXinId;
+
     public Long getId() {
         return id;
     }
@@ -226,5 +228,13 @@ public class UserDto implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getHuanXinId() {
+        return huanXinId;
+    }
+
+    public void setHuanXinId(String huanXinId) {
+        this.huanXinId = huanXinId;
     }
 }

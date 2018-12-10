@@ -634,7 +634,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 }
                 UserDto userDto = result.getData();
                 parentDto.setPhone(userDto.getUsername());
-                parentDto.setHuanxinId(userDto.getUsername()+userDto.getRole());
+                parentDto.setHuanxinId(userDto.getHuanXinId());
                 parentList.add(parentDto);
             }
             agencyStudentDto.setParentList(parentList);
@@ -883,10 +883,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 UserDto userDto = result.getData();
                 classUserInfoDto.setAvatar(userDto.getAvatar());
                 classUserInfoDto.setName(userDto.getName());
+
+//                classUserInfoDto.setClassName();
                 classUserInfoDto.setRole(userDto.getRole());
                 classUserInfoDto.setSex(userDto.getGender());
                 classUserInfoDto.setUserId(groupMember.getUserId());
-                classUserInfoDto.setHuanxinId(userDto.getUsername()+userDto.getRole());
+                classUserInfoDto.setHuanxinId(userDto.getHuanXinId());
             }
             if(StringUtil.isEmpty(groupMember.getUserId()) && groupMember.getStudentId()!=null){
                 AgencyStudent agencyStudent =agencyStudentMapper.selectByPrimaryKey(groupMember.getStudentId());
@@ -908,7 +910,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                         throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
                     }
                     UserDto userDto = result.getData();
-                    parentDto.setHuanxinId(userDto.getUsername()+userDto.getRole());
+                    parentDto.setHuanxinId(userDto.getHuanXinId());
                     parentList.add(parentDto);
                 }
                 classUserInfoDto.setParentList(parentList);

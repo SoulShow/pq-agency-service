@@ -11,6 +11,8 @@ public class ClassUserInfoDto {
 
     private String name;
 
+    private String className;
+
     private int role;
 
     private String sex;
@@ -81,5 +83,13 @@ public class ClassUserInfoDto {
 
     public void setHuanxinId(String huanxinId) {
         this.huanxinId = huanxinId;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 }
