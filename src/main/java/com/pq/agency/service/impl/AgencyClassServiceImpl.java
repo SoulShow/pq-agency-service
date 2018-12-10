@@ -17,6 +17,8 @@ import com.pq.common.exception.CommonErrors;
 import com.pq.common.util.DateUtil;
 import com.pq.common.util.HttpUtil;
 import com.pq.common.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ import java.util.*;
  */
 @Service
 public class AgencyClassServiceImpl implements AgencyClassService {
+    private final static Logger LOGGER = LoggerFactory.getLogger(AgencyClassServiceImpl.class);
 
     @Autowired
     private AgencyClassInvitationCodeMapper invitationCodeMapper;
@@ -207,6 +210,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
         }
         UserDto userDto = result.getData();
+        LOGGER.info("环信id————————————"+userDto.getHuanXinId());
         paramMap.put("hxGroupId", agencyClassMapper.selectByPrimaryKey(agencyClassInvitationCode.getAgencyClassId()).getGroupId());
         paramMap.put("userHxId", userDto.getHuanXinId());
         try {
