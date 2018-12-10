@@ -207,8 +207,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
         }
         UserDto userDto = result.getData();
-        paramMap.put("hxGroupId", agencyClassMapper.selectByPrimaryKey(agencyClassInvitationCode.getAgencyClassId()).getGroupId().toString());
-        paramMap.put("userHxId", userDto.getUsername());
+        paramMap.put("hxGroupId", agencyClassMapper.selectByPrimaryKey(agencyClassInvitationCode.getAgencyClassId()).getGroupId());
+        paramMap.put("userHxId", userDto.getHuanXinId());
         try {
             String huanxResult = HttpUtil.sendJson(phpUrl+"addHxGroup",new HashMap<>(),JSON.toJSONString(paramMap));
             AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
