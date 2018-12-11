@@ -288,4 +288,30 @@ public interface AgencyClassService {
      * @param status
      */
     void groupDisturb(Long groupId,String userId,Long studentId,Integer status);
+
+    /**
+     * 获取用户禁言状态
+     * @param groupId
+     * @param userId
+     * @param studentId
+     * @return
+     */
+    Integer getGroupChatStatus(Long groupId,String userId,Long studentId);
+
+    /**
+     * 禁言
+     * @param groupId
+     * @param userId
+     * @param studentId
+     * @param status
+     */
+    void groupKeepSilent(Long groupId,String userId,Long studentId,int status);
+
+    /**
+     * 获取免打扰群组信息
+     * @param userId
+     * @param studentId
+     * @return
+     */
+    List<AgencyClassInfoDto> getDisturbGroup(String userId,Long studentId);
 }

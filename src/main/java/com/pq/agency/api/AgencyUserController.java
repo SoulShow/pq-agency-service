@@ -128,4 +128,13 @@ public class AgencyUserController {
 		}
 		return result;
 	}
+
+	@GetMapping(value = "/disturb/group")
+	@ResponseBody
+	public AgencyResult getDisturbGroup(@RequestParam(value = "studentId",required = false)Long studentId,
+									 @RequestParam(value = "userId")String userId) {
+		AgencyResult result = new AgencyResult();
+		result.setData(agencyClassService.getDisturbGroup(userId,studentId));
+		return result;
+	}
 }

@@ -377,4 +377,23 @@ public class AgencyController {
 		return result;
 	}
 
+	@GetMapping(value = "/group/user/chatStatus")
+	@ResponseBody
+	public AgencyResult getGroupChatStatus(@RequestParam(value = "groupId")Long groupId,
+										   @RequestParam(value = "studentId",required = false)Long studentId,
+										   @RequestParam(value = "userId")String userId) {
+		AgencyResult result = new AgencyResult();
+		result.setData(agencyClassService.getGroupChatStatus(groupId,userId,studentId));
+		return result;
+	}
+
+	@PostMapping(value = "/group/user/chatStatus")
+	@ResponseBody
+	public AgencyResult groupKeepSilent(@RequestBody ChatStatusForm chatStatusForm) {
+		AgencyResult result = new AgencyResult();
+		agencyClassService.groupKeepSilent(chatStatusForm.getGroupId(),chatStatusForm.getUserId(),
+				chatStatusForm.getStudentId(),chatStatusForm.getStatus());
+		return result;
+	}
+
 }

@@ -855,21 +855,26 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         List<AgencyClassInfoDto> classInfoDtos = new ArrayList<>();
         List<AgencyGroupMember> memberList = groupMemberMapper.selectByStudentIdOrUserId(studentId,userId);
         for(AgencyGroupMember groupMember:memberList){
-            AgencyGroup agencyGroup = agencyGroupMapper.selectByPrimaryKey(groupMember.getGroupId());
-            AgencyClassInfoDto agencyClassInfoDto = new AgencyClassInfoDto();
-            agencyClassInfoDto.setId(agencyGroup.getId());
-            agencyClassInfoDto.setGroupId(agencyGroup.getHxGroupId());
-            agencyClassInfoDto.setImg(agencyGroup.getImg());
-            agencyClassInfoDto.setName(agencyGroup.getName());
-            agencyClassInfoDto.setType(Constants.AGENCY_GROUP_TYPE_GROUP);
-            if(agencyGroup.getClassId()!=null){
-                agencyClassInfoDto.setType(Constants.AGENCY_GROUP_TYPE_CLASS);
-            }
-            Integer count = groupMemberMapper.selectCountByGroupId(groupMember.getGroupId());
-            agencyClassInfoDto.setCount(count);
-            classInfoDtos.add(agencyClassInfoDto);
+            classInfoDtos.add(getAgencyClassInfoDto(groupMember));
         }
         return classInfoDtos;
+    }
+
+    private AgencyClassInfoDto getAgencyClassInfoDto(AgencyGroupMember groupMember){
+        AgencyGroup agencyGroup = agencyGroupMapper.selectByPrimaryKey(groupMember.getGroupId());
+        AgencyClassInfoDto agencyClassInfoDto = new AgencyClassInfoDto();
+        agencyClassInfoDto.setId(agencyGroup.getId());
+        agencyClassInfoDto.setGroupId(agencyGroup.getHxGroupId());
+        agencyClassInfoDto.setImg(agencyGroup.getImg());
+        agencyClassInfoDto.setName(agencyGroup.getName());
+        agencyClassInfoDto.setType(Constants.AGENCY_GROUP_TYPE_GROUP);
+        if(agencyGroup.getClassId()!=null){
+            agencyClassInfoDto.setType(Constants.AGENCY_GROUP_TYPE_CLASS);
+        }
+        agencyClassInfoDto.setDisturbStatus(groupMember.getDisturbStatus());
+        Integer count = groupMemberMapper.selectCountByGroupId(groupMember.getGroupId());
+        agencyClassInfoDto.setCount(count);
+        return agencyClassInfoDto;
     }
     @Override
     public  AgencyClassInfoDto getClassUserInfo(Long groupId,Long studentId,String userId){
@@ -959,6 +964,30 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         groupMember.setDisturbStatus(status);
         groupMember.setUpdatedTime(DateUtil.currentTime());
         groupMemberMapper.updateByPrimaryKey(groupMember);
+    }
+    @Override
+    public Integer getGroupChatStatus(Long groupId,String userId,Long studentId){
+        AgencyGroupMember groupMember = groupMemberMapper.selectByGroupIdAndStudentOrUserId(groupId,studentId,userId);
+        return groupMember.getChatStatus();
+    }
+
+
+    @Override
+    public void groupKeepSilent(Long groupId,String userId,Long studentId,int status){
+        AgencyGroupMember groupMember = groupMemberMapper.selectByGroupIdAndStudentOrUserId(groupId,studentId,userId);
+        groupMember.setChatStatus(status);
+        groupMember.setUpdatedTime(DateUtil.currentTime());
+        groupMemberMapper.updateByPrimaryKey(groupMember);
+    }
+
+    @Override
+    public List<AgencyClassInfoDto> getDisturbGroup(String userId,Long studentId){
+        List<AgencyClassInfoDto> classInfoDtos = new ArrayList<>();
+        List<AgencyGroupMember> memberList = groupMemberMapper.selectDisturbByStudentIdOrUserId(studentId,userId);
+        for(AgencyGroupMember groupMember:memberList){
+            classInfoDtos.add(getAgencyClassInfoDto(groupMember));
+        }
+        return classInfoDtos;
     }
 
 
