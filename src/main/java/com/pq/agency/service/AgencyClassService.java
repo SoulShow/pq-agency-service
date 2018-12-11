@@ -267,9 +267,11 @@ public interface AgencyClassService {
     /**
      * 获取班级成员信息
      * @param groupId
+     * @param studentId
+     * @param userId
      * @return
      */
-    AgencyClassInfoDto getClassUserInfo(Long groupId);
+    AgencyClassInfoDto getClassUserInfo(Long groupId,Long studentId,String userId);
 
     /**
      * 获取老师班级
@@ -277,4 +279,13 @@ public interface AgencyClassService {
      * @return
      */
     List<AgencyClass> getTeacherClassList(String userId);
+
+    /**
+     * 开启/关闭消息免打扰
+     * @param groupId
+     * @param userId
+     * @param studentId
+     * @param status
+     */
+    void groupDisturb(Long groupId,String userId,Long studentId,Integer status);
 }

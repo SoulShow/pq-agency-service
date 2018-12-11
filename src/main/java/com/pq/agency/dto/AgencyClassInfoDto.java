@@ -9,6 +9,8 @@ public class AgencyClassInfoDto {
     private String name;
     private int count;
     private int type;
+    private Integer disturbStatus;
+    private Integer chatStatus;
     private List<ClassUserInfoDto> list;
 
     public Long getId() {
@@ -65,5 +67,21 @@ public class AgencyClassInfoDto {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public Integer getDisturbStatus() {
+        return disturbStatus;
+    }
+
+    public void setDisturbStatus(Integer disturbStatus) {
+        this.disturbStatus = disturbStatus;
+    }
+
+    public Integer getChatStatus() {
+        return chatStatus;
+    }
+
+    public void setChatStatus(Integer chatStatus) {
+        this.chatStatus = chatStatus;
     }
 }

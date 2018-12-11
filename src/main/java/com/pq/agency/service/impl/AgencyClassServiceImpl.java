@@ -467,8 +467,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
     @Override
     public void noticeFileCollection(NoticeFileCollectionForm noticeFileCollectionForm){
-        UserNoticeFileCollection userNoticeFileCollection = new UserNoticeFileCollection();
-        userNoticeFileCollection.setNoticeId(noticeFileCollectionForm.getNoticeId());
+        UserNoticeFileCollection userNoticeFileCollection = collectionMapper.
+                selectByUserIdAndStudentIdAndFileName(noticeFileCollectionForm.getUserId(),
+                        noticeFileCollectionForm.getStudentId(), noticeFileCollectionForm.getFileName());
+        if(userNoticeFileCollection==null){
+            userNoticeFileCollection = new UserNoticeFileCollection();
+        }
         userNoticeFileCollection.setFile(noticeFileCollectionForm.getFileUrl());
         userNoticeFileCollection.setFileName(noticeFileCollectionForm.getFileName());
         userNoticeFileCollection.setFileSize(noticeFileCollectionForm.getFileSize());
@@ -477,9 +481,13 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         userNoticeFileCollection.setUserName(noticeFileCollectionForm.getName());
         userNoticeFileCollection.setSuffix(noticeFileCollectionForm.getSuffix());
         userNoticeFileCollection.setState(true);
-        userNoticeFileCollection.setCreatedTime(DateUtil.currentTime());
         userNoticeFileCollection.setUpdatedTime(DateUtil.currentTime());
-        collectionMapper.insert(userNoticeFileCollection);
+        if(userNoticeFileCollection.getId()==null){
+            userNoticeFileCollection.setCreatedTime(DateUtil.currentTime());
+            collectionMapper.insert(userNoticeFileCollection);
+        }else {
+            collectionMapper.updateByPrimaryKey(userNoticeFileCollection);
+        }
     }
     @Override
     public void deleteCollection(Long id,String userId,Long studentId){
@@ -865,7 +873,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         return classInfoDtos;
     }
     @Override
-    public  AgencyClassInfoDto getClassUserInfo(Long groupId){
+    public  AgencyClassInfoDto getClassUserInfo(Long groupId,Long studentId,String userId){
 
         AgencyClassInfoDto agencyClassInfoDto = new AgencyClassInfoDto();
         AgencyGroup agencyGroup = agencyGroupMapper.selectByPrimaryKey(groupId);
@@ -873,6 +881,13 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         agencyClassInfoDto.setId(agencyGroup.getId());
         agencyClassInfoDto.setName(agencyGroup.getName());
         agencyClassInfoDto.setImg(agencyGroup.getImg());
+
+        AgencyGroupMember member = groupMemberMapper.selectByGroupIdAndStudentOrUserId(groupId,studentId,userId);
+        if(member == null){
+            AgencyException.raise(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR);
+        }
+        agencyClassInfoDto.setChatStatus(member.getChatStatus());
+        agencyClassInfoDto.setDisturbStatus(member.getDisturbStatus());
 
         List<ClassUserInfoDto> list = new ArrayList<>();
         List<AgencyGroupMember> memberList = groupMemberMapper.selectByGroupId(groupId);
@@ -887,12 +902,14 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 UserDto userDto = result.getData();
                 classUserInfoDto.setAvatar(userDto.getAvatar());
                 classUserInfoDto.setName(userDto.getName());
-
 //                classUserInfoDto.setClassName();
                 classUserInfoDto.setRole(userDto.getRole());
                 classUserInfoDto.setSex(userDto.getGender());
                 classUserInfoDto.setUserId(groupMember.getUserId());
                 classUserInfoDto.setHuanxinId(userDto.getHuanxinId());
+                classUserInfoDto.setDisturbStatus(groupMember.getDisturbStatus());
+                classUserInfoDto.setChatStatus(groupMember.getChatStatus());
+
             }
             if(StringUtil.isEmpty(groupMember.getUserId()) && groupMember.getStudentId()!=null){
                 AgencyStudent agencyStudent =agencyStudentMapper.selectByPrimaryKey(groupMember.getStudentId());
@@ -900,6 +917,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 classUserInfoDto.setAvatar(agencyStudent.getAvatar());
                 classUserInfoDto.setName(agencyStudent.getName());
                 classUserInfoDto.setSex(agencyStudent.getSex()==1?"男":"女");
+                classUserInfoDto.setDisturbStatus(groupMember.getDisturbStatus());
+                classUserInfoDto.setChatStatus(groupMember.getChatStatus());
 
                 List<ParentDto> parentList = new ArrayList<>();
                 List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
@@ -934,6 +953,13 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             classList.add(agencyClass);
         }
         return classList;
+    }
+    @Override
+    public void groupDisturb(Long groupId,String userId,Long studentId,Integer status){
+        AgencyGroupMember groupMember = groupMemberMapper.selectByGroupIdAndStudentOrUserId(groupId,studentId,userId);
+        groupMember.setDisturbStatus(status);
+        groupMember.setUpdatedTime(DateUtil.currentTime());
+        groupMemberMapper.updateByPrimaryKey(groupMember);
     }
 
 

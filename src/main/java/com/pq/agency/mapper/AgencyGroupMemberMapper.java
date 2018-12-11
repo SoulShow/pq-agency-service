@@ -22,4 +22,8 @@ public interface AgencyGroupMemberMapper {
 
     List<AgencyGroupMember> selectByStudentIdOrUserId(@Param("studentId")Long studentId,
                                                       @Param("userId")String userId);
+
+    AgencyGroupMember selectByGroupIdAndStudentOrUserId(@Param("groupId") Long groupId,
+                                                        @Param("studentId")Long studentId,
+                                                        @Param("userId")String userId);
 }

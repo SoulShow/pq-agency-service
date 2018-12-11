@@ -19,6 +19,10 @@ public class ClassUserInfoDto {
 
     private String huanxinId;
 
+    private Integer disturbStatus;
+
+    private Integer chatStatus;
+
     private List<ParentDto> parentList;
 
     public String getName() {
@@ -91,5 +95,21 @@ public class ClassUserInfoDto {
 
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    public Integer getDisturbStatus() {
+        return disturbStatus;
+    }
+
+    public void setDisturbStatus(Integer disturbStatus) {
+        this.disturbStatus = disturbStatus;
+    }
+
+    public Integer getChatStatus() {
+        return chatStatus;
+    }
+
+    public void setChatStatus(Integer chatStatus) {
+        this.chatStatus = chatStatus;
     }
 }

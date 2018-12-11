@@ -59,8 +59,21 @@
     from pq_user_notice_file_collection
     where user_id = #{userId}
     and state = 1
+    <if test="studentId!=null and studentId !=0">
     and student_id = #{studentId}
+    </if>
     order by created_time desc
     limit #{offset},#{size}
+  </select>
+
+  <select id="selectByUserIdAndStudentIdAndFileName" resultMap="BaseResultMap" >
+    select id, user_id, user_name, notice_id, file, state, updated_time, created_time, file_name,file_size,suffix,student_id
+    from pq_user_notice_file_collection
+    where user_id = #{userId}
+    and state = 1
+    <if test="studentId!=null and studentId !=0">
+      and student_id = #{studentId}
+    </if>
+    and file_name = #{fileName}
   </select>
 </mapper>

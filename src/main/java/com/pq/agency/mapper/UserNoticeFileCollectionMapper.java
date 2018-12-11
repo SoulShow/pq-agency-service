@@ -21,4 +21,8 @@ public interface UserNoticeFileCollectionMapper {
                                                   @Param("studentId")Long studentId,
                                                   @Param(value = "offset")Integer offset,
                                                   @Param(value = "size")Integer size);
+
+    UserNoticeFileCollection selectByUserIdAndStudentIdAndFileName(@Param("userId")String userId,
+                                                                   @Param("studentId")Long studentId,
+                                                                   @Param("fileName")String fileName);
 }

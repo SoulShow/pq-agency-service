@@ -1,10 +1,7 @@
 package com.pq.agency.api;
 
 import com.pq.agency.exception.AgencyException;
-import com.pq.agency.param.CollectionDeleteForm;
-import com.pq.agency.param.NoticeFileCollectionForm;
-import com.pq.agency.param.NoticeReceiptForm;
-import com.pq.agency.param.VoteSelectedForm;
+import com.pq.agency.param.*;
 import com.pq.agency.service.AgencyClassService;
 import com.pq.agency.service.AgencyService;
 import com.pq.agency.utils.AgencyResult;
@@ -363,9 +360,20 @@ public class AgencyController {
 
 	@GetMapping(value = "/group/user")
 	@ResponseBody
-	public AgencyResult getAgencyClassUserInfo(@RequestParam(value = "groupId")Long groupId) {
+	public AgencyResult getAgencyClassUserInfo(@RequestParam(value = "groupId")Long groupId,
+											   @RequestParam(value = "studentId",required = false)Long studentId,
+											   @RequestParam(value = "userId")String userId) {
 		AgencyResult result = new AgencyResult();
-		result.setData(agencyClassService.getClassUserInfo(groupId));
+		result.setData(agencyClassService.getClassUserInfo(groupId,studentId,userId));
+		return result;
+	}
+
+	@PostMapping(value = "/group/disturb")
+	@ResponseBody
+	public AgencyResult groupDisturb(@RequestBody DisturbForm disturbForm) {
+		AgencyResult result = new AgencyResult();
+		agencyClassService.groupDisturb(disturbForm.getGroupId(),disturbForm.getUserId(),
+				disturbForm.getStudentId(),disturbForm.getStatus());
 		return result;
 	}
 

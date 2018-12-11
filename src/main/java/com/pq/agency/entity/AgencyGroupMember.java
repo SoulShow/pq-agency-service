@@ -11,6 +11,10 @@ public class AgencyGroupMember {
 
     private String userId;
 
+    private Integer disturbStatus;
+
+    private Integer chatStatus;
+
     private Boolean state;
 
     private Timestamp updatedTime;
@@ -71,5 +75,21 @@ public class AgencyGroupMember {
 
     public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public Integer getDisturbStatus() {
+        return disturbStatus;
+    }
+
+    public void setDisturbStatus(Integer disturbStatus) {
+        this.disturbStatus = disturbStatus;
+    }
+
+    public Integer getChatStatus() {
+        return chatStatus;
+    }
+
+    public void setChatStatus(Integer chatStatus) {
+        this.chatStatus = chatStatus;
     }
 }
