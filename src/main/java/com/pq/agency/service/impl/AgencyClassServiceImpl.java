@@ -447,12 +447,11 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         for(UserNoticeFileCollection collection:list){
             UserNoticeFileCollectionDto collectionDto = new UserNoticeFileCollectionDto();
             collectionDto.setId(collection.getId());
-            AgencyClassNotice notice = noticeMapper.selectByPrimaryKey(collection.getNoticeId());
-            AgencyResult<UserDto> result = userFeign.getUserInfo(notice.getUserId());
+            AgencyResult<UserDto> result = userFeign.getUserInfo(userId);
             if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
                 throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
             }
-            collectionDto.setUserId(notice.getUserId());
+            collectionDto.setUserId(userId);
             collectionDto.setUserName(result.getData().getName());
             collectionDto.setNoticeId(collection.getNoticeId());
             collectionDto.setFile(collection.getFile());
