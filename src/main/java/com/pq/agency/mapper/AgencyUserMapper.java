@@ -24,4 +24,5 @@ public interface AgencyUserMapper {
 
     List<AgencyUser> selectByClassIdAndRole(@Param("agencyClassId")Long agencyClassId,@Param("role")int role);
 
+
 }

@@ -314,4 +314,26 @@ public interface AgencyClassService {
      * @return
      */
     List<AgencyClassInfoDto> getDisturbGroup(String userId,Long studentId);
+
+
+    /**
+     * 获取群组成员信息
+     * @param groupId
+     * @param name
+     * @return
+     */
+    AgencyClassInfoDto getGroupSearchUserInfo(Long groupId,String name);
+
+    /**
+     * 获取某人的老师和班级信息
+     * @param userId
+     * @param studentId
+     * @param role
+     * @param name
+     * @return
+     */
+    ClassAndTeacherInfoDto getClassAndTeacherInfo(String userId,Long studentId,int role,String name);
+
+
+
 }

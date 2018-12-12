@@ -18,4 +18,8 @@ public class Constants {
     public static final int AGENCY_GROUP_TYPE_CLASS = 1;
     public static final int AGENCY_GROUP_TYPE_GROUP = 2;
 
+    public static final String AGENCY_GROUP_USER_INFO = "AGENCY_GROUP_USER_INFO:";
+
+    public static final String AGENCY_GROUP_FORWARD_INFO = "AGENCY_GROUP_FORWARD_INFO:";
+
 }

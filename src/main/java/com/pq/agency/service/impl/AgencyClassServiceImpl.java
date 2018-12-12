@@ -1,6 +1,8 @@
 package com.pq.agency.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.pq.agency.dto.*;
 import com.pq.agency.entity.*;
 import com.pq.agency.exception.AgencyErrorCode;
@@ -21,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,6 +92,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     private AgencyGroupMemberMapper groupMemberMapper;
     @Value("${php.url}")
     private String phpUrl;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     public void checkInvitationCodeAndStudent(String phone, String invitationCode, String studentName){
@@ -115,7 +120,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         if(studentList==null||studentList.size()==0){
             AgencyException.raise(AgencyErrors.AGENCY_STUDENT_NOT_EXIST_ERROR);
         }
-        List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.selectByAgencycClassIdAndStudentId(agencyClassInvitationCode.getAgencyClassId(),
+        List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.selectByAgencyClassIdAndStudentId(agencyClassInvitationCode.getAgencyClassId(),
                 studentList.get(0).getId());
         List<String> relationList = new ArrayList<>();
         for(AgencyUserStudent userStudent : userStudentList){
@@ -634,7 +639,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             List<ParentDto> parentList = new ArrayList<>();
 
             List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
-                    selectByAgencycClassIdAndStudentId(classTask.getAgencyClassId(),student.getId());
+                    selectByAgencyClassIdAndStudentId(classTask.getAgencyClassId(),student.getId());
             for(AgencyUserStudent userStudent : userStudentList){
                 ParentDto parentDto = new ParentDto();
                 parentDto.setUserId(userStudent.getUserId());
@@ -926,7 +931,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
                 List<ParentDto> parentList = new ArrayList<>();
                 List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
-                        selectByAgencycClassIdAndStudentId(agencyStudent.getAgencyClassId(),agencyStudent.getId());
+                        selectByAgencyClassIdAndStudentId(agencyStudent.getAgencyClassId(),agencyStudent.getId());
                 for(AgencyUserStudent userStudent : userStudentList){
                     ParentDto parentDto = new ParentDto();
                     parentDto.setUserId(userStudent.getUserId());
@@ -944,7 +949,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             }
             list.add(classUserInfoDto);
         }
+        redisTemplate.opsForValue().set(Constants.AGENCY_GROUP_USER_INFO+groupId,JSON.toJSON(list).toString());
         agencyClassInfoDto.setList(list);
+
         return agencyClassInfoDto;
     }
 
@@ -989,6 +996,132 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
         return classInfoDtos;
     }
+    @Override
+    public  AgencyClassInfoDto getGroupSearchUserInfo(Long groupId,String name){
+        List<ClassUserInfoDto> searchList = new ArrayList<>();
+        AgencyClassInfoDto agencyClassInfoDto = new AgencyClassInfoDto();
+        List<ClassUserInfoDto> list = new ArrayList<>();
+        if(redisTemplate.hasKey(Constants.AGENCY_GROUP_USER_INFO+groupId)){
+            LOGGER.info("群组人员list：-------"+redisTemplate.opsForValue().get(Constants.AGENCY_GROUP_USER_INFO+groupId));
+            list = JSON.parseObject((String) redisTemplate.opsForValue().get(Constants.AGENCY_GROUP_USER_INFO+groupId),new TypeReference<List<ClassUserInfoDto>>() {
+            });
+        }
+        if(!StringUtil.isEmpty(name)){
+            for(ClassUserInfoDto userInfoDto:list){
+                if(userInfoDto.getName().contains(name)){
+                    searchList.add(userInfoDto);
+                }
+            }
+        }
 
+        agencyClassInfoDto.setList(searchList);
+        return agencyClassInfoDto;
+    }
+
+    @Override
+    public ClassAndTeacherInfoDto getClassAndTeacherInfo(String userId,Long studentId,int role,String name){
+        ClassAndTeacherInfoDto classAndTeacherInfoDto = new ClassAndTeacherInfoDto();
+        List<AgencyClassDto> classList = new ArrayList<>();
+        List<AgencyTeacherDto> teacherList = new ArrayList<>();
+
+        if(StringUtil.isEmpty(name)){
+            if(role == CommonConstants.PQ_LOGIN_ROLE_PARENT){
+                AgencyUserStudent userStudent = agencyUserStudentMapper.selectByUserIdAndStudentId(userId,studentId);
+                if(userStudent==null){
+                    AgencyException.raise(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR);
+                }
+                AgencyClassDto agencyClassDto = new AgencyClassDto();
+                AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(userStudent.getAgencyClassId());
+                if(agencyClass==null){
+                    AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
+                }
+                agencyClassDto.setId(agencyClass.getId());
+                agencyClassDto.setAvatar(agencyClass.getImg());
+                agencyClassDto.setHxGroupId(agencyClass.getGroupId());
+                agencyClassDto.setName(agencyClass.getName());
+                classList.add(agencyClassDto);
+
+                List<AgencyUser> userList = agencyUserMapper.selectByClassIdAndRole(agencyClass.getId(),
+                        CommonConstants.PQ_LOGIN_ROLE_TEACHER);
+                for(AgencyUser agencyUser:userList){
+                    AgencyTeacherDto teacherDto = new AgencyTeacherDto();
+                    teacherDto.setUserId(agencyUser.getUserId());
+                    AgencyResult<UserDto> result = userFeign.getUserInfo(agencyUser.getUserId());
+                    if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                        throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+                    }
+                    UserDto userDto = result.getData();
+                    teacherDto.setHuanxinId(userDto.getHuanxinId());
+                    teacherDto.setName(userDto.getName());
+                    teacherDto.setAvatar(userDto.getAvatar());
+                    teacherList.add(teacherDto);
+                }
+            }
+
+            if(role == CommonConstants.PQ_LOGIN_ROLE_TEACHER){
+                List<Long> list = agencyUserMapper.selectClassIdByUserId(userId);
+                Map<String,Object> userMap = new HashMap<>();
+                for(Long classId:list){
+                    AgencyClassDto agencyClassDto = new AgencyClassDto();
+                    AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(classId);
+                    if(agencyClass==null){
+                        AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
+                    }
+                    agencyClassDto.setId(agencyClass.getId());
+                    agencyClassDto.setAvatar(agencyClass.getImg());
+                    agencyClassDto.setHxGroupId(agencyClass.getGroupId());
+                    agencyClassDto.setName(agencyClass.getName());
+                    classList.add(agencyClassDto);
+                    List<AgencyUser> userList =  agencyUserMapper.selectByClassIdAndRole(classId,CommonConstants.PQ_LOGIN_ROLE_TEACHER);
+                    for(AgencyUser agencyUser:userList){
+                        AgencyTeacherDto teacherDto = new AgencyTeacherDto();
+                        if(userId.equals(agencyUser.getUserId())){
+                            continue;
+                        }
+                        teacherDto.setUserId(agencyUser.getUserId());
+                        AgencyResult<UserDto> result = userFeign.getUserInfo(agencyUser.getUserId());
+                        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                            throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+                        }
+                        UserDto userDto = result.getData();
+                        teacherDto.setHuanxinId(userDto.getHuanxinId());
+                        teacherDto.setName(userDto.getName());
+                        teacherDto.setAvatar(userDto.getAvatar());
+                        userMap.put(teacherDto.getName(),teacherDto);
+                    }
+                }
+                Iterator iterator = userMap.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Map.Entry entry = (Map.Entry) iterator.next();
+                    teacherList.add((AgencyTeacherDto) entry.getValue());
+                }
+            }
+            classAndTeacherInfoDto.setClassList(classList);
+            classAndTeacherInfoDto.setTeacherList(teacherList);
+            redisTemplate.opsForValue().set(Constants.AGENCY_GROUP_FORWARD_INFO+userId+studentId,JSON.toJSON(classAndTeacherInfoDto).toString());
+        }else {
+            ClassAndTeacherInfoDto searchDto = new ClassAndTeacherInfoDto();
+            List<AgencyClassDto> searchClassList = new ArrayList<>();
+            List<AgencyTeacherDto> searchTeacherList = new ArrayList<>();
+
+            ClassAndTeacherInfoDto cacheDto = JSON.parseObject((String) redisTemplate.opsForValue()
+                    .get(Constants.AGENCY_GROUP_FORWARD_INFO+userId+studentId),ClassAndTeacherInfoDto.class);
+            for(AgencyClassDto classDto:cacheDto.getClassList()){
+                if(classDto.getName().contains(name)){
+                    searchClassList.add(classDto);
+                }
+            }
+            for(AgencyTeacherDto teacherDto:cacheDto.getTeacherList()){
+                if(teacherDto.getName().contains(name)){
+                    searchTeacherList.add(teacherDto);
+                }
+            }
+            searchDto.setTeacherList(searchTeacherList);
+            searchDto.setClassList(searchClassList);
+            return searchDto;
+        }
+
+        return classAndTeacherInfoDto;
+    }
 
 }

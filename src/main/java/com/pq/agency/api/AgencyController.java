@@ -354,7 +354,16 @@ public class AgencyController {
 	public AgencyResult getAgencyClassInfo(@RequestParam(value = "studentId",required = false)Long studentId,
 										   @RequestParam(value = "userId")String userId) {
 		AgencyResult result = new AgencyResult();
-		result.setData(agencyClassService.getClassInfo(userId,studentId));
+		try {
+			result.setData(agencyClassService.getClassInfo(userId,studentId));
+		}catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
 		return result;
 	}
 
@@ -364,7 +373,16 @@ public class AgencyController {
 											   @RequestParam(value = "studentId",required = false)Long studentId,
 											   @RequestParam(value = "userId")String userId) {
 		AgencyResult result = new AgencyResult();
-		result.setData(agencyClassService.getClassUserInfo(groupId,studentId,userId));
+		try {
+			result.setData(agencyClassService.getClassUserInfo(groupId,studentId,userId));
+		}catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
 		return result;
 	}
 
@@ -372,8 +390,18 @@ public class AgencyController {
 	@ResponseBody
 	public AgencyResult groupDisturb(@RequestBody DisturbForm disturbForm) {
 		AgencyResult result = new AgencyResult();
-		agencyClassService.groupDisturb(disturbForm.getGroupId(),disturbForm.getUserId(),
-				disturbForm.getStudentId(),disturbForm.getStatus());
+		try {
+			agencyClassService.groupDisturb(disturbForm.getGroupId(),disturbForm.getUserId(),
+					disturbForm.getStudentId(),disturbForm.getStatus());
+		}catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+
 		return result;
 	}
 
@@ -383,7 +411,16 @@ public class AgencyController {
 										   @RequestParam(value = "studentId",required = false)Long studentId,
 										   @RequestParam(value = "userId")String userId) {
 		AgencyResult result = new AgencyResult();
-		result.setData(agencyClassService.getGroupChatStatus(groupId,userId,studentId));
+		try{
+			result.setData(agencyClassService.getGroupChatStatus(groupId,userId,studentId));
+		}catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
 		return result;
 	}
 
@@ -391,8 +428,55 @@ public class AgencyController {
 	@ResponseBody
 	public AgencyResult groupKeepSilent(@RequestBody ChatStatusForm chatStatusForm) {
 		AgencyResult result = new AgencyResult();
-		agencyClassService.groupKeepSilent(chatStatusForm.getGroupId(),chatStatusForm.getUserId(),
-				chatStatusForm.getStudentId(),chatStatusForm.getStatus());
+		try{
+			agencyClassService.groupKeepSilent(chatStatusForm.getGroupId(),chatStatusForm.getUserId(),
+					chatStatusForm.getStudentId(),chatStatusForm.getStatus());
+		}catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+
+		return result;
+	}
+
+	@GetMapping(value = "/group/search/user")
+	@ResponseBody
+	public AgencyResult getGroupSearchUserInfo(@RequestParam(value = "groupId")Long groupId,
+											   @RequestParam(value = "name",required = false)String name) {
+		AgencyResult result = new AgencyResult();
+		try{
+			result.setData(agencyClassService.getGroupSearchUserInfo(groupId,name));
+		}catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
+	@GetMapping(value = "/group/forward/info")
+	@ResponseBody
+	public AgencyResult getGroupForwardSearchUserInfo(@RequestParam(value = "userId")String userId,
+											   @RequestParam(value = "studentId",required = false)Long studentId,
+											   @RequestParam(value = "name",required = false)String name,
+											   @RequestParam(value = "role")int role) {
+		AgencyResult result = new AgencyResult();
+		try{
+			result.setData(agencyClassService.getClassAndTeacherInfo(userId, studentId, role,name));
+		}catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
 		return result;
 	}
 

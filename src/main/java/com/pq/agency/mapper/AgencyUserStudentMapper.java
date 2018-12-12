@@ -18,6 +18,8 @@ public interface AgencyUserStudentMapper {
 
     List<AgencyUserStudent> selectByUserId(@Param("userId") String userId);
 
-    List<AgencyUserStudent> selectByAgencycClassIdAndStudentId(@Param("agencyClassId") Long agencyClassId,
+    List<AgencyUserStudent> selectByAgencyClassIdAndStudentId(@Param("agencyClassId") Long agencyClassId,
                                                          @Param("studentId")Long studentId);
+
+    AgencyUserStudent selectByUserIdAndStudentId(@Param("userId") String userId, @Param("studentId")Long studentId);
 }
