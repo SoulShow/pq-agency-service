@@ -651,6 +651,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 UserDto userDto = result.getData();
                 parentDto.setPhone(userDto.getUsername());
                 parentDto.setHuanxinId(userDto.getHuanxinId());
+                parentDto.setAvatar(userDto.getAvatar());
                 parentList.add(parentDto);
             }
             agencyStudentDto.setParentList(parentList);
@@ -936,13 +937,13 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                     ParentDto parentDto = new ParentDto();
                     parentDto.setUserId(userStudent.getUserId());
                     parentDto.setName(agencyStudent.getName()+userStudent.getRelation());
-
                     AgencyResult<UserDto> result = userFeign.getUserInfo(userStudent.getUserId());
                     if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
                         throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
                     }
                     UserDto userDto = result.getData();
                     parentDto.setHuanxinId(userDto.getHuanxinId());
+                    parentDto.setAvatar(userDto.getAvatar());
                     parentList.add(parentDto);
                 }
                 classUserInfoDto.setParentList(parentList);
