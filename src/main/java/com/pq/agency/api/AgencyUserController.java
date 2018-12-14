@@ -6,6 +6,8 @@ import com.pq.agency.exception.AgencyErrors;
 import com.pq.agency.exception.AgencyException;
 import com.pq.agency.param.AgencyUserRegisterCheckForm;
 import com.pq.agency.param.AgencyUserRegisterForm;
+import com.pq.agency.param.CollectionDeleteForm;
+import com.pq.agency.param.NoticeFileCollectionForm;
 import com.pq.agency.service.AgencyClassService;
 import com.pq.agency.utils.AgencyResult;
 import com.pq.common.exception.CommonErrors;
@@ -137,4 +139,67 @@ public class AgencyUserController {
 		result.setData(agencyClassService.getDisturbGroup(userId,studentId));
 		return result;
 	}
+
+	@GetMapping(value = "/user/collection/list")
+	@ResponseBody
+	public AgencyResult getCollectList(@RequestParam("userId")String userId,
+									   @RequestParam(value = "studentId")Long studentId,
+									   @RequestParam(value = "page",required = false)Integer page,
+									   @RequestParam(value = "size",required = false)Integer size) {
+
+		AgencyResult result = new AgencyResult();
+		try {
+			if (page == null || page < 1) {
+				page = 1;
+			}
+			if (size == null || size < 1) {
+				size = 20;
+			}
+			int offset = (page - 1) * size;
+			result.setData(agencyClassService.getCollectList(userId, studentId, offset, size));
+		} catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
+	@PostMapping(value = "/collection")
+	@ResponseBody
+	public AgencyResult collection(@RequestBody NoticeFileCollectionForm collectionForm) {
+
+		AgencyResult result = new AgencyResult();
+		try {
+			agencyClassService.noticeFileCollection(collectionForm);
+		} catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
+	@PostMapping(value = "/collection/delete")
+	@ResponseBody
+	public AgencyResult deleteCollection(@RequestBody CollectionDeleteForm deleteForm) {
+
+		AgencyResult result = new AgencyResult();
+		try {
+			agencyClassService.deleteCollection(deleteForm.getCollectionId(),deleteForm.getUserId(),deleteForm.getStudentId());
+		} catch (AgencyException e){
+			result.setStatus(e.getErrorCode().getErrorCode());
+			result.setMessage(e.getErrorCode().getErrorMsg());
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
+
 }

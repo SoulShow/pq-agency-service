@@ -126,4 +126,22 @@ public class AgencyTeacherController {
         }
         return result;
     }
+    @PostMapping(value = "/group/keepSilent")
+    @ResponseBody
+    public AgencyResult groupKeepSilent(@RequestBody ChatStatusForm chatStatusForm) {
+        AgencyResult result = new AgencyResult();
+        try{
+            agencyClassService.groupKeepSilent(chatStatusForm.getGroupId(),chatStatusForm.getUserId(),
+                    chatStatusForm.getStudentId(),chatStatusForm.getStatus());
+        }catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+
+        return result;
+    }
 }

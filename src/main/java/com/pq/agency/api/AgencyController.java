@@ -137,67 +137,6 @@ public class AgencyController {
 		}
 		return result;
 	}
-	@GetMapping(value = "/user/collection/list")
-	@ResponseBody
-	public AgencyResult getCollectList(@RequestParam("userId")String userId,
-									   @RequestParam(value = "studentId")Long studentId,
-									   @RequestParam(value = "page",required = false)Integer page,
-									   @RequestParam(value = "size",required = false)Integer size) {
-
-		AgencyResult result = new AgencyResult();
-		try {
-			if (page == null || page < 1) {
-				page = 1;
-			}
-			if (size == null || size < 1) {
-				size = 20;
-			}
-			int offset = (page - 1) * size;
-			result.setData(agencyClassService.getCollectList(userId, studentId, offset, size));
-		} catch (AgencyException e){
-			result.setStatus(e.getErrorCode().getErrorCode());
-			result.setMessage(e.getErrorCode().getErrorMsg());
-		}catch (Exception e) {
-			e.printStackTrace();
-			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
-			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
-		}
-		return result;
-	}
-	@PostMapping(value = "/user/collection")
-	@ResponseBody
-	public AgencyResult collection(@RequestBody NoticeFileCollectionForm collectionForm) {
-
-		AgencyResult result = new AgencyResult();
-		try {
-			agencyClassService.noticeFileCollection(collectionForm);
-		} catch (AgencyException e){
-			result.setStatus(e.getErrorCode().getErrorCode());
-			result.setMessage(e.getErrorCode().getErrorMsg());
-		}catch (Exception e) {
-			e.printStackTrace();
-			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
-			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
-		}
-		return result;
-	}
-	@PostMapping(value = "/user/collection/delete")
-	@ResponseBody
-	public AgencyResult deleteCollection(@RequestBody CollectionDeleteForm deleteForm) {
-
-		AgencyResult result = new AgencyResult();
-		try {
-			agencyClassService.deleteCollection(deleteForm.getCollectionId(),deleteForm.getUserId(),deleteForm.getStudentId());
-		} catch (AgencyException e){
-			result.setStatus(e.getErrorCode().getErrorCode());
-			result.setMessage(e.getErrorCode().getErrorMsg());
-		}catch (Exception e) {
-			e.printStackTrace();
-			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
-			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
-		}
-		return result;
-	}
 
     @GetMapping(value = "/class/schedule")
     @ResponseBody
@@ -424,24 +363,6 @@ public class AgencyController {
 		return result;
 	}
 
-	@PostMapping(value = "/group/user/chatStatus")
-	@ResponseBody
-	public AgencyResult groupKeepSilent(@RequestBody ChatStatusForm chatStatusForm) {
-		AgencyResult result = new AgencyResult();
-		try{
-			agencyClassService.groupKeepSilent(chatStatusForm.getGroupId(),chatStatusForm.getUserId(),
-					chatStatusForm.getStudentId(),chatStatusForm.getStatus());
-		}catch (AgencyException e){
-			result.setStatus(e.getErrorCode().getErrorCode());
-			result.setMessage(e.getErrorCode().getErrorMsg());
-		}catch (Exception e) {
-			e.printStackTrace();
-			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
-			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
-		}
-
-		return result;
-	}
 
 	@GetMapping(value = "/group/search/user")
 	@ResponseBody

@@ -48,6 +48,7 @@
     created_time
     from pq_agency_class_vote
     where id = #{id,jdbcType=BIGINT}
+    and state = 1
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select id, agency_class_id, user_id, title, deadline, type, is_secret, state, updated_time, 
