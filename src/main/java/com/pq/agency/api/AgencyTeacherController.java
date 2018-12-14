@@ -94,4 +94,36 @@ public class AgencyTeacherController {
         }
         return result;
     }
+    @PostMapping(value = "/class/vote")
+    @ResponseBody
+    public AgencyResult createVote(@RequestBody AgencyClassVoteForm voteForm) {
+        AgencyResult result = new AgencyResult();
+        try {
+            agencyClassService.createVote(voteForm);
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+    @PostMapping(value = "/class/vote/delete")
+    @ResponseBody
+    public AgencyResult deleteVote(@RequestParam("voteId")Long voteId) {
+        AgencyResult result = new AgencyResult();
+        try {
+            agencyClassService.deleteVote(voteId);
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
 }

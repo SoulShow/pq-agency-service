@@ -27,6 +27,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -1124,5 +1125,46 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
         return classAndTeacherInfoDto;
     }
+
+    @Override
+    public void createVote(AgencyClassVoteForm voteForm){
+        AgencyClassVote classVote = new AgencyClassVote();
+        classVote.setAgencyClassId(voteForm.getAgencyClassId());
+        classVote.setUserId(voteForm.getUserId());
+        classVote.setTitle(voteForm.getTitle());
+        classVote.setDeadline(new Timestamp(DateUtil.getDate(voteForm.getDeadline(),
+                DateUtil.DEFAULT_DATETIME_FORMAT).getTime()));
+        classVote.setType(voteForm.getType());
+        classVote.setIsSecret(voteForm.getIsSecret());
+        classVote.setState(true);
+        classVote.setUpdatedTime(DateUtil.currentTime());
+        classVote.setCreatedTime(DateUtil.currentTime());
+        classVoteMapper.insert(classVote);
+
+        for(String option:voteForm.getOptionList()){
+            ClassVoteOption voteOption = new ClassVoteOption();
+            voteOption.setVoteId(classVote.getId());
+            voteOption.setItem(option);
+            voteOption.setState(true);
+            voteOption.setUpdatedTime(DateUtil.currentTime());
+            voteOption.setCreatedTime(DateUtil.currentTime());
+            voteOptionMapper.insert(voteOption);
+        }
+        for(String img:voteForm.getImgList()){
+            ClassVoteImg voteImg = new ClassVoteImg();
+            voteImg.setVoteId(classVote.getId());
+            voteImg.setImg(img);
+            voteImg.setState(true);
+            voteImg.setUpdatedTime(DateUtil.currentTime());
+            voteImg.setCreatedTime(DateUtil.currentTime());
+            voteImgMapper.insert(voteImg);
+        }
+    }
+    @Override
+    public void deleteVote(Long voteId){
+        AgencyClassVote classVote = classVoteMapper.selectByPrimaryKey(voteId);
+        classVoteMapper.updateByPrimaryKey(classVote);
+    }
+
 
 }

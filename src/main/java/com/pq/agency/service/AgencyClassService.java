@@ -335,5 +335,17 @@ public interface AgencyClassService {
     ClassAndTeacherInfoDto getClassAndTeacherInfo(String userId,Long studentId,int role,String name);
 
 
+    /**
+     * 创建投票信息
+     * @param voteForm
+     */
+    void createVote(AgencyClassVoteForm voteForm);
+
+    /**
+     * 投票删除
+     * @param voteId
+     */
+    void deleteVote(Long voteId);
+
 
 }

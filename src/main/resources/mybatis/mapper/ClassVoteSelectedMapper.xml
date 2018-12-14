@@ -59,7 +59,9 @@
     where state = 1
     and vote_id = #{voteId}
     and user_id = #{userId}
+    <if test="studentId !=null and studentId!=''">
     and student_id = #{studentId}
+    </if>
   </select>
 
   <select id="selectByOptionAndVoteId" resultMap="BaseResultMap" >
