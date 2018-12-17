@@ -550,28 +550,28 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
     }
 
-    private void pushClassMsg(){
-
-        HashMap<String, String> paramMap = new HashMap<>();
-        AgencyResult<UserDto> result = userFeign.getUserInfo(registerForm.getUserId());
-        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
-            throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
-        }
-        UserDto userDto = result.getData();
-        LOGGER.info("环信id————————————"+userDto.getHuanxinId());
-        paramMap.put("hxGroupId", agencyClassMapper.selectByPrimaryKey(agencyClassInvitationCode.getAgencyClassId()).getGroupId());
-        paramMap.put("userHxId", userDto.getHuanxinId());
-        try {
-            String huanxResult = HttpUtil.sendJson(phpUrl+"push",new HashMap<>(),JSON.toJSONString(paramMap));
-            AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
-            if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
-                AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
-        }
-    }
+//    private void pushClassMsg(){
+//
+//        HashMap<String, String> paramMap = new HashMap<>();
+//        AgencyResult<UserDto> result = userFeign.getUserInfo(registerForm.getUserId());
+//        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+//            throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+//        }
+//        UserDto userDto = result.getData();
+//        LOGGER.info("环信id————————————"+userDto.getHuanxinId());
+//        paramMap.put("hxGroupId", agencyClassMapper.selectByPrimaryKey(agencyClassInvitationCode.getAgencyClassId()).getGroupId());
+//        paramMap.put("userHxId", userDto.getHuanxinId());
+//        try {
+//            String huanxResult = HttpUtil.sendJson(phpUrl+"push",new HashMap<>(),JSON.toJSONString(paramMap));
+//            AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
+//            if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
+//                AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
+//        }
+//    }
 
     @Override
     public List<ClassTaskDto> getTaskList(Long agencyClassId,String userId, Long studentId,int offset, int size){
