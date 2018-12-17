@@ -90,6 +90,13 @@ public interface AgencyClassService {
     List<Long> getUserClassId(String userId);
 
     /**
+     * 获取用户信息
+     * @param userId
+     * @return
+     */
+    List<AgencyClassDto> getUserClassInfo(String userId);
+
+    /**
      * 班级风采
      * @param agencyClassId
      * @param offset

@@ -1,6 +1,7 @@
 package com.pq.agency.api;
 
 
+import com.pq.agency.dto.AgencyClassDto;
 import com.pq.agency.entity.AgencyStudent;
 import com.pq.agency.exception.AgencyErrors;
 import com.pq.agency.exception.AgencyException;
@@ -195,6 +196,20 @@ public class AgencyUserController {
 			result.setStatus(e.getErrorCode().getErrorCode());
 			result.setMessage(e.getErrorCode().getErrorMsg());
 		}catch (Exception e) {
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
+
+	@GetMapping(value = "/class/info")
+	@ResponseBody
+	public AgencyResult<List<AgencyClassDto>> getUserClassInfo(@RequestParam("userId")String userId) {
+		AgencyResult result = new AgencyResult();
+		try{
+			result.setData(agencyClassService.getUserClassInfo(userId));
+		}catch (Exception e){
 			e.printStackTrace();
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
