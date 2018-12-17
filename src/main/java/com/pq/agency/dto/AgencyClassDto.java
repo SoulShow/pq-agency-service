@@ -10,6 +10,7 @@ public class AgencyClassDto {
 
     private String name;
 
+    private Integer isHead;
 
     public String getHxGroupId() {
         return hxGroupId;
@@ -41,5 +42,13 @@ public class AgencyClassDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getIsHead() {
+        return isHead;
+    }
+
+    public void setIsHead(Integer isHead) {
+        this.isHead = isHead;
     }
 }

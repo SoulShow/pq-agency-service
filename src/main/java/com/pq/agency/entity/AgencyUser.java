@@ -11,6 +11,8 @@ public class AgencyUser {
 
     private Integer role;
 
+    private Integer isHead;
+
     private Boolean state;
 
     private Timestamp updatedTime;
@@ -71,5 +73,13 @@ public class AgencyUser {
 
     public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public Integer getIsHead() {
+        return isHead;
+    }
+
+    public void setIsHead(Integer isHead) {
+        this.isHead = isHead;
     }
 }

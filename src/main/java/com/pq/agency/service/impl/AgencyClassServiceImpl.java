@@ -273,15 +273,16 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
     @Override
     public List<AgencyClassDto> getUserClassInfo(String userId){
-        List<Long> classIdList = agencyUserMapper.selectClassIdByUserId(userId);
+        List<AgencyUser> userList = agencyUserMapper.selectByUserId(userId);
         List<AgencyClassDto> classList = new ArrayList<>();
-        for(Long classId:classIdList){
-            AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(classId);
+        for(AgencyUser agencyUser:userList){
+            AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyUser.getAgencyClassId());
             AgencyClassDto agencyClassDto = new AgencyClassDto();
             agencyClassDto.setId(agencyClass.getId());
             agencyClassDto.setName(agencyClass.getName());
             agencyClassDto.setHxGroupId(agencyClass.getGroupId());
             agencyClassDto.setAvatar(agencyClass.getImg());
+            agencyClassDto.setIsHead(agencyUser.getIsHead());
             classList.add(agencyClassDto);
         }
         return classList;
