@@ -25,7 +25,14 @@ public interface AgencyClassService {
 
 
     /**
-     * 根据机构id查询机构班级
+     * 查询机构列表
+     * @param name
+     * @return
+     */
+    List<Agency> getAgencyList(String name);
+
+    /**
+     * 根据机构id查询机构年级
      * @param agencyId
      * @return
      */

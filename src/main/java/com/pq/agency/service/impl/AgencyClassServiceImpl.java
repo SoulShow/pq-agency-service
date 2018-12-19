@@ -112,6 +112,11 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
     }
     @Override
+    public List<Agency> getAgencyList(String name){
+        return agencyMapper.selectByName(name);
+    }
+
+    @Override
     public List<String> getUserStudentRelation(String invitationCode,String studentName){
         AgencyClassInvitationCode agencyClassInvitationCode = invitationCodeMapper.selectByCode(invitationCode);
         if(agencyClassInvitationCode==null){
