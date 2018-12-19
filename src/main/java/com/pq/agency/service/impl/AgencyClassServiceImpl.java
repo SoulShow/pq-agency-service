@@ -740,7 +740,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 //过期
                 agencyVoteDto.setVoteStatus(1);
             }
-            List<VoteOptionDetailDto> detailDtos = sortOptions(getOptions(classVote.getId(),voteSelected.getId()));
+            List<VoteOptionDetailDto> detailDtos = sortOptions(getOptions(classVote.getId(),voteSelected==null?null:voteSelected.getId()));
             if(detailDtos!=null && detailDtos.size()>3){
                 agencyVoteDto.setList(detailDtos.subList(0,3));
             }else {
@@ -796,7 +796,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
         agencyVoteDetailDto.setImgList(imgs);
 
-        agencyVoteDetailDto.setOptionList(getOptions(voteId,voteSelected.getId()));
+        agencyVoteDetailDto.setOptionList(getOptions(voteId,voteSelected==null?null:voteSelected.getId()));
         return agencyVoteDetailDto;
     }
 
@@ -808,12 +808,17 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             optionDto.setOption(option.getItem());
             Integer count = voteSelectedOptionMapper.selectCountByVoteIdAndOption(voteId,option.getItem());
             optionDto.setCount(count==null?0:count);
-            ClassVoteSelectedOption selectedOption = voteSelectedOptionMapper.selectByVoteIdAndSelectedId(voteId,selectedId);
-            if(selectedOption!=null&&selectedOption.getItem().equals(option.getItem())){
-                optionDto.setIsVoted(1);
+            if(selectedId!=null && selectedId.equals(0)){
+                ClassVoteSelectedOption selectedOption = voteSelectedOptionMapper.selectByVoteIdAndSelectedId(voteId,selectedId);
+                if(selectedOption!=null&&selectedOption.getItem().equals(option.getItem())){
+                    optionDto.setIsVoted(1);
+                }else {
+                    optionDto.setIsVoted(0);
+                }
             }else {
                 optionDto.setIsVoted(0);
             }
+
             options.add(optionDto);
         }
         return options;
