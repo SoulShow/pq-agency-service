@@ -18,7 +18,7 @@ public class AgencyController {
 
 	@GetMapping(value = "/list")
 	@ResponseBody
-	public AgencyResult getAgencyList(@RequestParam("name")String name) {
+	public AgencyResult getAgencyList(@RequestParam(value = "name",required = false)String name) {
 		AgencyResult result = new AgencyResult();
 		result.setData(agencyClassService.getAgencyList(name));
 		return result;
