@@ -1232,7 +1232,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyUser.setAgencyClassId(agencyClassDto.getId());
             agencyUser.setUserId(teacherRegisterForm.getUserId());
             agencyUser.setRole(teacherRegisterForm.getRole());
-            agencyUser.setState(false);
+            //TODO 测试传true，需要审核传false
+            agencyUser.setState(true);
             agencyUser.setIsHead(agencyClassDto.getIsHead());
             agencyUser.setCreatedTime(DateUtil.currentTime());
             agencyUser.setUpdatedTime(DateUtil.currentTime());
