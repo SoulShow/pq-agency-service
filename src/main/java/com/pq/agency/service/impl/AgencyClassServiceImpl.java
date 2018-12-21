@@ -1214,5 +1214,60 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         classVoteMapper.updateByPrimaryKey(classVote);
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void createTeacher(AgencyTeacherRegisterForm teacherRegisterForm){
+
+        HashMap<String, String> paramMap = new HashMap<>();
+        AgencyResult<UserDto> result = userFeign.getUserInfo(teacherRegisterForm.getUserId());
+        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+            throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+        }
+        UserDto userDto = result.getData();
+
+        LOGGER.info("环信id————————————"+userDto.getHuanxinId());
+
+        for(AgencyClassDto agencyClassDto:teacherRegisterForm.getClassList()){
+            AgencyUser agencyUser = new AgencyUser();
+            agencyUser.setAgencyClassId(agencyClassDto.getId());
+            agencyUser.setUserId(teacherRegisterForm.getUserId());
+            agencyUser.setRole(teacherRegisterForm.getRole());
+            agencyUser.setState(false);
+            agencyUser.setIsHead(agencyClassDto.getIsHead());
+            agencyUser.setCreatedTime(DateUtil.currentTime());
+            agencyUser.setUpdatedTime(DateUtil.currentTime());
+            agencyUserMapper.insert(agencyUser);
+            AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyUser.getAgencyClassId());
+            if(agencyClass==null){
+                AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
+            }
+            paramMap.put("hxGroupId", agencyClass.getGroupId());
+            paramMap.put("userHxId", userDto.getHuanxinId());
+            try {
+                String huanxResult = HttpUtil.sendJson(phpUrl+"addHxGroup",new HashMap<>(),JSON.toJSONString(paramMap));
+                AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
+                if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
+                    AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
+            }
+        }
+
+    }
+
+    @Override
+    public void checkTeacherHeader(List<AgencyClassDto> classList){
+        for(AgencyClassDto agencyClassDto:classList){
+            if(agencyClassDto.getIsHead()==1){
+                AgencyUser agencyUser = agencyUserMapper.selectClassHeaderByClassId(agencyClassDto.getId());
+                if(agencyUser!=null){
+                    AgencyException.raise(AgencyErrors.AGENCY_TEACHER_HERADER_EXIST_ERROR);
+                }
+            }
+        }
+    }
+
 
 }

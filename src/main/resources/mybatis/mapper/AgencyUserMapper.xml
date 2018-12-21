@@ -87,4 +87,13 @@
     where user_id = #{userId}
     and state = 1
   </select>
+
+  <select id="selectClassHeaderByClassId" resultMap="BaseResultMap">
+    select  id, agency_class_id, user_id, role, state, updated_time, created_time, is_head
+    from pq_agency_user
+    where agency_class_id = #{agencyClassId}
+    and is_head = 1
+    and role = 1
+    and state = 1
+  </select>
 </mapper>

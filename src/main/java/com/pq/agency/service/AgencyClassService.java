@@ -362,4 +362,16 @@ public interface AgencyClassService {
     void deleteVote(Long voteId);
 
 
+    /**
+     * 创建老师
+     * @param teacherRegisterForm
+     */
+    void createTeacher(AgencyTeacherRegisterForm teacherRegisterForm);
+
+    /**
+     * 验证班主任是否存在
+     * @param classList
+     */
+    void checkTeacherHeader(List<AgencyClassDto> classList);
+
 }

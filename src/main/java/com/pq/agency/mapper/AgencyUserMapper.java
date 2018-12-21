@@ -26,6 +26,8 @@ public interface AgencyUserMapper {
 
     List<AgencyUser> selectByUserId(@Param("userId") String userId);
 
+    AgencyUser selectClassHeaderByClassId(@Param("agencyClassId")Long agencyClassId);
+
 
 
 }

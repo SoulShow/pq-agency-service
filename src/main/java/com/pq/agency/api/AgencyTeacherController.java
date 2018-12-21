@@ -144,4 +144,38 @@ public class AgencyTeacherController {
 
         return result;
     }
+
+    @PostMapping(value = "/create")
+    @ResponseBody
+    public AgencyResult createUser(@RequestBody AgencyTeacherRegisterForm teacherRegisterForm) {
+        AgencyResult result = new AgencyResult();
+        try{
+            agencyClassService.createTeacher(teacherRegisterForm);
+        }catch (AgencyException a){
+            result.setStatus(a.getErrorCode().getErrorCode());
+            result.setMessage(a.getErrorCode().getErrorMsg());
+        }catch (Exception e){
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/header/check")
+    @ResponseBody
+    public AgencyResult checkTeacherHeader(@RequestBody AgencyTeacherRegisterForm teacherRegisterForm) {
+        AgencyResult result = new AgencyResult();
+        try{
+            agencyClassService.checkTeacherHeader(teacherRegisterForm.getClassList());
+        }catch (AgencyException a){
+            result.setStatus(a.getErrorCode().getErrorCode());
+            result.setMessage(a.getErrorCode().getErrorMsg());
+        }catch (Exception e){
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
 }
