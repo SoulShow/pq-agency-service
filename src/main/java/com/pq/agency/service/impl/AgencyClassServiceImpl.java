@@ -1211,6 +1211,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     @Override
     public void deleteVote(Long voteId){
         AgencyClassVote classVote = classVoteMapper.selectByPrimaryKey(voteId);
+        classVote.setState(false);
+        classVote.setUpdatedTime(DateUtil.currentTime());
         classVoteMapper.updateByPrimaryKey(classVote);
     }
 
