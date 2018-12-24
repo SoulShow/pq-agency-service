@@ -230,10 +230,24 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
                 AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
             }
+            AgencyGroupMember agencyGroupMember = new AgencyGroupMember();
+            List<AgencyGroup> list = agencyGroupMapper.selectByClassId(userStudent.getAgencyClassId());
+            if(list==null||list.size()==0){
+                AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
+            }
+            agencyGroupMember.setStudentId(userStudent.getStudentId());
+            agencyGroupMember.setGroupId(list.get(0).getId());
+            agencyGroupMember.setDisturbStatus(1);
+            agencyGroupMember.setChatStatus(0);
+            agencyGroupMember.setState(true);
+            agencyGroupMember.setUpdatedTime(DateUtil.currentTime());
+            agencyGroupMember.setCreatedTime(DateUtil.currentTime());
+            groupMemberMapper.insert(agencyGroupMember);
         } catch (Exception e) {
             e.printStackTrace();
             AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
         }
+
     }
     @Override
     public List<AgencyUserDto> getAgencyUserInfo(String userId){
@@ -1252,6 +1266,19 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
                     AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
                 }
+                AgencyGroupMember agencyGroupMember = new AgencyGroupMember();
+                List<AgencyGroup> list = agencyGroupMapper.selectByClassId(agencyUser.getAgencyClassId());
+                if(list==null||list.size()==0){
+                    AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
+                }
+                agencyGroupMember.setUserId(agencyUser.getUserId());
+                agencyGroupMember.setGroupId(list.get(0).getId());
+                agencyGroupMember.setDisturbStatus(1);
+                agencyGroupMember.setChatStatus(0);
+                agencyGroupMember.setState(true);
+                agencyGroupMember.setUpdatedTime(DateUtil.currentTime());
+                agencyGroupMember.setCreatedTime(DateUtil.currentTime());
+                groupMemberMapper.insert(agencyGroupMember);
             } catch (Exception e) {
                 e.printStackTrace();
                 AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);

@@ -39,4 +39,6 @@ public class AgencyErrors extends CommonErrors {
 
     public final static ErrorCode AGENCY_TEACHER_HERADER_EXIST_ERROR = new AgencyErrorCode("0015", "抱歉，该班级的班主任已经存在");
 
+    public final static ErrorCode AGENCY_GROUP_NOT_EXIST_ERROR = new AgencyErrorCode("0016", "抱歉，群组不存在");
+
 }

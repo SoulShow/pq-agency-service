@@ -83,7 +83,12 @@
             <!--<columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
             <!--<columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>-->
         <!--</table>-->
-        <table tableName="pq_agency_group" domainObjectName="AgencyGroup">
+        <table tableName="pq_class_course" domainObjectName="ClassCourse">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
+            <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
+        </table>
+        <table tableName="pq_user_course" domainObjectName="UserCourse">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <columnOverride column="created_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
             <columnOverride column="updated_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
