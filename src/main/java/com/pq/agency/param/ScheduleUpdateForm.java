@@ -1,15 +1,14 @@
 package com.pq.agency.param;
 
 
+import com.pq.agency.dto.ScheduleDto;
+
 import java.util.List;
 
 public class ScheduleUpdateForm {
 
     private Long agencyClassId;
-
-    private int week;
-
-    private List<String> schedule;
+    private List<ScheduleDto> scheduleList;
 
     public Long getAgencyClassId() {
         return agencyClassId;
@@ -19,19 +18,11 @@ public class ScheduleUpdateForm {
         this.agencyClassId = agencyClassId;
     }
 
-    public int getWeek() {
-        return week;
+    public List<ScheduleDto> getScheduleList() {
+        return scheduleList;
     }
 
-    public void setWeek(int week) {
-        this.week = week;
-    }
-
-    public List<String> getSchedule() {
-        return schedule;
-    }
-
-    public void setSchedule(List<String> schedule) {
-        this.schedule = schedule;
+    public void setScheduleList(List<ScheduleDto> scheduleList) {
+        this.scheduleList = scheduleList;
     }
 }

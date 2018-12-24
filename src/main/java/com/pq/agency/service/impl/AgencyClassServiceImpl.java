@@ -1303,18 +1303,21 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
     @Override
     public void updateSchedule(ScheduleUpdateForm scheduleUpdateForm){
-        AgencyClassSchedule schedule = classScheduleMapper.selectByClassIdAndWeek(scheduleUpdateForm.getAgencyClassId(),scheduleUpdateForm.getWeek());
-        if(schedule==null){
-            schedule.setSchedule(JSON.toJSON(scheduleUpdateForm.getSchedule()).toString());
-            schedule.setState(true);
-            schedule.setCreatedTime(DateUtil.currentTime());
-            schedule.setUpdatedTime(DateUtil.currentTime());
-            classScheduleMapper.insert(schedule);
-        }else {
-            schedule.setSchedule(JSON.toJSON(scheduleUpdateForm.getSchedule()).toString());
-            schedule.setUpdatedTime(DateUtil.currentTime());
-            classScheduleMapper.updateByPrimaryKey(schedule);
+        for(ScheduleDto scheduleDto:scheduleUpdateForm.getScheduleList()){
+            AgencyClassSchedule schedule = classScheduleMapper.selectByClassIdAndWeek(scheduleUpdateForm.getAgencyClassId(),scheduleDto.getWeek());
+            if(schedule==null){
+                schedule.setSchedule(JSON.toJSON(scheduleDto.getSchedule()).toString());
+                schedule.setState(true);
+                schedule.setCreatedTime(DateUtil.currentTime());
+                schedule.setUpdatedTime(DateUtil.currentTime());
+                classScheduleMapper.insert(schedule);
+            }else {
+                schedule.setSchedule(JSON.toJSON(scheduleDto.getSchedule()).toString());
+                schedule.setUpdatedTime(DateUtil.currentTime());
+                classScheduleMapper.updateByPrimaryKey(schedule);
+            }
         }
+
     }
     @Override
     public List<ClassCourseDto> getTeacherClassCourse(String userId){
