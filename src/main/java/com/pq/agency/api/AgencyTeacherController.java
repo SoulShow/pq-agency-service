@@ -112,10 +112,10 @@ public class AgencyTeacherController {
     }
     @PostMapping(value = "/class/vote/delete")
     @ResponseBody
-    public AgencyResult deleteVote(@RequestParam("voteId")Long voteId) {
+    public AgencyResult deleteVote(@RequestBody VoteDelForm voteDelForm) {
         AgencyResult result = new AgencyResult();
         try {
-            agencyClassService.deleteVote(voteId);
+            agencyClassService.deleteVote(voteDelForm.getVoteId());
         } catch (AgencyException e){
             result.setStatus(e.getErrorCode().getErrorCode());
             result.setMessage(e.getErrorCode().getErrorMsg());
