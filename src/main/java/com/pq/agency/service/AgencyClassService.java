@@ -381,4 +381,11 @@ public interface AgencyClassService {
      */
     void updateSchedule(ScheduleUpdateForm scheduleUpdateForm);
 
+    /**
+     * 获取老师的班级课程
+     * @param userId
+     * @return
+     */
+    List<ClassCourseDto> getTeacherClassCourse(String userId);
+
 }

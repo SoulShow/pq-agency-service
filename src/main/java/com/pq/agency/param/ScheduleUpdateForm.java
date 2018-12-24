@@ -1,13 +1,15 @@
 package com.pq.agency.param;
 
 
+import java.util.List;
+
 public class ScheduleUpdateForm {
 
     private Long agencyClassId;
 
     private int week;
 
-    private String schedule;
+    private List<String> schedule;
 
     public Long getAgencyClassId() {
         return agencyClassId;
@@ -25,11 +27,11 @@ public class ScheduleUpdateForm {
         this.week = week;
     }
 
-    public String getSchedule() {
+    public List<String> getSchedule() {
         return schedule;
     }
 
-    public void setSchedule(String schedule) {
+    public void setSchedule(List<String> schedule) {
         this.schedule = schedule;
     }
 }

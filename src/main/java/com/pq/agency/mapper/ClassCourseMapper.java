@@ -1,6 +1,7 @@
 package com.pq.agency.mapper;
 
 import com.pq.agency.entity.ClassCourse;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface ClassCourseMapper {
     List<ClassCourse> selectAll();
 
     int updateByPrimaryKey(ClassCourse record);
+
+    List<ClassCourse> selectByClassId(@Param("classId")Long classId);
 }

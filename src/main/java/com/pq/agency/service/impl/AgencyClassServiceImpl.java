@@ -91,6 +91,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     private AgencyGroupMapper agencyGroupMapper;
     @Autowired
     private AgencyGroupMemberMapper groupMemberMapper;
+    @Autowired
+    private ClassCourseMapper classCourseMapper;
     @Value("${php.url}")
     private String phpUrl;
     @Autowired
@@ -1303,14 +1305,31 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     public void updateSchedule(ScheduleUpdateForm scheduleUpdateForm){
         AgencyClassSchedule schedule = classScheduleMapper.selectByClassIdAndWeek(scheduleUpdateForm.getAgencyClassId(),scheduleUpdateForm.getWeek());
         if(schedule==null){
+            schedule.setSchedule(JSON.toJSON(scheduleUpdateForm.getSchedule()).toString());
             schedule.setState(true);
             schedule.setCreatedTime(DateUtil.currentTime());
             schedule.setUpdatedTime(DateUtil.currentTime());
             classScheduleMapper.insert(schedule);
         }else {
+            schedule.setSchedule(JSON.toJSON(scheduleUpdateForm.getSchedule()).toString());
             schedule.setUpdatedTime(DateUtil.currentTime());
             classScheduleMapper.updateByPrimaryKey(schedule);
         }
+    }
+    @Override
+    public List<ClassCourseDto> getTeacherClassCourse(String userId){
+        List<Long> classIdList = agencyUserMapper.selectClassIdByUserId(userId);
+        List<ClassCourseDto> classCourseDtoList = new ArrayList<>();
+        for(Long classId : classIdList){
+            ClassCourseDto classCourseDto = new ClassCourseDto();
+            AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(classId);
+            classCourseDto.setClassId(agencyClass.getId());
+            classCourseDto.setClassName(agencyClass.getName());
+            List<ClassCourse> list = classCourseMapper.selectByClassId(classId);
+            classCourseDto.setClassCourseList(list);
+            classCourseDtoList.add(classCourseDto);
+        }
+        return classCourseDtoList;
     }
 
 
