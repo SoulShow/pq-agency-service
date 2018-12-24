@@ -374,4 +374,11 @@ public interface AgencyClassService {
      */
     void checkTeacherHeader(List<AgencyClassDto> classList);
 
+
+    /**
+     * 修改班级信息
+     * @param scheduleUpdateForm
+     */
+    void updateSchedule(ScheduleUpdateForm scheduleUpdateForm);
+
 }

@@ -178,4 +178,22 @@ public class AgencyTeacherController {
         }
         return result;
     }
+
+    @PostMapping(value = "/class/schedule")
+    @ResponseBody
+    public AgencyResult updateSchedule(@RequestBody ScheduleUpdateForm scheduleUpdateForm) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            agencyClassService.updateSchedule(scheduleUpdateForm);
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
 }

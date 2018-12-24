@@ -51,4 +51,12 @@
     where agency_class_id = #{agencyClassId}
     and state = 1
   </select>
+
+  <select id="selectByClassIdAndWeek" resultMap="BaseResultMap" >
+    select id, agency_class_id, week, schedule, state, updated_time, created_time
+    from pq_agency_class_schedule
+    where agency_class_id = #{agencyClassId}
+    and week = #{week}
+    and state = 1
+  </select>
 </mapper>
