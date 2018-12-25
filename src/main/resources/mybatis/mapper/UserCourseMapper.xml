@@ -41,11 +41,13 @@
     from pq_user_course
   </select>
 
-  <select id="selectByUserId" resultMap="BaseResultMap" >
-    select id, class_course_id, user_id, state, updated_time, created_time
-    from pq_user_course
-    where user_id = #{userId}
-    and state = 1
+  <select id="selectByUserIdAndClassId" resultMap="BaseResultMap" >
+    select u.*
+    from pq_user_course u, pq_class_course c
+    where u.user_id = #{userId}
+    and c.class_id = #{classId}
+    and u.class_course_id = c.id
+    and u.state = 1
   </select>
   <select id="selectByUserIdAndClassCourseId" resultMap="BaseResultMap" >
     select id, class_course_id, user_id, state, updated_time, created_time

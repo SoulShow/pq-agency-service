@@ -1379,7 +1379,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
             //课程list
             StringBuilder course = new StringBuilder(agencyClass.getName()+"-");
-            List<UserCourse> userCourseList = userCourseMapper.selectByUserId(userId);
+            List<UserCourse> userCourseList = userCourseMapper.selectByUserIdAndClassId(userId,classId);
             for(UserCourse userCourse : userCourseList){
                 ClassCourse classCourse = classCourseMapper.selectByPrimaryKey(userCourse.getClassCourseId());
                 course.append(classCourse.getCourseName()+",");
