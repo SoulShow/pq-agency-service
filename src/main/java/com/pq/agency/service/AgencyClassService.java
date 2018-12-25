@@ -395,4 +395,12 @@ public interface AgencyClassService {
      */
     UserCourseDto getTeacherCourse(String userId);
 
+
+    /**
+     * 添加、更改老师科目
+     * @param teacherCourseForm
+     */
+    void createTeacherCourse(TeacherCourseForm teacherCourseForm);
+
+
 }

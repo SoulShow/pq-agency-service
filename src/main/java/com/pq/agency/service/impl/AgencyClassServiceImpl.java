@@ -1395,4 +1395,19 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         return userCourseDto;
     }
 
+    @Override
+    public void createTeacherCourse(TeacherCourseForm teacherCourseForm){
+        userCourseMapper.deleteByUserId(teacherCourseForm.getUserId());
+        for(Long classCourseId:teacherCourseForm.getClassCourseIdList()){
+            UserCourse userCourse = new UserCourse();
+            userCourse.setUserId(teacherCourseForm.getUserId());
+            userCourse.setClassCourseId(classCourseId);
+            userCourse.setState(true);
+            userCourse.setCreatedTime(DateUtil.currentTime());
+            userCourse.setUpdatedTime(DateUtil.currentTime());
+            userCourseMapper.insert(userCourse);
+        }
+    }
+
+
 }

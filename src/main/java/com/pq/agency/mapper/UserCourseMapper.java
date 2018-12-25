@@ -19,4 +19,6 @@ public interface UserCourseMapper {
     List<UserCourse> selectByUserId(@Param("userId")String userId);
 
     UserCourse selectByUserIdAndClassCourseId(@Param("userId")String userId,@Param("classCourseId")Long classCourseId);
+
+    void deleteByUserId(@Param("userId")String userId);
 }

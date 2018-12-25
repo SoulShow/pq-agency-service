@@ -54,4 +54,12 @@
     and class_course_id = #{classCourseId}
     and state = 1
   </select>
+
+  <select id="deleteByUserId" >
+    select  pq_user_course
+    set state = 0,
+        updated_time = now()
+    where user_id = #{userId}
+    and state = 1
+  </select>
 </mapper>
