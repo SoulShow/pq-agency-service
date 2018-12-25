@@ -1370,8 +1370,11 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 userCourseDto.setHeadClassName(agencyClass.getName());
             }
             userCourseDto.setAgencyName(agencyMapper.selectByPrimaryKey(agencyClass.getAgencyId()).getName());
+            Grade grade = gradeMapper.selectByPrimaryKey(agencyClass.getGradeId());
 
-            gradeName.append(gradeMapper.selectByPrimaryKey(agencyClass.getGradeId()).getName()+",");
+            if(!gradeName.toString().contains(grade.getName())){
+                gradeName.append(grade.getName()+",");
+            }
             className.append(agencyClass.getName()+",");
 
             //课程list
@@ -1381,11 +1384,13 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 ClassCourse classCourse = classCourseMapper.selectByPrimaryKey(userCourse.getClassCourseId());
                 course.append(classCourse.getCourseName()+",");
             }
-            courseList.add(course.substring(0,course.length()-1));
+            if(userCourseList!=null && userCourseList.size()>0){
+                courseList.add(course.substring(0,course.length()-1));
+            }
         }
 
         userCourseDto.setGradeName(gradeName.substring(0,gradeName.length()-1));
-        userCourseDto.setClassName(className.substring(0,gradeName.length()-1));
+        userCourseDto.setClassName(className.substring(0,className.length()-1));
         userCourseDto.setCourseList(courseList);
         return userCourseDto;
     }
