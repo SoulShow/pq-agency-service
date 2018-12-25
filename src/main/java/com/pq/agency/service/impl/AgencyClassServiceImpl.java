@@ -1332,6 +1332,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             classCourseDto.setClassId(agencyClass.getId());
             classCourseDto.setClassName(agencyClass.getName());
             List<ClassCourse> list = classCourseMapper.selectByClassId(classId);
+            for(ClassCourse classCourse:list){
+                UserCourse userCourse = userCourseMapper.selectByUserIdAndClassCourseId(userId,classCourse.getId());
+                if(userCourse!=null){
+                    classCourse.setIsExist(1);
+                }
+            }
             classCourseDto.setClassCourseList(list);
             classCourseDtoList.add(classCourseDto);
         }

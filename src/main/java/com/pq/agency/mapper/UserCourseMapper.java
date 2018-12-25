@@ -17,4 +17,6 @@ public interface UserCourseMapper {
     int updateByPrimaryKey(UserCourse record);
 
     List<UserCourse> selectByUserId(@Param("userId")String userId);
+
+    UserCourse selectByUserIdAndClassCourseId(@Param("userId")String userId,@Param("classCourseId")Long classCourseId);
 }

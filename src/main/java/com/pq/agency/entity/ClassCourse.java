@@ -17,6 +17,8 @@ public class ClassCourse {
 
     private Timestamp createdTime;
 
+    private int isExist=0;
+
     public Long getId() {
         return id;
     }
@@ -71,5 +73,13 @@ public class ClassCourse {
 
     public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public int getIsExist() {
+        return isExist;
+    }
+
+    public void setIsExist(int isExist) {
+        this.isExist = isExist;
     }
 }
