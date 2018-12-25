@@ -12,6 +12,7 @@ public class AgencyClassInfoDto {
     private int isHead;
     private Integer disturbStatus;
     private Integer chatStatus;
+    private Integer chatCount;
     private List<ClassUserInfoDto> list;
 
     public Long getId() {
@@ -92,5 +93,13 @@ public class AgencyClassInfoDto {
 
     public void setIsHead(int isHead) {
         this.isHead = isHead;
+    }
+
+    public Integer getChatCount() {
+        return chatCount;
+    }
+
+    public void setChatCount(Integer chatCount) {
+        this.chatCount = chatCount;
     }
 }

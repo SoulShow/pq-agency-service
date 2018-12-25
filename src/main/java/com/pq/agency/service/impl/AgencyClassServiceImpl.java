@@ -973,8 +973,11 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
         List<ClassUserInfoDto> list = new ArrayList<>();
         List<AgencyGroupMember> memberList = groupMemberMapper.selectByGroupId(groupId);
-
+        int chatCount = 0;
         for(AgencyGroupMember groupMember : memberList){
+            if(groupMember.getChatStatus()==1){
+                chatCount++;
+            }
             ClassUserInfoDto classUserInfoDto = new ClassUserInfoDto();
             if(!StringUtil.isEmpty(groupMember.getUserId()) && groupMember.getStudentId()==null){
                 AgencyResult<UserDto> result = userFeign.getUserInfo(groupMember.getUserId());
@@ -1023,6 +1026,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             list.add(classUserInfoDto);
         }
         redisTemplate.opsForValue().set(Constants.AGENCY_GROUP_USER_INFO+groupId,JSON.toJSON(list).toString());
+        agencyClassInfoDto.setChatCount(chatCount);
         agencyClassInfoDto.setList(list);
 
         return agencyClassInfoDto;
