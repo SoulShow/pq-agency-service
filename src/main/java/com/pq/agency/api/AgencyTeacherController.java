@@ -248,4 +248,40 @@ public class AgencyTeacherController {
         }
         return result;
     }
+
+    @PostMapping(value = "/class/show")
+    @ResponseBody
+    public AgencyResult createClassShow(@RequestBody ClassShowCreateForm classShowCreateForm) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            agencyClassService.createClassShow(classShowCreateForm);
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/class/show/delete")
+    @ResponseBody
+    public AgencyResult deleteShow(@RequestBody ShowDelForm showDelForm) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            agencyClassService.deleteClassShow(showDelForm);
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
 }

@@ -402,5 +402,17 @@ public interface AgencyClassService {
      */
     void createTeacherCourse(TeacherCourseForm teacherCourseForm);
 
+    /**
+     * 创建班级相册
+     * @param classShowCreateForm
+     */
+    void createClassShow(ClassShowCreateForm classShowCreateForm);
+
+    /**
+     * 删除班级相册
+     * @param showDelForm
+     */
+    void deleteClassShow(ShowDelForm showDelForm);
+
 
 }

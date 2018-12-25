@@ -9,6 +9,7 @@ public class AgencyClassInfoDto {
     private String name;
     private int count;
     private int type;
+    private int isHead;
     private Integer disturbStatus;
     private Integer chatStatus;
     private List<ClassUserInfoDto> list;
@@ -83,5 +84,13 @@ public class AgencyClassInfoDto {
 
     public void setChatStatus(Integer chatStatus) {
         this.chatStatus = chatStatus;
+    }
+
+    public int getIsHead() {
+        return isHead;
+    }
+
+    public void setIsHead(int isHead) {
+        this.isHead = isHead;
     }
 }

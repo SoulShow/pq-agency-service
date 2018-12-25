@@ -203,6 +203,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         agencyUser.setUserId(registerForm.getUserId());
         agencyUser.setRole(registerForm.getRole());
         agencyUser.setState(true);
+        agencyUser.setIsHead(0);
         agencyUser.setCreatedTime(DateUtil.currentTime());
         agencyUser.setUpdatedTime(DateUtil.currentTime());
         agencyUserMapper.insert(agencyUser);
@@ -244,6 +245,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyGroupMember.setDisturbStatus(1);
             agencyGroupMember.setChatStatus(0);
             agencyGroupMember.setState(true);
+            agencyGroupMember.setIsHead(0);
             agencyGroupMember.setUpdatedTime(DateUtil.currentTime());
             agencyGroupMember.setCreatedTime(DateUtil.currentTime());
             groupMemberMapper.insert(agencyGroupMember);
@@ -945,6 +947,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         if(agencyGroup.getClassId()!=null){
             agencyClassInfoDto.setType(Constants.AGENCY_GROUP_TYPE_CLASS);
         }
+        agencyClassInfoDto.setIsHead(groupMember.getIsHead());
         agencyClassInfoDto.setDisturbStatus(groupMember.getDisturbStatus());
         Integer count = groupMemberMapper.selectCountByGroupId(groupMember.getGroupId());
         agencyClassInfoDto.setCount(count);
@@ -966,6 +969,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
         agencyClassInfoDto.setChatStatus(member.getChatStatus());
         agencyClassInfoDto.setDisturbStatus(member.getDisturbStatus());
+        agencyClassInfoDto.setIsHead(member.getIsHead());
 
         List<ClassUserInfoDto> list = new ArrayList<>();
         List<AgencyGroupMember> memberList = groupMemberMapper.selectByGroupId(groupId);
@@ -1195,37 +1199,41 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
     @Override
     public void createVote(AgencyClassVoteForm voteForm){
-        AgencyClassVote classVote = new AgencyClassVote();
-        classVote.setAgencyClassId(voteForm.getAgencyClassId());
-        classVote.setUserId(voteForm.getUserId());
-        classVote.setTitle(voteForm.getTitle());
-        classVote.setDeadline(new Timestamp(DateUtil.getDate(voteForm.getDeadline(),
-                DateUtil.DEFAULT_DATETIME_FORMAT).getTime()));
-        classVote.setType(voteForm.getType());
-        classVote.setIsSecret(voteForm.getIsSecret());
-        classVote.setState(true);
-        classVote.setUpdatedTime(DateUtil.currentTime());
-        classVote.setCreatedTime(DateUtil.currentTime());
-        classVoteMapper.insert(classVote);
 
-        for(String option:voteForm.getOptionList()){
-            ClassVoteOption voteOption = new ClassVoteOption();
-            voteOption.setVoteId(classVote.getId());
-            voteOption.setItem(option);
-            voteOption.setState(true);
-            voteOption.setUpdatedTime(DateUtil.currentTime());
-            voteOption.setCreatedTime(DateUtil.currentTime());
-            voteOptionMapper.insert(voteOption);
+        for(Long classId : voteForm.getAgencyClassIdList()){
+            AgencyClassVote classVote = new AgencyClassVote();
+            classVote.setAgencyClassId(classId);
+            classVote.setUserId(voteForm.getUserId());
+            classVote.setTitle(voteForm.getTitle());
+            classVote.setDeadline(new Timestamp(DateUtil.getDate(voteForm.getDeadline(),
+                    DateUtil.DEFAULT_DATETIME_FORMAT).getTime()));
+            classVote.setType(voteForm.getType());
+            classVote.setIsSecret(voteForm.getIsSecret());
+            classVote.setState(true);
+            classVote.setUpdatedTime(DateUtil.currentTime());
+            classVote.setCreatedTime(DateUtil.currentTime());
+            classVoteMapper.insert(classVote);
+
+            for(String option:voteForm.getOptionList()){
+                ClassVoteOption voteOption = new ClassVoteOption();
+                voteOption.setVoteId(classVote.getId());
+                voteOption.setItem(option);
+                voteOption.setState(true);
+                voteOption.setUpdatedTime(DateUtil.currentTime());
+                voteOption.setCreatedTime(DateUtil.currentTime());
+                voteOptionMapper.insert(voteOption);
+            }
+            for(String img:voteForm.getImgList()){
+                ClassVoteImg voteImg = new ClassVoteImg();
+                voteImg.setVoteId(classVote.getId());
+                voteImg.setImg(img);
+                voteImg.setState(true);
+                voteImg.setUpdatedTime(DateUtil.currentTime());
+                voteImg.setCreatedTime(DateUtil.currentTime());
+                voteImgMapper.insert(voteImg);
+            }
         }
-        for(String img:voteForm.getImgList()){
-            ClassVoteImg voteImg = new ClassVoteImg();
-            voteImg.setVoteId(classVote.getId());
-            voteImg.setImg(img);
-            voteImg.setState(true);
-            voteImg.setUpdatedTime(DateUtil.currentTime());
-            voteImg.setCreatedTime(DateUtil.currentTime());
-            voteImgMapper.insert(voteImg);
-        }
+
     }
     @Override
     public void deleteVote(Long voteId){
@@ -1280,6 +1288,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 agencyGroupMember.setGroupId(list.get(0).getId());
                 agencyGroupMember.setDisturbStatus(1);
                 agencyGroupMember.setChatStatus(0);
+                agencyGroupMember.setIsHead(agencyUser.getIsHead());
                 agencyGroupMember.setState(true);
                 agencyGroupMember.setUpdatedTime(DateUtil.currentTime());
                 agencyGroupMember.setCreatedTime(DateUtil.currentTime());
@@ -1409,6 +1418,51 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             userCourse.setCreatedTime(DateUtil.currentTime());
             userCourse.setUpdatedTime(DateUtil.currentTime());
             userCourseMapper.insert(userCourse);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void createClassShow(ClassShowCreateForm taskCreateForm){
+        ClassShow classShow = new ClassShow();
+        classShow.setAgencyClassId(taskCreateForm.getClassId());
+        classShow.setContent(taskCreateForm.getContent());
+        classShow.setState(true);
+        classShow.setUserId(taskCreateForm.getUserId());
+        classShow.setCreatedTime(DateUtil.currentTime());
+        classShow.setUpdatedTime(DateUtil.currentTime());
+        classShowMapper.insert(classShow);
+        for(String img:taskCreateForm.getImgList()){
+            ClassShowImg classShowImg = new ClassShowImg();
+            classShowImg.setImg(img);
+            classShowImg.setShowId(classShow.getId());
+            classShowImg.setType(1);
+            classShowImg.setState(true);
+            classShowImg.setCreatedTime(DateUtil.currentTime());
+            classShowImg.setUpdatedTime(DateUtil.currentTime());
+            classShowImgMapper.insert(classShowImg);
+        }
+        if(!StringUtil.isEmpty(taskCreateForm.getMovieUrl())){
+            ClassShowImg classShowImg = new ClassShowImg();
+            classShowImg.setImg(taskCreateForm.getMovieUrl());
+            classShowImg.setShowId(classShow.getId());
+            classShowImg.setType(2);
+            classShowImg.setState(true);
+            classShowImg.setCreatedTime(DateUtil.currentTime());
+            classShowImg.setUpdatedTime(DateUtil.currentTime());
+            classShowImgMapper.insert(classShowImg);
+        }
+    }
+    @Override
+    public void deleteClassShow(ShowDelForm showDelForm){
+        ClassShow classShow = classShowMapper.selectByPrimaryKey(showDelForm.getShowId());
+        if(classShow==null){
+           AgencyException.raise(AgencyErrors.AGENCY_CLASS_SHOW_NOT_EXIST_ERROR);
+        }
+        if(showDelForm.getUserId().equals(classShow.getUserId())){
+            classShow.setUpdatedTime(DateUtil.currentTime());
+            classShow.setState(false);
+            classShowMapper.updateByPrimaryKey(classShow);
         }
     }
 

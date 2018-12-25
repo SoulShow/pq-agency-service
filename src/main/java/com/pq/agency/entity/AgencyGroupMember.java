@@ -15,6 +15,8 @@ public class AgencyGroupMember {
 
     private Integer chatStatus;
 
+    private Integer isHead;
+
     private Boolean state;
 
     private Timestamp updatedTime;
@@ -91,5 +93,13 @@ public class AgencyGroupMember {
 
     public void setChatStatus(Integer chatStatus) {
         this.chatStatus = chatStatus;
+    }
+
+    public Integer getIsHead() {
+        return isHead;
+    }
+
+    public void setIsHead(Integer isHead) {
+        this.isHead = isHead;
     }
 }
