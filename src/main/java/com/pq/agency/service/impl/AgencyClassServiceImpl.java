@@ -1309,6 +1309,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         for(ScheduleDto scheduleDto:scheduleUpdateForm.getScheduleList()){
             AgencyClassSchedule schedule = classScheduleMapper.selectByClassIdAndWeek(scheduleUpdateForm.getAgencyClassId(),scheduleDto.getWeek());
             if(schedule==null){
+                schedule = new AgencyClassSchedule();
                 schedule.setSchedule(JSON.toJSON(scheduleDto.getSchedule()).toString());
                 schedule.setState(true);
                 schedule.setCreatedTime(DateUtil.currentTime());
