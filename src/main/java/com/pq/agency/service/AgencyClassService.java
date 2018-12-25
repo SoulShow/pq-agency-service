@@ -388,4 +388,11 @@ public interface AgencyClassService {
      */
     List<ClassCourseDto> getTeacherClassCourse(String userId);
 
+    /**
+     * 获取老师职务
+     * @param userId
+     * @return
+     */
+    UserCourseDto getTeacherCourse(String userId);
+
 }

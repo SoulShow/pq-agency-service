@@ -18,7 +18,7 @@ public interface AgencyUserMapper {
 
     List<Long> selectClassIdByUserId(String userId);
 
-    List<AgencyUser> selectByUserAndClassId(@Param("userId")String userId,@Param("agencyClassId")Long agencyClassId);
+    AgencyUser selectByUserAndClassId(@Param("userId")String userId,@Param("agencyClassId")Long agencyClassId);
 
     Integer selectCountByClassIdAndRole(@Param("agencyClassId")Long agencyClassId,@Param("role")int role);
 

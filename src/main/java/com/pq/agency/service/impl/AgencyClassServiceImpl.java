@@ -93,6 +93,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     private AgencyGroupMemberMapper groupMemberMapper;
     @Autowired
     private ClassCourseMapper classCourseMapper;
+    @Autowired
+    private UserCourseMapper userCourseMapper;
     @Value("${php.url}")
     private String phpUrl;
     @Autowired
@@ -521,7 +523,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         userNoticeFileCollection.setFileName(noticeFileCollectionForm.getFileName());
         userNoticeFileCollection.setFileSize(noticeFileCollectionForm.getFileSize());
         userNoticeFileCollection.setUserId(noticeFileCollectionForm.getUserId());
-        userNoticeFileCollection.setStudentId(noticeFileCollectionForm.getStudentId());
+        userNoticeFileCollection.setStudentId(noticeFileCollectionForm.getStudentId()==null?
+                0:noticeFileCollectionForm.getStudentId());
         userNoticeFileCollection.setUserName(noticeFileCollectionForm.getName());
         userNoticeFileCollection.setSuffix(noticeFileCollectionForm.getSuffix());
         userNoticeFileCollection.setState(true);
@@ -1334,7 +1337,51 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
         return classCourseDtoList;
     }
+    @Override
+    public UserCourseDto getTeacherCourse(String userId){
+        List<Long> classIdList = agencyUserMapper.selectClassIdByUserId(userId);
+        AgencyResult<UserDto> result = userFeign.getUserInfo(userId);
+        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+            throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+        }
+        UserCourseDto userCourseDto = new UserCourseDto();
+        UserDto userDto = result.getData();
+        userCourseDto.setAvatar(userDto.getAvatar());
+        userCourseDto.setName(userDto.getName());
+        userCourseDto.setIsHead(0);
 
+        StringBuilder gradeName = new StringBuilder();
+        StringBuilder className = new StringBuilder();
+        List<String> courseList = new ArrayList<>();
+        for(Long classId : classIdList){
+            AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(classId);
+            if(agencyClass==null){
+                AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
+            }
+            AgencyUser agencyUser = agencyUserMapper.selectByUserAndClassId(userId,agencyClass.getId());
+            if(agencyUser.getIsHead()==1){
+                userCourseDto.setIsHead(1);
+                userCourseDto.setHeadClassName(agencyClass.getName());
+            }
+            userCourseDto.setAgencyName(agencyMapper.selectByPrimaryKey(agencyClass.getAgencyId()).getName());
 
+            gradeName.append(gradeMapper.selectByPrimaryKey(agencyClass.getGradeId()).getName()+",");
+            className.append(agencyClass.getName()+",");
+
+            //课程list
+            StringBuilder course = new StringBuilder(agencyClass.getName()+"-");
+            List<UserCourse> userCourseList = userCourseMapper.selectByUserId(userId);
+            for(UserCourse userCourse : userCourseList){
+                ClassCourse classCourse = classCourseMapper.selectByPrimaryKey(userCourse.getClassCourseId());
+                course.append(classCourse.getCourseName()+",");
+            }
+            courseList.add(course.substring(0,course.length()-1));
+        }
+
+        userCourseDto.setGradeName(gradeName.substring(0,gradeName.length()-1));
+        userCourseDto.setClassName(className.substring(0,gradeName.length()-1));
+        userCourseDto.setCourseList(courseList);
+        return userCourseDto;
+    }
 
 }

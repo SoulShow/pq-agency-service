@@ -40,4 +40,11 @@
     select id, class_course_id, user_id, state, updated_time, created_time
     from pq_user_course
   </select>
+
+  <select id="selectByUserId" resultMap="BaseResultMap" >
+    select id, class_course_id, user_id, state, updated_time, created_time
+    from pq_user_course
+    where user_id = #{userId}
+    and state = 1
+  </select>
 </mapper>

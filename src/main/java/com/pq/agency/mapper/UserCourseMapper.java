@@ -1,6 +1,7 @@
 package com.pq.agency.mapper;
 
 import com.pq.agency.entity.UserCourse;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface UserCourseMapper {
     List<UserCourse> selectAll();
 
     int updateByPrimaryKey(UserCourse record);
+
+    List<UserCourse> selectByUserId(@Param("userId")String userId);
 }
