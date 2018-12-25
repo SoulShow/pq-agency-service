@@ -56,7 +56,7 @@
   </select>
 
   <select id="deleteByUserId" >
-    select  pq_user_course
+    update  pq_user_course
     set state = 0,
         updated_time = now()
     where user_id = #{userId}
