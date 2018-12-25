@@ -141,7 +141,7 @@ public class AgencyUserController {
 		return result;
 	}
 
-	@GetMapping(value = "/user/collection/list")
+	@GetMapping(value = "/collection/list")
 	@ResponseBody
 	public AgencyResult getCollectList(@RequestParam("userId")String userId,
 									   @RequestParam(value = "studentId",required = false)Long studentId,
