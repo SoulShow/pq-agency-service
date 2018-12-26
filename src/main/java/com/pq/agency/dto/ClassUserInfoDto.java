@@ -4,10 +4,10 @@ import java.util.List;
 
 public class ClassUserInfoDto {
 
-    public ClassUserInfoDto( String distinctKey) {
-        super();
-        this.distinctKey = distinctKey;
-    }
+//    public ClassUserInfoDto( String distinctKey) {
+//        super();
+//        this.distinctKey = distinctKey;
+//    }
     private Long studentId;
 
     private String userId;

@@ -989,7 +989,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             if(groupMember.getChatStatus()==1){
                 chatCount++;
             }
-            ClassUserInfoDto classUserInfoDto = new ClassUserInfoDto(null);
+            ClassUserInfoDto classUserInfoDto = new ClassUserInfoDto();
             if(!StringUtil.isEmpty(groupMember.getUserId()) && groupMember.getStudentId()==null){
                 AgencyResult<UserDto> result = userFeign.getUserInfo(groupMember.getUserId());
                 if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
@@ -1733,23 +1733,23 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     }
     public  List<ClassUserInfoDto> distinctList(List<ClassUserInfoDto> list){
         HashMap<String,ClassUserInfoDto> tempMap = new HashMap<>();
-        for (ClassUserInfoDto user : list) {
-            String key = user.getStudentId()+user.getUserId()+user.getClassName();
-            // containsKey(Object key) 该方法判断Map集合对象中是否包含指定的键名。
-            // 如果Map集合中包含指定的键名，则返回true，否则返回false
-            // value：要查询的Map集合的指定键值对象.如果Map集合中包含指定的键值，则返回true，否则返回false
-            if(tempMap.containsKey(key)){
-                ClassUserInfoDto tempUser = new ClassUserInfoDto(key);
-            //HashMap是不允许key重复的，所以如果有key重复的话，那么前面的value会被后面的value覆盖
-                tempMap.put(key, tempUser);
-            }else{
-                tempMap.put(key, user);
-            }
-        }
+//        for (ClassUserInfoDto user : list) {
+//            String key = user.getStudentId()+user.getUserId()+user.getClassName();
+//            // containsKey(Object key) 该方法判断Map集合对象中是否包含指定的键名。
+//            // 如果Map集合中包含指定的键名，则返回true，否则返回false
+//            // value：要查询的Map集合的指定键值对象.如果Map集合中包含指定的键值，则返回true，否则返回false
+//            if(tempMap.containsKey(key)){
+//                ClassUserInfoDto tempUser = new ClassUserInfoDto(key);
+//            //HashMap是不允许key重复的，所以如果有key重复的话，那么前面的value会被后面的value覆盖
+//                tempMap.put(key, tempUser);
+//            }else{
+//                tempMap.put(key, user);
+//            }
+//        }
         List<ClassUserInfoDto> tempList = new ArrayList<>();
-        for(String key : tempMap.keySet()){
-            tempList.add(tempMap.get(key));
-        }
+//        for(String key : tempMap.keySet()){
+//            tempList.add(tempMap.get(key));
+//        }
         return tempList;
     }
 
