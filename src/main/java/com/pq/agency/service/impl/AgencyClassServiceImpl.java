@@ -1536,6 +1536,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         try {
             LOGGER.info("userHxId:-------"+userDto.getHuanxinId());
             huanxResult = HttpUtil.sendJson(phpUrl+"addHxGroup",new HashMap<>(),JSON.toJSONString(paramMap));
+            LOGGER.info("创建群组返回结果为--------"+huanxResult);
             AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
             if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
                 AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
