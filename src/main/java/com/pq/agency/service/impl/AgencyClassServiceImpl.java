@@ -998,9 +998,6 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 UserDto userDto = result.getData();
                 classUserInfoDto.setAvatar(userDto.getAvatar());
                 classUserInfoDto.setName(userDto.getName());
-                AgencyStudent student = agencyStudentMapper.selectByPrimaryKey(studentId);
-                AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(student.getAgencyClassId());
-                classUserInfoDto.setClassName(agencyClass.getName());
                 classUserInfoDto.setRole(userDto.getRole());
                 classUserInfoDto.setSex(userDto.getGender());
                 classUserInfoDto.setUserId(groupMember.getUserId());
@@ -1017,6 +1014,10 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 classUserInfoDto.setSex(agencyStudent.getSex()==1?"男":"女");
                 classUserInfoDto.setDisturbStatus(groupMember.getDisturbStatus());
                 classUserInfoDto.setChatStatus(groupMember.getChatStatus());
+
+                AgencyStudent student = agencyStudentMapper.selectByPrimaryKey(studentId);
+                AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(student.getAgencyClassId());
+                classUserInfoDto.setClassName(agencyClass.getName());
 
                 List<ParentDto> parentList = new ArrayList<>();
                 List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
