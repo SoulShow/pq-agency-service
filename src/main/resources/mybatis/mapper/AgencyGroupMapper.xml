@@ -53,4 +53,11 @@
     and state = 1
     order by created_time desc
   </select>
+
+  <select id="selectByName" resultMap="BaseResultMap" >
+    select id, hx_group_id, name, img, state, updated_time, created_time, class_id
+    from pq_agency_group
+    where  name = #{name}
+    and state = 1
+  </select>
 </mapper>

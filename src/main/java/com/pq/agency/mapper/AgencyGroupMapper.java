@@ -16,5 +16,7 @@ public interface AgencyGroupMapper {
 
     int updateByPrimaryKey(AgencyGroup record);
 
-    List<AgencyGroup> selectByClassId(@Param("classId")Long classId);
+    AgencyGroup selectByClassId(@Param("classId")Long classId);
+
+    AgencyGroup selectByName(@Param("name")String name);
 }

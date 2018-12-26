@@ -235,12 +235,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
                 AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
             }
-            List<AgencyGroup> list = agencyGroupMapper.selectByClassId(userStudent.getAgencyClassId());
-            if(list==null||list.size()==0){
+            AgencyGroup agencyGroup = agencyGroupMapper.selectByClassId(userStudent.getAgencyClassId());
+            if(agencyGroup==null){
                 AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
             }
 
-            AgencyGroupMember agencyGroupMember = groupMemberMapper.selectByGroupIdAndStudentOrUserId(list.get(0).getId(),
+            AgencyGroupMember agencyGroupMember = groupMemberMapper.selectByGroupIdAndStudentOrUserId(agencyGroup.getId(),
                     userStudent.getStudentId(),null);
             if(agencyGroupMember==null){
                 agencyGroupMember = new AgencyGroupMember();
@@ -248,7 +248,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 return;
             }
             agencyGroupMember.setStudentId(userStudent.getStudentId());
-            agencyGroupMember.setGroupId(list.get(0).getId());
+            agencyGroupMember.setGroupId(agencyGroup.getId());
             agencyGroupMember.setDisturbStatus(1);
             agencyGroupMember.setChatStatus(0);
             agencyGroupMember.setState(true);
@@ -989,7 +989,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             if(groupMember.getChatStatus()==1){
                 chatCount++;
             }
-            ClassUserInfoDto classUserInfoDto = new ClassUserInfoDto();
+            ClassUserInfoDto classUserInfoDto = new ClassUserInfoDto(null);
             if(!StringUtil.isEmpty(groupMember.getUserId()) && groupMember.getStudentId()==null){
                 AgencyResult<UserDto> result = userFeign.getUserInfo(groupMember.getUserId());
                 if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
@@ -998,7 +998,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 UserDto userDto = result.getData();
                 classUserInfoDto.setAvatar(userDto.getAvatar());
                 classUserInfoDto.setName(userDto.getName());
-//                classUserInfoDto.setClassName();
+                AgencyStudent student = agencyStudentMapper.selectByPrimaryKey(studentId);
+                AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(student.getAgencyClassId());
+                classUserInfoDto.setClassName(agencyClass.getName());
                 classUserInfoDto.setRole(userDto.getRole());
                 classUserInfoDto.setSex(userDto.getGender());
                 classUserInfoDto.setUserId(groupMember.getUserId());
@@ -1044,12 +1046,20 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     }
 
     @Override
-    public List<AgencyClass> getTeacherClassList(String userId){
+    public List<AgencyClassGroupDto> getTeacherClassList(String userId){
         List<Long> list = agencyUserMapper.selectClassIdByUserId(userId);
-        List<AgencyClass> classList = new ArrayList<>();
+        List<AgencyClassGroupDto> classList = new ArrayList<>();
         for(Long classId : list){
             AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(classId);
-            classList.add(agencyClass);
+            AgencyClassGroupDto groupDto = new AgencyClassGroupDto();
+            groupDto.setId(agencyClass.getId());
+            groupDto.setName(agencyClass.getName());
+            AgencyGroup group = agencyGroupMapper.selectByClassId(agencyClass.getId());
+            if(group==null){
+                AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
+            }
+            groupDto.setGroupId(group.getId());
+            classList.add(groupDto);
         }
         return classList;
     }
@@ -1295,12 +1305,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                     AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
                 }
                 AgencyGroupMember agencyGroupMember = new AgencyGroupMember();
-                List<AgencyGroup> list = agencyGroupMapper.selectByClassId(agencyUser.getAgencyClassId());
-                if(list==null||list.size()==0){
+                AgencyGroup agencyGroup = agencyGroupMapper.selectByClassId(agencyUser.getAgencyClassId());
+                if(agencyGroup==null){
                     AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
                 }
                 agencyGroupMember.setUserId(agencyUser.getUserId());
-                agencyGroupMember.setGroupId(list.get(0).getId());
+                agencyGroupMember.setGroupId(agencyGroup.getId());
                 agencyGroupMember.setDisturbStatus(1);
                 agencyGroupMember.setChatStatus(0);
                 agencyGroupMember.setIsHead(agencyUser.getIsHead());
@@ -1698,5 +1708,48 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             delMember(groupMember.getUserId(),groupMember.getStudentId(),agencyGroup);
         }
     }
+
+    @Override
+    public void checkGroupName(String name){
+        AgencyGroup group = agencyGroupMapper.selectByName(name);
+        if(group!=null){
+            AgencyException.raise(AgencyErrors.AGENCY_GROUP_NAME_EXIST_ERROR);
+        }
+    }
+
+    @Override
+    public List<ClassUserInfoDto> searchClassUser(String name,String userId){
+        List<AgencyClassGroupDto> teacherClassList = getTeacherClassList(userId);
+        List<ClassUserInfoDto> list = new ArrayList<>();
+        for(AgencyClassGroupDto groupDto:teacherClassList){
+            getClassUserInfo(groupDto.getGroupId(),null,userId);
+            AgencyClassInfoDto classInfoDto =  getGroupSearchUserInfo(groupDto.getGroupId(), name);
+            list.addAll(classInfoDto.getList());
+        }
+        return distinctList(list);
+    }
+    public  List<ClassUserInfoDto> distinctList(List<ClassUserInfoDto> list){
+        HashMap<String,ClassUserInfoDto> tempMap = new HashMap<>();
+        for (ClassUserInfoDto user : list) {
+            String key = user.getStudentId()+user.getUserId()+user.getClassName();
+            // containsKey(Object key) 该方法判断Map集合对象中是否包含指定的键名。
+            // 如果Map集合中包含指定的键名，则返回true，否则返回false
+            // value：要查询的Map集合的指定键值对象.如果Map集合中包含指定的键值，则返回true，否则返回false
+            if(tempMap.containsKey(key)){
+                ClassUserInfoDto tempUser = new ClassUserInfoDto(key);
+            //HashMap是不允许key重复的，所以如果有key重复的话，那么前面的value会被后面的value覆盖
+                tempMap.put(key, tempUser);
+            }else{
+                tempMap.put(key, user);
+            }
+        }
+        List<ClassUserInfoDto> tempList = new ArrayList<>();
+        for(String key : tempMap.keySet()){
+            tempList.add(tempMap.get(key));
+        }
+        return tempList;
+    }
+
+
 
 }

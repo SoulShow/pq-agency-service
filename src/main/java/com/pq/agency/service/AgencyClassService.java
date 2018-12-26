@@ -293,7 +293,7 @@ public interface AgencyClassService {
      * @param userId
      * @return
      */
-    List<AgencyClass> getTeacherClassList(String userId);
+    List<AgencyClassGroupDto> getTeacherClassList(String userId);
 
     /**
      * 开启/关闭消息免打扰
@@ -450,4 +450,18 @@ public interface AgencyClassService {
      * @param groupDeleteForm
      */
     void delGroup(GroupDeleteForm groupDeleteForm);
+
+    /**
+     * check群组名称是否存在
+     * @param name
+     */
+    void checkGroupName(String name);
+
+    /**
+     * 查询班级用户
+     * @param name
+     * @param userId
+     * @return
+     */
+    List<ClassUserInfoDto> searchClassUser(String name,String userId);
 }

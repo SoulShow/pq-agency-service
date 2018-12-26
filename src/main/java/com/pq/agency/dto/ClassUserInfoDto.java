@@ -3,6 +3,11 @@ package com.pq.agency.dto;
 import java.util.List;
 
 public class ClassUserInfoDto {
+
+    public ClassUserInfoDto( String distinctKey) {
+        super();
+        this.distinctKey = distinctKey;
+    }
     private Long studentId;
 
     private String userId;
@@ -24,6 +29,8 @@ public class ClassUserInfoDto {
     private Integer chatStatus;
 
     private List<ParentDto> parentList;
+
+    private String distinctKey;
 
     public String getName() {
         return name;
@@ -111,5 +118,13 @@ public class ClassUserInfoDto {
 
     public void setChatStatus(Integer chatStatus) {
         this.chatStatus = chatStatus;
+    }
+
+    public String getDistinctKey() {
+        return distinctKey;
+    }
+
+    public void setDistinctKey(String distinctKey) {
+        this.distinctKey = distinctKey;
     }
 }

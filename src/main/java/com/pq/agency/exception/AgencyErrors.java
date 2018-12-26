@@ -47,4 +47,6 @@ public class AgencyErrors extends CommonErrors {
 
     public final static ErrorCode AGENCY_GROUP_MEMBER_PERMISSION_NOT_EXIST_ERROR = new AgencyErrorCode("0019", "抱歉，无操作权限");
 
+    public final static ErrorCode AGENCY_GROUP_NAME_EXIST_ERROR = new AgencyErrorCode("0020", "群组名称已存在");
+
 }

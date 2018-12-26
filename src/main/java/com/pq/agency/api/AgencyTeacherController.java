@@ -388,4 +388,41 @@ public class AgencyTeacherController {
         }
         return result;
     }
+
+    @GetMapping(value = "/group/check")
+    @ResponseBody
+    public AgencyResult checkGroup(@RequestParam("name")String name) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            agencyClassService.checkGroupName(name);
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+
+    @GetMapping(value = "/group/user/search")
+    @ResponseBody
+    public AgencyResult searchClassUser(@RequestParam("name")String name,
+                                        @RequestParam("userId")String userId) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            result.setData(agencyClassService.searchClassUser(name,userId));
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
 }
