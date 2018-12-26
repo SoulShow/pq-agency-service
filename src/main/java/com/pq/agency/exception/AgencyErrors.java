@@ -43,5 +43,8 @@ public class AgencyErrors extends CommonErrors {
 
     public final static ErrorCode AGENCY_CLASS_SHOW_NOT_EXIST_ERROR = new AgencyErrorCode("0017", "班级相册不存在");
 
+    public final static ErrorCode AGENCY_GROUP_MEMBER_NOT_EXIST_ERROR = new AgencyErrorCode("0018", "抱歉，群组成员不存在");
+
+    public final static ErrorCode AGENCY_GROUP_MEMBER_PERMISSION_NOT_EXIST_ERROR = new AgencyErrorCode("0019", "抱歉，无操作权限");
 
 }

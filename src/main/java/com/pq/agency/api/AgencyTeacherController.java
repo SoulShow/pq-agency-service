@@ -284,4 +284,108 @@ public class AgencyTeacherController {
         }
         return result;
     }
+
+    @PostMapping(value = "/group")
+    @ResponseBody
+    public AgencyResult createGroup(@RequestBody GroupCreateForm groupCreateForm) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            agencyClassService.createGroup(groupCreateForm);
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+    @PostMapping(value = "/group/name")
+    @ResponseBody
+    public AgencyResult updateGroupName(@RequestBody GroupUpdateForm groupUpdateForm) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            agencyClassService.updateGroupName(groupUpdateForm);
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+    @PostMapping(value = "/group/img")
+    @ResponseBody
+    public AgencyResult updateGroupImg(@RequestBody GroupUpdateForm groupUpdateForm) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            agencyClassService.updateGroupImg(groupUpdateForm);
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+    @PostMapping(value = "/group/add/member")
+    @ResponseBody
+    public AgencyResult addGroupMember(@RequestBody AddGroupMemberForm addGroupMemberForm) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            agencyClassService.addGroupMember(addGroupMemberForm);
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+    @PostMapping(value = "/group/del/member")
+    @ResponseBody
+    public AgencyResult delGroupMember(@RequestBody DelGroupMemberForm delGroupMemberForm) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            agencyClassService.delGroupMember(delGroupMemberForm);
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/group/del")
+    @ResponseBody
+    public AgencyResult delGroup(@RequestBody GroupDeleteForm groupDeleteForm) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            agencyClassService.delGroup(groupDeleteForm);
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
 }

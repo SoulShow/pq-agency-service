@@ -235,10 +235,17 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
                 AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
             }
-            AgencyGroupMember agencyGroupMember = new AgencyGroupMember();
             List<AgencyGroup> list = agencyGroupMapper.selectByClassId(userStudent.getAgencyClassId());
             if(list==null||list.size()==0){
                 AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
+            }
+
+            AgencyGroupMember agencyGroupMember = groupMemberMapper.selectByGroupIdAndStudentOrUserId(list.get(0).getId(),
+                    userStudent.getStudentId(),null);
+            if(agencyGroupMember==null){
+                agencyGroupMember = new AgencyGroupMember();
+            }else {
+                return;
             }
             agencyGroupMember.setStudentId(userStudent.getStudentId());
             agencyGroupMember.setGroupId(list.get(0).getId());
@@ -1470,5 +1477,221 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void createGroup(GroupCreateForm groupCreateForm){
+        //TODO 环信创建群组
+        HashMap<String, String> paramMap = new HashMap<>();
+        paramMap.put("class_name", groupCreateForm.getName());
+        String huanxResult = null;
+
+        try {
+            huanxResult = HttpUtil.sendJson(phpUrl+"createHxGroup",new HashMap<>(),JSON.toJSONString(paramMap));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        CreateHxGroupDto hxGroupDto = JSON.parseObject(huanxResult,CreateHxGroupDto.class);
+        if(hxGroupDto==null||!CommonErrors.SUCCESS.getErrorCode().equals(hxGroupDto.getStatus())){
+            AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
+        }
+
+        AgencyGroup agencyGroup = new AgencyGroup();
+        agencyGroup.setName(groupCreateForm.getName());
+        agencyGroup.setHxGroupId(hxGroupDto.getGroupId());
+        agencyGroup.setState(true);
+        agencyGroup.setCreatedTime(DateUtil.currentTime());
+        agencyGroup.setUpdatedTime(DateUtil.currentTime());
+        agencyGroupMapper.insert(agencyGroup);
+        for(String userId:groupCreateForm.getTeacherList()){
+            addGroupMember(null,userId,agencyGroup,0);
+        }
+        for(ClassStudentDto studentDto:groupCreateForm.getStudentList()){
+            List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
+                    selectByAgencyClassIdAndStudentId(studentDto.getClassId(),studentDto.getStudentId());
+            for(AgencyUserStudent userStudent:userStudentList){
+                addGroupMember(studentDto.getStudentId(),userStudent.getUserId(),agencyGroup,0);
+
+            }
+        }
+        addGroupMember(null,groupCreateForm.getUserId(),agencyGroup,1);
+    }
+
+    private void addGroupMember(Long studentId,String userId, AgencyGroup agencyGroup,int isHead){
+
+        HashMap<String, String> paramMap = new HashMap<>();
+
+        AgencyResult<UserDto> result = userFeign.getUserInfo(userId);
+        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+            throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+        }
+        UserDto userDto = result.getData();
+        paramMap.put("hxGroupId", agencyGroup.getHxGroupId());
+        paramMap.put("userHxId", userDto.getHuanxinId());
+
+        String huanxResult = null;
+        try {
+            huanxResult = HttpUtil.sendJson(phpUrl+"addHxGroup",new HashMap<>(),JSON.toJSONString(paramMap));
+            AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
+            if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
+                AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
+            }
+            AgencyGroupMember agencyGroupMember = null;
+            if(studentId!=null&& studentId!=0){
+                 agencyGroupMember = groupMemberMapper.selectByGroupIdAndStudentOrUserId(agencyGroup.getId(),
+                        studentId,null);
+                if(agencyGroupMember==null){
+                    agencyGroupMember = new AgencyGroupMember();
+                    agencyGroupMember.setStudentId(studentId);
+                }else {
+                    return;
+                }
+            }else {
+                agencyGroupMember = new AgencyGroupMember();
+                agencyGroupMember.setUserId(userId);
+            }
+            agencyGroupMember.setGroupId(agencyGroup.getId());
+            agencyGroupMember.setDisturbStatus(1);
+            agencyGroupMember.setChatStatus(0);
+            agencyGroupMember.setIsHead(isHead);
+            agencyGroupMember.setState(true);
+            agencyGroupMember.setUpdatedTime(DateUtil.currentTime());
+            agencyGroupMember.setCreatedTime(DateUtil.currentTime());
+            groupMemberMapper.insert(agencyGroupMember);
+        } catch (Exception e) {
+            e.printStackTrace();
+            AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
+        }
+    }
+
+    @Override
+    public void updateGroupName(GroupUpdateForm groupUpdateForm){
+        checkMemberHead(groupUpdateForm.getUserId(),groupUpdateForm.getGroupId());
+        AgencyGroup agencyGroup = agencyGroupMapper.selectByPrimaryKey(groupUpdateForm.getGroupId());
+        if(agencyGroup==null){
+            AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
+        }
+        agencyGroup.setName(groupUpdateForm.getName());
+        agencyGroup.setUpdatedTime(DateUtil.currentTime());
+        agencyGroupMapper.updateByPrimaryKey(agencyGroup);
+    }
+
+    @Override
+    public void updateGroupImg(GroupUpdateForm groupUpdateForm){
+        checkMemberHead(groupUpdateForm.getUserId(),groupUpdateForm.getGroupId());
+        AgencyGroup agencyGroup = agencyGroupMapper.selectByPrimaryKey(groupUpdateForm.getGroupId());
+        if(agencyGroup==null){
+            AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
+        }
+        agencyGroup.setImg(groupUpdateForm.getImg());
+        agencyGroup.setUpdatedTime(DateUtil.currentTime());
+        agencyGroupMapper.updateByPrimaryKey(agencyGroup);
+    }
+
+    private void checkMemberHead(String userId,Long groupId){
+        AgencyGroupMember groupMember = groupMemberMapper.selectByGroupIdAndStudentOrUserId(groupId, null,userId);
+        if(groupMember==null){
+            AgencyException.raise(AgencyErrors.AGENCY_GROUP_MEMBER_NOT_EXIST_ERROR);
+        }
+        if(groupMember.getIsHead()==0){
+            AgencyException.raise(AgencyErrors.AGENCY_GROUP_MEMBER_PERMISSION_NOT_EXIST_ERROR);
+        }
+    }
+    @Override
+    public void addGroupMember(AddGroupMemberForm addGroupMemberForm){
+        AgencyGroup agencyGroup = agencyGroupMapper.selectByPrimaryKey(addGroupMemberForm.getGroupId());
+        if(agencyGroup==null){
+            AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
+        }
+        checkMemberHead(addGroupMemberForm.getUserId(),addGroupMemberForm.getGroupId());
+        for(String userId:addGroupMemberForm.getTeacherList()){
+            addGroupMember(null,userId,agencyGroup,0);
+        }
+        for(ClassStudentDto studentDto:addGroupMemberForm.getStudentList()){
+            List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
+                    selectByAgencyClassIdAndStudentId(studentDto.getClassId(),studentDto.getStudentId());
+            for(AgencyUserStudent userStudent:userStudentList){
+                addGroupMember(studentDto.getStudentId(),userStudent.getUserId(),agencyGroup,0);
+            }
+        }
+    }
+    @Override
+    public void delGroupMember(DelGroupMemberForm delGroupMemberForm){
+        AgencyGroup agencyGroup = agencyGroupMapper.selectByPrimaryKey(delGroupMemberForm.getGroupId());
+        if(agencyGroup==null){
+            AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
+        }
+        checkMemberHead(delGroupMemberForm.getUserId(),delGroupMemberForm.getGroupId());
+
+        for(String userId:delGroupMemberForm.getTeacherList()){
+            delMember(userId,null,agencyGroup);
+        }
+        for(Long studentId:delGroupMemberForm.getStudentList()){
+            delMember(null,studentId,agencyGroup);
+        }
+
+    }
+
+    private void delMember(String userId,Long studentId,AgencyGroup group){
+        if((studentId!=null||studentId!=0)&&userId==null){
+            AgencyStudent agencyStudent = agencyStudentMapper.selectByPrimaryKey(studentId);
+            List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
+                    selectByAgencyClassIdAndStudentId(agencyStudent.getAgencyClassId(),agencyStudent.getId());
+            for(AgencyUserStudent userStudent:userStudentList){
+                delHuanxinGroupMember(group.getHxGroupId(),userStudent.getUserId());
+            }
+        }
+        if(userId!=null){
+            delHuanxinGroupMember(group.getHxGroupId(),userId);
+        }
+
+        AgencyGroupMember groupMember = groupMemberMapper.selectByGroupIdAndStudentOrUserId(group.getId(),
+                studentId,userId);
+        if(groupMember==null){
+            AgencyException.raise(AgencyErrors.AGENCY_GROUP_MEMBER_NOT_EXIST_ERROR);
+        }
+        groupMember.setState(false);
+        groupMember.setUpdatedTime(DateUtil.currentTime());
+        groupMemberMapper.updateByPrimaryKey(groupMember);
+    }
+
+    private void delHuanxinGroupMember(String hxGroupId,String userId){
+        HashMap<String, String> paramMap = new HashMap<>();
+
+        AgencyResult<UserDto> result = userFeign.getUserInfo(userId);
+        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+            throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+        }
+        UserDto userDto = result.getData();
+        paramMap.put("group_id", hxGroupId);
+        paramMap.put("huanxin_id", userDto.getHuanxinId());
+
+        String huanxResult = null;
+        try {
+            huanxResult = HttpUtil.sendJson(phpUrl+"groupDeleteUser",new HashMap<>(),JSON.toJSONString(paramMap));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
+            if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
+                AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
+            }
+    }
+
+    @Override
+    public void delGroup(GroupDeleteForm groupDeleteForm){
+        checkMemberHead(groupDeleteForm.getUserId(),groupDeleteForm.getGroupId());
+        AgencyGroup agencyGroup = agencyGroupMapper.selectByPrimaryKey(groupDeleteForm.getGroupId());
+        if(agencyGroup==null){
+            AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
+        }
+        agencyGroup.setState(false);
+        agencyGroup.setUpdatedTime(DateUtil.currentTime());
+        agencyGroupMapper.updateByPrimaryKey(agencyGroup);
+
+        List<AgencyGroupMember> list = groupMemberMapper.selectByGroupId(groupDeleteForm.getGroupId());
+        for(AgencyGroupMember groupMember:list){
+            delMember(groupMember.getUserId(),groupMember.getStudentId(),agencyGroup);
+        }
+    }
 
 }

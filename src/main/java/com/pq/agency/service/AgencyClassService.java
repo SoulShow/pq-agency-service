@@ -414,5 +414,39 @@ public interface AgencyClassService {
      */
     void deleteClassShow(ShowDelForm showDelForm);
 
+    /**
+     * 创建群组
+     * @param groupCreateForm
+     */
+    void createGroup(GroupCreateForm groupCreateForm);
 
+    /**
+     * 修改群组名称
+     * @param groupUpdateForm
+     */
+    void updateGroupName(GroupUpdateForm groupUpdateForm);
+
+    /**
+     * 修改群组头像
+     * @param groupUpdateForm
+     */
+    void updateGroupImg(GroupUpdateForm groupUpdateForm);
+
+    /**
+     * 添加群组成员
+     * @param addGroupMemberForm
+     */
+    void addGroupMember(AddGroupMemberForm addGroupMemberForm);
+
+    /**
+     * 添加群组成员
+     * @param delGroupMemberForm
+     */
+    void delGroupMember(DelGroupMemberForm delGroupMemberForm);
+
+    /**
+     * 解散群组
+     * @param groupDeleteForm
+     */
+    void delGroup(GroupDeleteForm groupDeleteForm);
 }
