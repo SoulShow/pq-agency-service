@@ -1534,6 +1534,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
         String huanxResult = null;
         try {
+            LOGGER.info("userHxId:-------"+userDto.getHuanxinId());
             huanxResult = HttpUtil.sendJson(phpUrl+"addHxGroup",new HashMap<>(),JSON.toJSONString(paramMap));
             AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
             if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
