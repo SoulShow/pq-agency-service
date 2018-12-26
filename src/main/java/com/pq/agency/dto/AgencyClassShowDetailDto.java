@@ -17,6 +17,8 @@ public class AgencyClassShowDetailDto {
 
     private List<String> imgList;
 
+    private int canDel;
+
     public String getAvatar() {
         return avatar;
     }
@@ -71,5 +73,13 @@ public class AgencyClassShowDetailDto {
 
     public void setMovieUrl(String movieUrl) {
         this.movieUrl = movieUrl;
+    }
+
+    public int getCanDel() {
+        return canDel;
+    }
+
+    public void setCanDel(int canDel) {
+        this.canDel = canDel;
     }
 }

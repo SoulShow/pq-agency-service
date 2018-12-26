@@ -106,11 +106,12 @@ public interface AgencyClassService {
     /**
      * 班级风采
      * @param agencyClassId
+     * @param userId
      * @param offset
      * @param size
      * @return
      */
-    AgencyClassShowDto getAgencyClassShowList(Long agencyClassId,int offset,int size);
+    AgencyClassShowDto getAgencyClassShowList(Long agencyClassId,String userId,int offset,int size);
 
 
     /**

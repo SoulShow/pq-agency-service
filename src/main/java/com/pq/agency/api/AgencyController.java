@@ -43,6 +43,7 @@ public class AgencyController {
 	@GetMapping(value = "/class/show")
 	@ResponseBody
 	public AgencyResult getClassShow(@RequestParam(value = "agencyClassId")Long agencyClassId,
+									 @RequestParam(value = "userId")String userId,
 									 @RequestParam(value = "page",required = false)Integer page,
 									 @RequestParam(value = "size",required = false)Integer size) {
 		if (page == null || page < 1) {
@@ -55,7 +56,7 @@ public class AgencyController {
 
 		AgencyResult result = new AgencyResult();
 		try {
-			result.setData(agencyClassService.getAgencyClassShowList(agencyClassId,offset,size));
+			result.setData(agencyClassService.getAgencyClassShowList(agencyClassId,userId,offset,size));
 		} catch (AgencyException e){
 			result.setStatus(e.getErrorCode().getErrorCode());
 			result.setMessage(e.getErrorCode().getErrorMsg());

@@ -322,7 +322,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
 
     @Override
-    public AgencyClassShowDto getAgencyClassShowList(Long agencyClassId,int offset,int size){
+    public AgencyClassShowDto getAgencyClassShowList(Long agencyClassId,String userId,int offset,int size){
         List<ClassShow> showList = classShowMapper.selectByClassId(agencyClassId, offset, size);
         AgencyClassShowDto showDto = new AgencyClassShowDto();
         List<AgencyClassShowDetailDto> list = new ArrayList<>();
@@ -350,6 +350,10 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             }
             showDetailDto.setMovieUrl(movieUrl);
             showDetailDto.setImgList(imgList);
+            showDetailDto.setCanDel(0);
+            if(userId.equals(classShow.getUserId())){
+                showDetailDto.setCanDel(1);
+            }
             list.add(showDetailDto);
         }
         showDto.setShowList(list);
