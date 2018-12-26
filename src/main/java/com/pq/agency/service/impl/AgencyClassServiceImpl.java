@@ -1015,7 +1015,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 classUserInfoDto.setDisturbStatus(groupMember.getDisturbStatus());
                 classUserInfoDto.setChatStatus(groupMember.getChatStatus());
 
-                AgencyStudent student = agencyStudentMapper.selectByPrimaryKey(studentId);
+                AgencyStudent student = agencyStudentMapper.selectByPrimaryKey(groupMember.getStudentId());
                 AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(student.getAgencyClassId());
                 classUserInfoDto.setClassName(agencyClass.getName());
 
