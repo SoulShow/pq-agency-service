@@ -1484,7 +1484,6 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createGroup(GroupCreateForm groupCreateForm){
-        //TODO 环信创建群组
         HashMap<String, String> paramMap = new HashMap<>();
         paramMap.put("class_name", groupCreateForm.getName());
         String huanxResult = null;
@@ -1638,7 +1637,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     }
 
     private void delMember(String userId,Long studentId,AgencyGroup group){
-        if((studentId!=null||studentId!=0)&&userId==null){
+        if((studentId!=null&&studentId!=0)&&userId==null){
             AgencyStudent agencyStudent = agencyStudentMapper.selectByPrimaryKey(studentId);
             List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
                     selectByAgencyClassIdAndStudentId(agencyStudent.getAgencyClassId(),agencyStudent.getId());
