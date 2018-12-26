@@ -1107,6 +1107,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
         if(!StringUtil.isEmpty(name)){
             for(ClassUserInfoDto userInfoDto:list){
+                LOGGER.info("userInfoDto+-----------"+JSON.toJSON(userInfoDto));
                 if(userInfoDto.getName().contains(name)){
                     searchList.add(userInfoDto);
                 }
