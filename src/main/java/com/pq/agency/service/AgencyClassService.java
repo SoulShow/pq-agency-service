@@ -473,5 +473,5 @@ public interface AgencyClassService {
      * @param type
      * @return
      */
-    List<String> getClassMemberList(Long agencyClassId,int type);
+    List<MemberDto> getClassMemberList(Long agencyClassId,int type);
 }

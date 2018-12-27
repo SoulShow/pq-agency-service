@@ -1539,15 +1539,20 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         agencyGroup.setCreatedTime(DateUtil.currentTime());
         agencyGroup.setUpdatedTime(DateUtil.currentTime());
         agencyGroupMapper.insert(agencyGroup);
-        for(String userId:groupCreateForm.getTeacherList()){
-            addGroupMember(null,userId,agencyGroup,0);
-        }
-        for(ClassStudentDto studentDto:groupCreateForm.getStudentList()){
-            List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
-                    selectByAgencyClassIdAndStudentId(studentDto.getClassId(),studentDto.getStudentId());
-            for(AgencyUserStudent userStudent:userStudentList){
-                addGroupMember(studentDto.getStudentId(),userStudent.getUserId(),agencyGroup,0);
 
+        if(groupCreateForm.getTeacherList() != null && groupCreateForm.getTeacherList().size()>0) {
+            for (String userId : groupCreateForm.getTeacherList()) {
+                addGroupMember(null, userId, agencyGroup, 0);
+            }
+        }
+        if(groupCreateForm.getStudentList()!=null && groupCreateForm.getStudentList().size()>0) {
+            for (ClassStudentDto studentDto : groupCreateForm.getStudentList()) {
+                List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
+                        selectByAgencyClassIdAndStudentId(studentDto.getClassId(), studentDto.getStudentId());
+                for (AgencyUserStudent userStudent : userStudentList) {
+                    addGroupMember(studentDto.getStudentId(), userStudent.getUserId(), agencyGroup, 0);
+
+                }
             }
         }
         addGroupMember(null,groupCreateForm.getUserId(),agencyGroup,1);
@@ -1642,14 +1647,18 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
         }
         checkMemberHead(addGroupMemberForm.getUserId(),addGroupMemberForm.getGroupId());
-        for(String userId:addGroupMemberForm.getTeacherList()){
-            addGroupMember(null,userId,agencyGroup,0);
+        if(addGroupMemberForm.getTeacherList() != null && addGroupMemberForm.getTeacherList().size()>0) {
+            for (String userId : addGroupMemberForm.getTeacherList()) {
+                addGroupMember(null, userId, agencyGroup, 0);
+            }
         }
-        for(ClassStudentDto studentDto:addGroupMemberForm.getStudentList()){
-            List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
+        if(addGroupMemberForm.getStudentList()!=null && addGroupMemberForm.getStudentList().size()>0){
+            for(ClassStudentDto studentDto:addGroupMemberForm.getStudentList()){
+                List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
                     selectByAgencyClassIdAndStudentId(studentDto.getClassId(),studentDto.getStudentId());
-            for(AgencyUserStudent userStudent:userStudentList){
-                addGroupMember(studentDto.getStudentId(),userStudent.getUserId(),agencyGroup,0);
+                for(AgencyUserStudent userStudent:userStudentList){
+                 addGroupMember(studentDto.getStudentId(),userStudent.getUserId(),agencyGroup,0);
+                }
             }
         }
     }
@@ -1771,25 +1780,30 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     }
 
     @Override
-    public List<String> getClassMemberList(Long agencyClassId,int type){
+    public List<MemberDto> getClassMemberList(Long agencyClassId,int type){
         AgencyGroup group = agencyGroupMapper.selectByClassId(agencyClassId);
         if(group==null){
             AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
         }
-        List<String> memberList = new ArrayList<>();
+        List<MemberDto> memberList = new ArrayList<>();
         List<AgencyGroupMember> list = groupMemberMapper.selectByGroupId(group.getId());
         for(AgencyGroupMember member : list){
+            MemberDto memberDto = new MemberDto();
             if(type==CommonConstants.PQ_LOGIN_ROLE_TEACHER && !StringUtil.isEmpty(member.getUserId())){
                 AgencyResult<UserDto> result = userFeign.getUserInfo(member.getUserId());
                 if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
                     throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
                 }
                 UserDto userDto = result.getData();
-                memberList.add(userDto.getName());
+                memberDto.setName(userDto.getName());
+                memberDto.setAvatar(userDto.getAvatar());
+                memberList.add(memberDto);
             }
             if(type==CommonConstants.PQ_LOGIN_ROLE_PARENT && member.getStudentId()!=null && member.getStudentId()!=0){
                 AgencyStudent student = agencyStudentMapper.selectByPrimaryKey(member.getStudentId());
-                memberList.add(student.getName());
+                memberDto.setName(student.getName());
+                memberDto.setAvatar(student.getAvatar());
+                memberList.add(memberDto);
             }
         }
         return memberList;
