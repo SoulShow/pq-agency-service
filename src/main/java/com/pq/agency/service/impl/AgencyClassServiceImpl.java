@@ -978,7 +978,10 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         agencyClassInfoDto.setId(agencyGroup.getId());
         agencyClassInfoDto.setName(agencyGroup.getName());
         agencyClassInfoDto.setImg(agencyGroup.getImg());
-
+        agencyClassInfoDto.setType(Constants.AGENCY_GROUP_TYPE_GROUP);
+        if(agencyGroup.getClassId()!=null){
+            agencyClassInfoDto.setType(Constants.AGENCY_GROUP_TYPE_CLASS);
+        }
         AgencyGroupMember member = groupMemberMapper.selectByGroupIdAndStudentOrUserId(groupId,studentId,userId);
         if(member == null){
             AgencyException.raise(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR);
