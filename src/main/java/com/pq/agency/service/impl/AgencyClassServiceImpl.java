@@ -315,6 +315,11 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyClassDto.setHxGroupId(agencyClass.getGroupId());
             agencyClassDto.setAvatar(agencyClass.getImg());
             agencyClassDto.setIsHead(agencyUser.getIsHead());
+            AgencyGroup group = agencyGroupMapper.selectByClassId(agencyClass.getId());
+            if(group==null){
+                AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
+            }
+            agencyClassDto.setGroupId(group.getId());
             classList.add(agencyClassDto);
         }
         return classList;
