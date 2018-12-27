@@ -1661,12 +1661,17 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
         checkMemberHead(delGroupMemberForm.getUserId(),delGroupMemberForm.getGroupId());
 
-        for(String userId:delGroupMemberForm.getTeacherList()){
-            delMember(userId,null,agencyGroup);
+        if(delGroupMemberForm.getTeacherList() != null && delGroupMemberForm.getTeacherList().size()>0){
+            for(String userId:delGroupMemberForm.getTeacherList()){
+                delMember(userId,null,agencyGroup);
+            }
         }
-        for(Long studentId:delGroupMemberForm.getStudentList()){
-            delMember(null,studentId,agencyGroup);
+        if(delGroupMemberForm.getStudentList()!=null && delGroupMemberForm.getStudentList().size()>0){
+            for(Long studentId:delGroupMemberForm.getStudentList()){
+                delMember(null,studentId,agencyGroup);
+            }
         }
+
 
     }
 
