@@ -194,6 +194,7 @@ public interface AgencyClassService {
      * 家长任务列表
      * @param agencyClassId
      * @param userId
+     * @param studentId
      * @param offset
      * @param size
      * @return
@@ -464,4 +465,13 @@ public interface AgencyClassService {
      * @return
      */
     List<ClassUserInfoDto> searchClassUser(String name,String userId);
+
+
+    /**
+     * 获取班级成员
+     * @param agencyClassId
+     * @param type
+     * @return
+     */
+    List<String> getClassMemberList(Long agencyClassId,int type);
 }

@@ -14,6 +14,8 @@ public class AgencyClassVoteForm {
 
     private Integer type;
 
+    private Integer voteType;
+
     private Integer isSecret;
 
     private List<String> optionList;
@@ -82,5 +84,13 @@ public class AgencyClassVoteForm {
 
     public void setAgencyClassIdList(List<Long> agencyClassIdList) {
         this.agencyClassIdList = agencyClassIdList;
+    }
+
+    public Integer getVoteType() {
+        return voteType;
+    }
+
+    public void setVoteType(Integer voteType) {
+        this.voteType = voteType;
     }
 }

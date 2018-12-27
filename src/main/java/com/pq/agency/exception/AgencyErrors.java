@@ -49,4 +49,7 @@ public class AgencyErrors extends CommonErrors {
 
     public final static ErrorCode AGENCY_GROUP_NAME_EXIST_ERROR = new AgencyErrorCode("0020", "群组名称已存在");
 
+    public final static ErrorCode AGENCY_USER_VOTE_NO_PERMISSION_ERROR = new AgencyErrorCode("0021", "此用户无次投票权限");
+
+
 }

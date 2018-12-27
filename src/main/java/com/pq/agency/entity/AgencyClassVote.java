@@ -15,6 +15,8 @@ public class AgencyClassVote {
 
     private Integer type;
 
+    private Integer voteType;
+
     private Integer isSecret;
 
     private Boolean state;
@@ -101,5 +103,13 @@ public class AgencyClassVote {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Integer getVoteType() {
+        return voteType;
+    }
+
+    public void setVoteType(Integer voteType) {
+        this.voteType = voteType;
     }
 }

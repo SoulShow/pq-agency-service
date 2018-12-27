@@ -8,6 +8,7 @@
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="deadline" property="deadline" jdbcType="TIMESTAMP" />
     <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="vote_type" property="voteType" jdbcType="INTEGER" />
     <result column="is_secret" property="isSecret" jdbcType="INTEGER" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
@@ -23,11 +24,11 @@
     </selectKey>
     insert into pq_agency_class_vote (agency_class_id, user_id, title, 
       deadline, type, is_secret, 
-      state, updated_time, created_time
+      state, updated_time, created_time,vote_type
       )
     values (#{agencyClassId,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
       #{deadline,jdbcType=TIMESTAMP}, #{type,jdbcType=INTEGER}, #{isSecret,jdbcType=INTEGER},
-      #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP}
+      #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP},#{voteType}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.AgencyClassVote" >
@@ -37,6 +38,7 @@
       title = #{title,jdbcType=VARCHAR},
       deadline = #{deadline,jdbcType=TIMESTAMP},
       type = #{type,jdbcType=INTEGER},
+      vote_type = #{voteType},
       is_secret = #{isSecret,jdbcType=INTEGER},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
@@ -45,19 +47,19 @@
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select id, agency_class_id, user_id, title, deadline, type, is_secret, state, updated_time, 
-    created_time
+    created_time, vote_type
     from pq_agency_class_vote
     where id = #{id,jdbcType=BIGINT}
     and state = 1
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select id, agency_class_id, user_id, title, deadline, type, is_secret, state, updated_time, 
-    created_time
+    created_time, vote_type
     from pq_agency_class_vote
   </select>
   <select id="selectByClassId" resultMap="BaseResultMap" >
     select id, agency_class_id, user_id, title, deadline, type, is_secret, state, updated_time,
-    created_time
+    created_time, vote_type
     from pq_agency_class_vote
     where state = 1
     and agency_class_id = #{agencyClassId}

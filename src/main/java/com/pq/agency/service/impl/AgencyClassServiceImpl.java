@@ -1234,7 +1234,19 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void createVote(AgencyClassVoteForm voteForm){
+        if(voteForm.getAgencyClassIdList()==null||voteForm.getAgencyClassIdList().size()==0){
+            AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
+        }
+        //选举投票
+        if(voteForm.getVoteType()==2){
+            AgencyUser agencyUser = agencyUserMapper.selectByUserAndClassId(voteForm.getUserId(),
+                    voteForm.getAgencyClassIdList().get(0));
+            if(agencyUser.getIsHead() != 1){
+                AgencyException.raise(AgencyErrors.AGENCY_USER_VOTE_NO_PERMISSION_ERROR);
+            }
+        }
 
         for(Long classId : voteForm.getAgencyClassIdList()){
             AgencyClassVote classVote = new AgencyClassVote();
@@ -1244,6 +1256,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             classVote.setDeadline(new Timestamp(DateUtil.getDate(voteForm.getDeadline(),
                     DateUtil.DEFAULT_DATETIME_FORMAT).getTime()));
             classVote.setType(voteForm.getType());
+            classVote.setVoteType(voteForm.getVoteType());
             classVote.setIsSecret(voteForm.getIsSecret());
             classVote.setState(true);
             classVote.setUpdatedTime(DateUtil.currentTime());
@@ -1752,6 +1765,30 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         return tempList;
     }
 
+    @Override
+    public List<String> getClassMemberList(Long agencyClassId,int type){
+        AgencyGroup group = agencyGroupMapper.selectByClassId(agencyClassId);
+        if(group==null){
+            AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
+        }
+        List<String> memberList = new ArrayList<>();
+        List<AgencyGroupMember> list = groupMemberMapper.selectByGroupId(group.getId());
+        for(AgencyGroupMember member : list){
+            if(type==CommonConstants.PQ_LOGIN_ROLE_TEACHER && !StringUtil.isEmpty(member.getUserId())){
+                AgencyResult<UserDto> result = userFeign.getUserInfo(member.getUserId());
+                if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                    throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+                }
+                UserDto userDto = result.getData();
+                memberList.add(userDto.getName());
+            }
+            if(type==CommonConstants.PQ_LOGIN_ROLE_PARENT && member.getStudentId()!=null && member.getStudentId()!=0){
+                AgencyStudent student = agencyStudentMapper.selectByPrimaryKey(member.getStudentId());
+                memberList.add(student.getName());
+            }
+        }
+        return memberList;
+    }
 
 
 }

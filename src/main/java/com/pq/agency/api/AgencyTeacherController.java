@@ -4,6 +4,7 @@ import com.pq.agency.exception.AgencyException;
 import com.pq.agency.param.*;
 import com.pq.agency.service.AgencyClassService;
 import com.pq.agency.utils.AgencyResult;
+import com.pq.common.constants.CommonConstants;
 import com.pq.common.exception.CommonErrors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -415,6 +416,40 @@ public class AgencyTeacherController {
         AgencyResult result = new AgencyResult();
         try {
             result.setData(agencyClassService.searchClassUser(name,userId));
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+
+    @GetMapping(value = "/class/teacher/list")
+    @ResponseBody
+    public AgencyResult getClassTeacherList(@RequestParam("agencyClassId")Long agencyClassId) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            result.setData(agencyClassService.getClassMemberList(agencyClassId,CommonConstants.PQ_LOGIN_ROLE_TEACHER));
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+    @GetMapping(value = "/class/student/list")
+    @ResponseBody
+    public AgencyResult getClassStudentList(@RequestParam("agencyClassId")Long agencyClassId) {
+        AgencyResult result = new AgencyResult();
+        try {
+            result.setData(agencyClassService.getClassMemberList(agencyClassId,CommonConstants.PQ_LOGIN_ROLE_PARENT));
         } catch (AgencyException e){
             result.setStatus(e.getErrorCode().getErrorCode());
             result.setMessage(e.getErrorCode().getErrorMsg());
