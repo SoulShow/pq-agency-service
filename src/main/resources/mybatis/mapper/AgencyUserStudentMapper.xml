@@ -75,4 +75,12 @@
     and student_id = #{studentId}
     and state =1
   </select>
+  <select id="selectByAgencyClassIdAndUserId" resultMap="BaseResultMap" >
+    select id, agency_class_id, user_id, agency_user_id, student_id, state, updated_time,
+    created_time, student_name, relation
+    from pq_agency_user_student
+    where user_id = #{userId}
+    and agency_class_id = #{agencyClassId}
+    and state =1
+  </select>
 </mapper>

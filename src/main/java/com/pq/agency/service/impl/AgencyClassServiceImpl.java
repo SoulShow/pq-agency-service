@@ -1823,7 +1823,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             UserDto userDto = result.getData();
             ClassUserDto classUserDto = new ClassUserDto();
             classUserDto.setAvatar(userDto.getAvatar());
-            classUserDto.setName(userDto.getName());
+            if(agencyUser.getRole()==1){
+                classUserDto.setName(userDto.getName());
+            }else {
+                List<AgencyUserStudent> studentList = agencyUserStudentMapper.selectByAgencyClassIdAndUserId(agencyClassId,userId);
+                classUserDto.setName(studentList.get(0).getStudentName()+studentList.get(0).getRelation());
+            }
             classUserDto.setUserId(userDto.getUserId());
             classUserDto.setHuanxinId(userDto.getHuanxinId());
             list.add(classUserDto);

@@ -22,4 +22,7 @@ public interface AgencyUserStudentMapper {
                                                          @Param("studentId")Long studentId);
 
     AgencyUserStudent selectByUserIdAndStudentId(@Param("userId") String userId, @Param("studentId")Long studentId);
+
+    List<AgencyUserStudent> selectByAgencyClassIdAndUserId(@Param("agencyClassId") Long agencyClassId,
+                                                           @Param("userId") String userId);
 }
