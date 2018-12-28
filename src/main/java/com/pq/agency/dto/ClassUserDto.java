@@ -10,6 +10,8 @@ public class ClassUserDto {
 
     private String huanxinId;
 
+    private int chatStatus;
+
     public String getName() {
         return name;
     }
@@ -40,5 +42,13 @@ public class ClassUserDto {
 
     public void setHuanxinId(String huanxinId) {
         this.huanxinId = huanxinId;
+    }
+
+    public int getChatStatus() {
+        return chatStatus;
+    }
+
+    public void setChatStatus(int chatStatus) {
+        this.chatStatus = chatStatus;
     }
 }
