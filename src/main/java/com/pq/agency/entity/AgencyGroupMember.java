@@ -13,8 +13,6 @@ public class AgencyGroupMember {
 
     private Integer disturbStatus;
 
-    private Integer chatStatus;
-
     private Integer isHead;
 
     private Boolean state;
@@ -85,14 +83,6 @@ public class AgencyGroupMember {
 
     public void setDisturbStatus(Integer disturbStatus) {
         this.disturbStatus = disturbStatus;
-    }
-
-    public Integer getChatStatus() {
-        return chatStatus;
-    }
-
-    public void setChatStatus(Integer chatStatus) {
-        this.chatStatus = chatStatus;
     }
 
     public Integer getIsHead() {

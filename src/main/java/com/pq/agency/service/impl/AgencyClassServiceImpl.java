@@ -250,7 +250,6 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyGroupMember.setStudentId(userStudent.getStudentId());
             agencyGroupMember.setGroupId(agencyGroup.getId());
             agencyGroupMember.setDisturbStatus(1);
-            agencyGroupMember.setChatStatus(0);
             agencyGroupMember.setState(true);
             agencyGroupMember.setIsHead(0);
             agencyGroupMember.setUpdatedTime(DateUtil.currentTime());
@@ -986,17 +985,21 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         if(member == null){
             AgencyException.raise(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR);
         }
-        agencyClassInfoDto.setChatStatus(member.getChatStatus());
         agencyClassInfoDto.setDisturbStatus(member.getDisturbStatus());
         agencyClassInfoDto.setIsHead(member.getIsHead());
 
         List<ClassUserInfoDto> list = new ArrayList<>();
         List<AgencyGroupMember> memberList = groupMemberMapper.selectByGroupId(groupId);
-        int chatCount = 0;
-        for(AgencyGroupMember groupMember : memberList){
-            if(groupMember.getChatStatus()==1){
-                chatCount++;
+
+        Integer chatCount = 0;
+        if(agencyClassInfoDto.getType()==Constants.AGENCY_GROUP_TYPE_CLASS){
+            chatCount = agencyUserMapper.selectChatCountByClassId(agencyGroup.getClassId());
+            if(chatCount==null){
+                chatCount=0;
             }
+        }
+        for(AgencyGroupMember groupMember : memberList){
+
             ClassUserInfoDto classUserInfoDto = new ClassUserInfoDto();
             if(!StringUtil.isEmpty(groupMember.getUserId()) && groupMember.getStudentId()==null){
                 AgencyResult<UserDto> result = userFeign.getUserInfo(groupMember.getUserId());
@@ -1011,7 +1014,6 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 classUserInfoDto.setUserId(groupMember.getUserId());
                 classUserInfoDto.setHuanxinId(userDto.getHuanxinId());
                 classUserInfoDto.setDisturbStatus(groupMember.getDisturbStatus());
-                classUserInfoDto.setChatStatus(groupMember.getChatStatus());
 
             }
             if(StringUtil.isEmpty(groupMember.getUserId()) && groupMember.getStudentId()!=null){
@@ -1021,7 +1023,6 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 classUserInfoDto.setName(agencyStudent.getName());
                 classUserInfoDto.setSex(agencyStudent.getSex()==1?"男":"女");
                 classUserInfoDto.setDisturbStatus(groupMember.getDisturbStatus());
-                classUserInfoDto.setChatStatus(groupMember.getChatStatus());
 
                 AgencyStudent student = agencyStudentMapper.selectByPrimaryKey(groupMember.getStudentId());
                 AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(student.getAgencyClassId());
@@ -1080,18 +1081,18 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         groupMemberMapper.updateByPrimaryKey(groupMember);
     }
     @Override
-    public Integer getGroupChatStatus(Long groupId,String userId,Long studentId){
-        AgencyGroupMember groupMember = groupMemberMapper.selectByGroupIdAndStudentOrUserId(groupId,studentId,userId);
-        return groupMember.getChatStatus();
+    public Integer getClassChatStatus(Long classId,String userId){
+        AgencyUser agencyUser = agencyUserMapper.selectByUserAndClassId(userId,classId);
+        return agencyUser.getChatStatus();
     }
 
 
     @Override
-    public void groupKeepSilent(Long groupId,String userId,Long studentId,int status){
-        AgencyGroupMember groupMember = groupMemberMapper.selectByGroupIdAndStudentOrUserId(groupId,studentId,userId);
-        groupMember.setChatStatus(status);
-        groupMember.setUpdatedTime(DateUtil.currentTime());
-        groupMemberMapper.updateByPrimaryKey(groupMember);
+    public void groupKeepSilent(Long classId,String userId,int status){
+        AgencyUser user = agencyUserMapper.selectByUserAndClassId(userId,classId);
+        user.setChatStatus(status);
+        user.setUpdatedTime(DateUtil.currentTime());
+        agencyUserMapper.updateByPrimaryKey(user);
     }
 
     @Override
@@ -1336,7 +1337,6 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 agencyGroupMember.setUserId(agencyUser.getUserId());
                 agencyGroupMember.setGroupId(agencyGroup.getId());
                 agencyGroupMember.setDisturbStatus(1);
-                agencyGroupMember.setChatStatus(0);
                 agencyGroupMember.setIsHead(agencyUser.getIsHead());
                 agencyGroupMember.setState(true);
                 agencyGroupMember.setUpdatedTime(DateUtil.currentTime());
@@ -1595,7 +1595,6 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             }
             agencyGroupMember.setGroupId(agencyGroup.getId());
             agencyGroupMember.setDisturbStatus(1);
-            agencyGroupMember.setChatStatus(0);
             agencyGroupMember.setIsHead(isHead);
             agencyGroupMember.setState(true);
             agencyGroupMember.setUpdatedTime(DateUtil.currentTime());
@@ -1807,6 +1806,29 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             }
         }
         return memberList;
+    }
+
+    @Override
+    public List<ClassUserDto> getClassUserList(Long agencyClassId,String userId){
+        List<AgencyUser> userList = agencyUserMapper.selectByClassId(agencyClassId);
+        List<ClassUserDto> list = new ArrayList<>();
+        for(AgencyUser agencyUser:userList){
+            if(userId.equals(agencyUser.getUserId())){
+                continue;
+            }
+            AgencyResult<UserDto> result = userFeign.getUserInfo(agencyUser.getUserId());
+            if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+            }
+            UserDto userDto = result.getData();
+            ClassUserDto classUserDto = new ClassUserDto();
+            classUserDto.setAvatar(userDto.getAvatar());
+            classUserDto.setName(userDto.getName());
+            classUserDto.setUserId(userDto.getUserId());
+            classUserDto.setHuanxinId(userDto.getHuanxinId());
+            list.add(classUserDto);
+        }
+        return list;
     }
 
 

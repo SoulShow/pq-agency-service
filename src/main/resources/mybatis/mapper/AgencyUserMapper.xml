@@ -7,6 +7,7 @@
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="role" property="role" jdbcType="INTEGER" />
     <result column="is_head" property="isHead" jdbcType="INTEGER" />
+    <result column="chat_status" property="chatStatus" jdbcType="INTEGER" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
     <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
@@ -20,11 +21,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into pq_agency_user (agency_class_id, user_id, role, 
-      state, updated_time, created_time,is_head
+      state, updated_time, created_time,is_head, chat_status
       )
     values (#{agencyClassId,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, 
       #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP},
-    #{isHead}
+    #{isHead},#{chatStatus}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.AgencyUser" >
@@ -33,18 +34,19 @@
       user_id = #{userId,jdbcType=VARCHAR},
       role = #{role,jdbcType=INTEGER},
       is_head = #{isHead},
+      chat_status = #{chatStatus},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
       created_time = #{createdTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, agency_class_id, user_id, role, state, updated_time, created_time, is_head
+    select id, agency_class_id, user_id, role, state, updated_time, created_time, is_head,chat_status
     from pq_agency_user
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, agency_class_id, user_id, role, state, updated_time, created_time, is_head
+    select id, agency_class_id, user_id, role, state, updated_time, created_time, is_head,chat_status
     from pq_agency_user
   </select>
 
@@ -56,7 +58,7 @@
   </select>
 
   <select id="selectByUserAndClassId" resultMap="BaseResultMap" >
-    select  id, agency_class_id, user_id, role, state, updated_time, created_time,is_head
+    select  id, agency_class_id, user_id, role, state, updated_time, created_time,is_head,chat_status
     from pq_agency_user
     where user_id = #{userId}
     <if test="agencyClassId!=null and agencyClassId!='' ">
@@ -74,7 +76,7 @@
   </select>
 
   <select id="selectByClassIdAndRole" resultMap="BaseResultMap">
-    select  id, agency_class_id, user_id, role, state, updated_time, created_time, is_head
+    select  id, agency_class_id, user_id, role, state, updated_time, created_time, is_head,chat_status
     from pq_agency_user
     where agency_class_id = #{agencyClassId}
     and role = #{role}
@@ -82,18 +84,34 @@
   </select>
 
   <select id="selectByUserId" resultMap="BaseResultMap">
-    select  id, agency_class_id, user_id, role, state, updated_time, created_time, is_head
+    select  id, agency_class_id, user_id, role, state, updated_time, created_time, is_head,chat_status
     from pq_agency_user
     where user_id = #{userId}
     and state = 1
   </select>
 
   <select id="selectClassHeaderByClassId" resultMap="BaseResultMap">
-    select  id, agency_class_id, user_id, role, state, updated_time, created_time, is_head
+    select  id, agency_class_id, user_id, role, state, updated_time, created_time, is_head,chat_status
     from pq_agency_user
     where agency_class_id = #{agencyClassId}
     and is_head = 1
     and role = 1
     and state = 1
   </select>
+
+  <select id="selectChatCountByClassId" resultType="java.lang.Integer">
+    select  count(id)
+    from pq_agency_user
+    where agency_class_id = #{agencyClassId}
+    and chat_status = 0
+    and state = 1
+  </select>
+
+  <select id="selectByClassId" resultMap="BaseResultMap">
+    select  id, agency_class_id, user_id, role, state, updated_time, created_time, is_head,chat_status
+    from pq_agency_user
+    where agency_class_id = #{agencyClassId}
+    and state = 1
+  </select>
+
 </mapper>

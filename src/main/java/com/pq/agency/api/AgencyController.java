@@ -369,14 +369,13 @@ public class AgencyController {
 		return result;
 	}
 
-	@GetMapping(value = "/group/user/chatStatus")
+	@GetMapping(value = "/class/user/chatStatus")
 	@ResponseBody
-	public AgencyResult getGroupChatStatus(@RequestParam(value = "groupId")Long groupId,
-										   @RequestParam(value = "studentId",required = false)Long studentId,
+	public AgencyResult getGroupChatStatus(@RequestParam(value = "classId")Long groupId,
 										   @RequestParam(value = "userId")String userId) {
 		AgencyResult result = new AgencyResult();
 		try{
-			result.setData(agencyClassService.getGroupChatStatus(groupId,userId,studentId));
+			result.setData(agencyClassService.getClassChatStatus(groupId,userId));
 		}catch (AgencyException e){
 			result.setStatus(e.getErrorCode().getErrorCode());
 			result.setMessage(e.getErrorCode().getErrorMsg());

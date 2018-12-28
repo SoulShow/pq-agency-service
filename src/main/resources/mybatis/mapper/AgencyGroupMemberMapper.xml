@@ -8,7 +8,6 @@
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="is_head" property="isHead" jdbcType="INTEGER" />
     <result column="disturb_status" property="disturbStatus" jdbcType="INTEGER" />
-    <result column="chat_status" property="chatStatus" jdbcType="INTEGER" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
     <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
@@ -22,11 +21,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into pq_agency_group_member (group_id, student_id, user_id, 
-      state, updated_time, created_time,disturb_status,chat_status, is_head
+      state, updated_time, created_time,disturb_status, is_head
       )
     values (#{groupId,jdbcType=BIGINT}, #{studentId,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, 
       #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP},
-    #{disturbStatus},#{chatStatus},#{isHead}
+    #{disturbStatus},#{isHead}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.AgencyGroupMember" >
@@ -35,7 +34,6 @@
       student_id = #{studentId,jdbcType=BIGINT},
       user_id = #{userId,jdbcType=VARCHAR},
       disturb_status = #{disturbStatus},
-      chat_status = #{chatStatus},
       is_head = #{isHead},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
@@ -43,12 +41,12 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, group_id, student_id, user_id, state, updated_time, created_time,disturb_status,chat_status,is_head
+    select id, group_id, student_id, user_id, state, updated_time, created_time,disturb_status,is_head
     from pq_agency_group_member
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, group_id, student_id, user_id, state, updated_time, created_time,disturb_status,chat_status,is_head
+    select id, group_id, student_id, user_id, state, updated_time, created_time,disturb_status,is_head
     from pq_agency_group_member
   </select>
 
@@ -60,14 +58,14 @@
   </select>
 
   <select id="selectByGroupId" resultMap="BaseResultMap" >
-    select id, group_id, student_id, user_id, state, updated_time, created_time,disturb_status,chat_status,is_head
+    select id, group_id, student_id, user_id, state, updated_time, created_time,disturb_status,is_head
     from pq_agency_group_member
     where group_id = #{groupId}
     and state = 1
   </select>
 
   <select id="selectByStudentIdOrUserId" resultMap="BaseResultMap" >
-    select id, group_id, student_id, user_id, state, updated_time, created_time,disturb_status,chat_status,is_head
+    select id, group_id, student_id, user_id, state, updated_time, created_time,disturb_status,is_head
     from pq_agency_group_member
     where state = 1
     <if test="studentId==null">
@@ -80,7 +78,7 @@
   </select>
 
   <select id="selectByGroupIdAndStudentOrUserId" resultMap="BaseResultMap" >
-    select id, group_id, student_id, user_id, state, updated_time,created_time,disturb_status,chat_status,is_head
+    select id, group_id, student_id, user_id, state, updated_time,created_time,disturb_status,is_head
     from pq_agency_group_member
     where
     group_id = #{groupId}
@@ -94,7 +92,7 @@
   </select>
 
   <select id="selectDisturbByStudentIdOrUserId" resultMap="BaseResultMap" >
-    select id, group_id, student_id, user_id, state, updated_time, created_time,disturb_status,chat_status,is_head
+    select id, group_id, student_id, user_id, state, updated_time, created_time,disturb_status,is_head
     from pq_agency_group_member
     where state = 1
     <if test="studentId==null">

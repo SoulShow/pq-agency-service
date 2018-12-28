@@ -28,6 +28,10 @@ public interface AgencyUserMapper {
 
     AgencyUser selectClassHeaderByClassId(@Param("agencyClassId")Long agencyClassId);
 
+    Integer selectChatCountByClassId(@Param("agencyClassId")Long agencyClassId);
+
+    List<AgencyUser> selectByClassId(@Param("agencyClassId")Long agencyClassId);
+
 
 
 }

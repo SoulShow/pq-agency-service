@@ -307,21 +307,19 @@ public interface AgencyClassService {
 
     /**
      * 获取用户禁言状态
-     * @param groupId
+     * @param classId
      * @param userId
-     * @param studentId
      * @return
      */
-    Integer getGroupChatStatus(Long groupId,String userId,Long studentId);
+    Integer getClassChatStatus(Long classId,String userId);
 
     /**
      * 禁言
-     * @param groupId
+     * @param classId
      * @param userId
-     * @param studentId
      * @param status
      */
-    void groupKeepSilent(Long groupId,String userId,Long studentId,int status);
+    void groupKeepSilent(Long classId,String userId,int status);
 
     /**
      * 获取免打扰群组信息
@@ -466,7 +464,6 @@ public interface AgencyClassService {
      */
     List<ClassUserInfoDto> searchClassUser(String name,String userId);
 
-
     /**
      * 获取班级成员
      * @param agencyClassId
@@ -474,4 +471,12 @@ public interface AgencyClassService {
      * @return
      */
     List<MemberDto> getClassMemberList(Long agencyClassId,int type);
+
+    /**
+     * 获取班级用户
+     * @param agencyClassId
+     * @param userId
+     * @return
+     */
+    List<ClassUserDto> getClassUserList(Long agencyClassId,String userId);
 }

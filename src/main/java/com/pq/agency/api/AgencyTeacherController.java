@@ -132,8 +132,7 @@ public class AgencyTeacherController {
     public AgencyResult groupKeepSilent(@RequestBody ChatStatusForm chatStatusForm) {
         AgencyResult result = new AgencyResult();
         try{
-            agencyClassService.groupKeepSilent(chatStatusForm.getGroupId(),chatStatusForm.getUserId(),
-                    chatStatusForm.getStudentId(),chatStatusForm.getStatus());
+            agencyClassService.groupKeepSilent(chatStatusForm.getAgencyClassId(),chatStatusForm.getUserId(),chatStatusForm.getStatus());
         }catch (AgencyException e){
             result.setStatus(e.getErrorCode().getErrorCode());
             result.setMessage(e.getErrorCode().getErrorMsg());
@@ -450,6 +449,23 @@ public class AgencyTeacherController {
         AgencyResult result = new AgencyResult();
         try {
             result.setData(agencyClassService.getClassMemberList(agencyClassId,CommonConstants.PQ_LOGIN_ROLE_PARENT));
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+    @GetMapping(value = "/class/user/list")
+    @ResponseBody
+    public AgencyResult getClassUserList(@RequestParam("agencyClassId")Long agencyClassId,
+                                         @RequestParam("userId")String userId) {
+        AgencyResult result = new AgencyResult();
+        try {
+            result.setData(agencyClassService.getClassUserList(agencyClassId,userId));
         } catch (AgencyException e){
             result.setStatus(e.getErrorCode().getErrorCode());
             result.setMessage(e.getErrorCode().getErrorMsg());

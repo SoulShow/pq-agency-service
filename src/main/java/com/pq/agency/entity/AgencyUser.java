@@ -13,6 +13,8 @@ public class AgencyUser {
 
     private Integer isHead;
 
+    private Integer chatStatus;
+
     private Boolean state;
 
     private Timestamp updatedTime;
@@ -81,5 +83,13 @@ public class AgencyUser {
 
     public void setIsHead(Integer isHead) {
         this.isHead = isHead;
+    }
+
+    public Integer getChatStatus() {
+        return chatStatus;
+    }
+
+    public void setChatStatus(Integer chatStatus) {
+        this.chatStatus = chatStatus;
     }
 }
