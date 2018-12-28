@@ -461,11 +461,11 @@ public class AgencyTeacherController {
     }
     @GetMapping(value = "/class/user/list")
     @ResponseBody
-    public AgencyResult getClassUserList(@RequestParam("agencyClassId")Long agencyClassId,
+    public AgencyResult getClassUserList(@RequestParam("groupId")Long groupId,
                                          @RequestParam("userId")String userId) {
         AgencyResult result = new AgencyResult();
         try {
-            result.setData(agencyClassService.getClassUserList(agencyClassId,userId));
+            result.setData(agencyClassService.getClassUserList(groupId,userId));
         } catch (AgencyException e){
             result.setStatus(e.getErrorCode().getErrorCode());
             result.setMessage(e.getErrorCode().getErrorMsg());

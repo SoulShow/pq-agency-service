@@ -1809,8 +1809,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     }
 
     @Override
-    public List<ClassUserDto> getClassUserList(Long agencyClassId,String userId){
-        List<AgencyUser> userList = agencyUserMapper.selectByClassId(agencyClassId);
+    public List<ClassUserDto> getClassUserList(Long groupId,String userId){
+        AgencyGroup agencyGroup = agencyGroupMapper.selectByPrimaryKey(groupId);
+        if(agencyGroup==null){
+            AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
+        }
+        List<AgencyUser> userList = agencyUserMapper.selectByClassId(agencyGroup.getClassId());
         List<ClassUserDto> list = new ArrayList<>();
         for(AgencyUser agencyUser:userList){
             if(userId.equals(agencyUser.getUserId())){
@@ -1828,7 +1832,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             if(agencyUser.getRole().equals(CommonConstants.PQ_LOGIN_ROLE_TEACHER)){
                 classUserDto.setName(userDto.getName());
             }else {
-                List<AgencyUserStudent> studentList = agencyUserStudentMapper.selectByAgencyClassIdAndUserId(agencyClassId,agencyUser.getUserId());
+                List<AgencyUserStudent> studentList = agencyUserStudentMapper.selectByAgencyClassIdAndUserId(agencyGroup.getClassId(),agencyUser.getUserId());
                 if(studentList==null || studentList.size()==0){
                     continue;
                 }

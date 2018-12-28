@@ -474,9 +474,9 @@ public interface AgencyClassService {
 
     /**
      * 获取班级用户
-     * @param agencyClassId
+     * @param groupId
      * @param userId
      * @return
      */
-    List<ClassUserDto> getClassUserList(Long agencyClassId,String userId);
+    List<ClassUserDto> getClassUserList(Long groupId,String userId);
 }
