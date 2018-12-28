@@ -1827,7 +1827,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             if(agencyUser.getRole().equals(CommonConstants.PQ_LOGIN_ROLE_TEACHER)){
                 classUserDto.setName(userDto.getName());
             }else {
-                List<AgencyUserStudent> studentList = agencyUserStudentMapper.selectByAgencyClassIdAndUserId(agencyClassId,userId);
+                List<AgencyUserStudent> studentList = agencyUserStudentMapper.selectByAgencyClassIdAndUserId(agencyClassId,agencyUser.getUserId());
                 classUserDto.setName(studentList.get(0).getStudentName()+studentList.get(0).getRelation());
             }
             classUserDto.setUserId(userDto.getUserId());
