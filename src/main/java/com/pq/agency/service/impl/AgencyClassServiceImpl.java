@@ -1823,6 +1823,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             UserDto userDto = result.getData();
             ClassUserDto classUserDto = new ClassUserDto();
             classUserDto.setAvatar(userDto.getAvatar());
+            LOGGER.info("用不role--------"+agencyUser.getRole());
             if(agencyUser.getRole().equals(CommonConstants.PQ_LOGIN_ROLE_TEACHER)){
                 classUserDto.setName(userDto.getName());
             }else {
