@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class ChatStatusForm implements Serializable {
     private static final long serialVersionUID = -5012356177885649604L;
     private String userId;
-    private Long agencyClassId;
+    private Long groupId;
     private Integer status;
 
     public String getUserId() {
@@ -27,11 +27,11 @@ public class ChatStatusForm implements Serializable {
         this.status = status;
     }
 
-    public Long getAgencyClassId() {
-        return agencyClassId;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setAgencyClassId(Long agencyClassId) {
-        this.agencyClassId = agencyClassId;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 }

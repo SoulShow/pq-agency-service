@@ -51,5 +51,7 @@ public class AgencyErrors extends CommonErrors {
 
     public final static ErrorCode AGENCY_USER_VOTE_NO_PERMISSION_ERROR = new AgencyErrorCode("0021", "此用户无次投票权限");
 
+    public final static ErrorCode AGENCY_GROUP_NO_PERMISSION_ERROR = new AgencyErrorCode("0022", "此群组无禁言权限");
+
 
 }

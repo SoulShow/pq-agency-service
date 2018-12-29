@@ -307,19 +307,19 @@ public interface AgencyClassService {
 
     /**
      * 获取用户禁言状态
-     * @param classId
+     * @param groupId
      * @param userId
      * @return
      */
-    Integer getClassChatStatus(Long classId,String userId);
+    Integer getClassChatStatus(Long groupId,String userId);
 
     /**
      * 禁言
-     * @param classId
+     * @param groupId
      * @param userId
      * @param status
      */
-    void groupKeepSilent(Long classId,String userId,int status);
+    void groupKeepSilent(Long groupId,String userId,int status);
 
     /**
      * 获取免打扰群组信息

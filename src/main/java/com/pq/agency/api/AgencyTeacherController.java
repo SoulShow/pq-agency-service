@@ -132,7 +132,7 @@ public class AgencyTeacherController {
     public AgencyResult groupKeepSilent(@RequestBody ChatStatusForm chatStatusForm) {
         AgencyResult result = new AgencyResult();
         try{
-            agencyClassService.groupKeepSilent(chatStatusForm.getAgencyClassId(),chatStatusForm.getUserId(),chatStatusForm.getStatus());
+            agencyClassService.groupKeepSilent(chatStatusForm.getGroupId(),chatStatusForm.getUserId(),chatStatusForm.getStatus());
         }catch (AgencyException e){
             result.setStatus(e.getErrorCode().getErrorCode());
             result.setMessage(e.getErrorCode().getErrorMsg());

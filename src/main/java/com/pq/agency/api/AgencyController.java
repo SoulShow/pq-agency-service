@@ -371,7 +371,7 @@ public class AgencyController {
 
 	@GetMapping(value = "/class/user/chatStatus")
 	@ResponseBody
-	public AgencyResult getGroupChatStatus(@RequestParam(value = "classId")Long groupId,
+	public AgencyResult getGroupChatStatus(@RequestParam(value = "groupId")Long groupId,
 										   @RequestParam(value = "userId")String userId) {
 		AgencyResult result = new AgencyResult();
 		try{

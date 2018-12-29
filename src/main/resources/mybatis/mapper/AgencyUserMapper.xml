@@ -103,7 +103,7 @@
     select  count(id)
     from pq_agency_user
     where agency_class_id = #{agencyClassId}
-    and chat_status = 0
+    and chat_status = 1
     and state = 1
   </select>
 

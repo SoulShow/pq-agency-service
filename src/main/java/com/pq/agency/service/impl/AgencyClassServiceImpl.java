@@ -1081,15 +1081,23 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         groupMemberMapper.updateByPrimaryKey(groupMember);
     }
     @Override
-    public Integer getClassChatStatus(Long classId,String userId){
-        AgencyUser agencyUser = agencyUserMapper.selectByUserAndClassId(userId,classId);
+    public Integer getClassChatStatus(Long groupId,String userId){
+        AgencyGroup group = agencyGroupMapper.selectByPrimaryKey(groupId);
+        if(group.getClassId()==null||group.getClassId()==0){
+            AgencyException.raise(AgencyErrors.AGENCY_GROUP_NO_PERMISSION_ERROR);
+        }
+        AgencyUser agencyUser = agencyUserMapper.selectByUserAndClassId(userId,group.getClassId());
         return agencyUser.getChatStatus();
     }
 
 
     @Override
-    public void groupKeepSilent(Long classId,String userId,int status){
-        AgencyUser user = agencyUserMapper.selectByUserAndClassId(userId,classId);
+    public void groupKeepSilent(Long groupId,String userId,int status){
+        AgencyGroup group = agencyGroupMapper.selectByPrimaryKey(groupId);
+        if(group.getClassId()==null||group.getClassId()==0){
+            AgencyException.raise(AgencyErrors.AGENCY_GROUP_NO_PERMISSION_ERROR);
+        }
+        AgencyUser user = agencyUserMapper.selectByUserAndClassId(userId,group.getClassId());
         user.setChatStatus(status);
         user.setUpdatedTime(DateUtil.currentTime());
         agencyUserMapper.updateByPrimaryKey(user);
