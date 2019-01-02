@@ -22,12 +22,12 @@ public interface AgencyClassNoticeMapper {
                                                         @Param("size") int size);
 
     List<AgencyClassNotice> selectByUserIdAndClassId(@Param("userId")String userId,
-                             @Param("classIds")List<Long> classIds,
-                             @Param("offset")int offset,
-                             @Param("size") int size);
+                                                     @Param("classId")Long classId,
+                                                     @Param("offset")int offset,
+                                                     @Param("size") int size);
 
     List<AgencyClassNotice> selectByNoUserIdAndClassId(@Param("userId")String userId,
-                               @Param("classIds")List<Long> classIds,
-                               @Param("offset")int offset,
-                               @Param("size") int size);
+                                                       @Param("classId")Long classId,
+                                                       @Param("offset")int offset,
+                                                       @Param("size") int size);
 }

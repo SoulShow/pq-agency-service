@@ -67,8 +67,7 @@
     created_time
     from pq_agency_class_notice
     where user_id = #{userId}
-    and agency_class_id in
-    <foreach item="item" collection="classIds" separator="," open="(" close=")">#{item}</foreach>
+    and agency_class_id =#{classId}
     and state = 1
     order by created_time desc
     limit #{offset},#{size}
@@ -79,8 +78,7 @@
     created_time
     from pq_agency_class_notice
     where user_id != #{userId}
-    and agency_class_id in
-    <foreach item="item" collection="classIds" separator="," open="(" close=")">#{item}</foreach>
+    and agency_class_id =#{classId}
     and state = 1
     order by created_time desc
     limit #{offset},#{size}

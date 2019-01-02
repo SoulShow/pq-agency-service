@@ -479,7 +479,8 @@ public class AgencyTeacherController {
 
     @GetMapping(value = "/class/notice")
     @ResponseBody
-    public AgencyResult getClassNotice(@RequestParam(value = "userId")String userId,
+    public AgencyResult getClassNotice(@RequestParam("classId")Long classId,
+                                       @RequestParam(value = "userId")String userId,
                                        @RequestParam(value = "isMine")int isMine,
                                        @RequestParam(value = "page",required = false)Integer page,
                                        @RequestParam(value = "size",required = false)Integer size) {
@@ -493,7 +494,7 @@ public class AgencyTeacherController {
 
         AgencyResult result = new AgencyResult();
         try {
-            result.setData(agencyClassService.getTeacherNoticeList(userId,isMine,offset,size));
+            result.setData(agencyClassService.getTeacherNoticeList(classId,userId,isMine,offset,size));
         } catch (AgencyException e){
             result.setStatus(e.getErrorCode().getErrorCode());
             result.setMessage(e.getErrorCode().getErrorMsg());

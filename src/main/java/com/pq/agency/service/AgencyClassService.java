@@ -483,11 +483,12 @@ public interface AgencyClassService {
 
     /**
      * 获取教师端通知
+     * @param classId
      * @param userId
      * @param isMine
      * @param offset
      * @param size
      * @return
      */
-    List<AgencyNoticeDto> getTeacherNoticeList(String userId,int isMine,int offset,int size);
+    List<AgencyNoticeDto> getTeacherNoticeList(Long classId,String userId,int isMine,int offset,int size);
 }

@@ -1860,13 +1860,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     }
 
     @Override
-    public List<AgencyNoticeDto> getTeacherNoticeList(String userId,int isMine,int offset,int size){
-        List<Long> classIdList = agencyUserMapper.selectClassIdByUserId(userId);
+    public List<AgencyNoticeDto> getTeacherNoticeList(Long classId,String userId,int isMine,int offset,int size){
         List<AgencyClassNotice> list = new ArrayList<>();
         if(isMine==1){
-            list = noticeMapper.selectByUserIdAndClassId(userId,classIdList,offset,size);
+            list = noticeMapper.selectByUserIdAndClassId(userId,classId,offset,size);
         }else {
-            list = noticeMapper.selectByNoUserIdAndClassId(userId,classIdList,offset,size);
+            list = noticeMapper.selectByNoUserIdAndClassId(userId,classId,offset,size);
         }
 
         List<AgencyNoticeDto> agencyNoticeDtoList = new ArrayList<>();
