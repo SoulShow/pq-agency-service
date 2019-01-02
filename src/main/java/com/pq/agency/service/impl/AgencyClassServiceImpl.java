@@ -1331,6 +1331,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             }
             paramMap.put("hxGroupId", agencyClass.getGroupId());
             paramMap.put("userHxId", userDto.getHuanxinId());
+
+            paramMap.put("is_head", agencyClassDto.getIsHead()==null||agencyClassDto.getIsHead()==0?
+                    "0":agencyClassDto.getIsHead().toString());
             try {
                 String huanxResult = HttpUtil.sendJson(phpUrl+"addHxGroup",new HashMap<>(),JSON.toJSONString(paramMap));
                 AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
