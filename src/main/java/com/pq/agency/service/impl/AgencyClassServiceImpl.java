@@ -556,7 +556,10 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     @Override
     public void deleteCollection(Long id,String userId,Long studentId){
         UserNoticeFileCollection collection = collectionMapper.selectByPrimaryKey(id);
-        if(collection==null||!userId.equals(collection.getUserId())|| !studentId.equals(collection.getStudentId())){
+        if(collection==null||!userId.equals(collection.getUserId())){
+            AgencyException.raise(AgencyErrors.AGENCY_COLLECTION_NOT_EXIST_ERROR);
+        }
+        if(studentId !=null && studentId>0 && !collection.getStudentId().equals(studentId)){
             AgencyException.raise(AgencyErrors.AGENCY_COLLECTION_NOT_EXIST_ERROR);
         }
         collection.setState(false);
@@ -1854,6 +1857,45 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             list.add(classUserDto);
         }
         return list;
+    }
+
+    @Override
+    public List<AgencyNoticeDto> getTeacherNoticeList(String userId,int isMine,int offset,int size){
+        List<Long> classIdList = agencyUserMapper.selectClassIdByUserId(userId);
+        List<AgencyClassNotice> list = new ArrayList<>();
+        if(isMine==1){
+            list = noticeMapper.selectByUserIdAndClassId(userId,classIdList,offset,size);
+        }else {
+            list = noticeMapper.selectByNoUserIdAndClassId(userId,classIdList,offset,size);
+        }
+
+        List<AgencyNoticeDto> agencyNoticeDtoList = new ArrayList<>();
+        for(AgencyClassNotice agencyClassNotice:list){
+            AgencyNoticeDto agencyNoticeDto = new AgencyNoticeDto();
+            agencyNoticeDto.setId(agencyClassNotice.getId());
+            agencyNoticeDto.setCreatedTime(DateUtil.formatDate(agencyClassNotice.getCreatedTime(),DateUtil.DEFAULT_TIME_MINUTE));
+            agencyNoticeDto.setContent(agencyClassNotice.getContent());
+            agencyNoticeDto.setTitle(agencyClassNotice.getTitle());
+            ClassNoticeReadLog readLog = noticeReadLogMapper.selectByUserIdAndNoticeId(userId,agencyClassNotice.getId());
+            agencyNoticeDto.setReadStatus(readLog==null?0:1);
+
+            int fileStatus = 0;
+            int imgStatus = 0;
+            List<ClassNoticeFile> fileList = noticeFileMapper.selectByNoticeId(agencyClassNotice.getId());
+            for(ClassNoticeFile classNoticeFile:fileList){
+                if(classNoticeFile.getType()==2){
+                    fileStatus = 1;
+                    continue;
+                }else {
+                    imgStatus = 1;
+                    continue;
+                }
+            }
+            agencyNoticeDto.setFileStatus(fileStatus);
+            agencyNoticeDto.setImgStatus(imgStatus);
+            agencyNoticeDtoList.add(agencyNoticeDto);
+        }
+        return agencyNoticeDtoList;
     }
 
 

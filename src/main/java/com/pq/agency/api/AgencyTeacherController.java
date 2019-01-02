@@ -476,4 +476,32 @@ public class AgencyTeacherController {
         }
         return result;
     }
+
+    @GetMapping(value = "/class/notice")
+    @ResponseBody
+    public AgencyResult getClassNotice(@RequestParam(value = "userId")String userId,
+                                       @RequestParam(value = "isMine")int isMine,
+                                       @RequestParam(value = "page",required = false)Integer page,
+                                       @RequestParam(value = "size",required = false)Integer size) {
+        if (page == null || page < 1) {
+            page = 1;
+        }
+        if (size == null || size < 1) {
+            size = 20;
+        }
+        int offset = (page - 1) * size;
+
+        AgencyResult result = new AgencyResult();
+        try {
+            result.setData(agencyClassService.getTeacherNoticeList(userId,isMine,offset,size));
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
 }

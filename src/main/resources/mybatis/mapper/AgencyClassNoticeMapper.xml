@@ -61,4 +61,28 @@
     order by created_time desc
     limit #{offset},#{size}
   </select>
+
+  <select id="selectByUserIdAndClassId" resultMap="BaseResultMap" >
+    select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time,
+    created_time
+    from pq_agency_class_notice
+    where user_id = #{userId}
+    and agency_class_id in
+    <foreach item="item" collection="classIds" separator="," open="(" close=")">#{item}</foreach>
+    and state = 1
+    order by created_time desc
+    limit #{offset},#{size}
+  </select>
+
+  <select id="selectByNoUserIdAndClassId" resultMap="BaseResultMap" >
+    select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time,
+    created_time
+    from pq_agency_class_notice
+    where user_id != #{userId}
+    and agency_class_id in
+    <foreach item="item" collection="classIds" separator="," open="(" close=")">#{item}</foreach>
+    and state = 1
+    order by created_time desc
+    limit #{offset},#{size}
+  </select>
 </mapper>

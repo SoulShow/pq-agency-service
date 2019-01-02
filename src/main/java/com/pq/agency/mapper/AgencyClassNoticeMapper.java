@@ -20,4 +20,14 @@ public interface AgencyClassNoticeMapper {
                                                         @Param("isReceipt")int isReceipt,
                                                         @Param("offset")int offset,
                                                         @Param("size") int size);
+
+    List<AgencyClassNotice> selectByUserIdAndClassId(@Param("userId")String userId,
+                             @Param("classIds")List<Long> classIds,
+                             @Param("offset")int offset,
+                             @Param("size") int size);
+
+    List<AgencyClassNotice> selectByNoUserIdAndClassId(@Param("userId")String userId,
+                               @Param("classIds")List<Long> classIds,
+                               @Param("offset")int offset,
+                               @Param("size") int size);
 }

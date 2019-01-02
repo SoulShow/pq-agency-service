@@ -479,4 +479,15 @@ public interface AgencyClassService {
      * @return
      */
     List<ClassUserDto> getClassUserList(Long groupId,String userId);
+
+
+    /**
+     * 获取教师端通知
+     * @param userId
+     * @param isMine
+     * @param offset
+     * @param size
+     * @return
+     */
+    List<AgencyNoticeDto> getTeacherNoticeList(String userId,int isMine,int offset,int size);
 }
