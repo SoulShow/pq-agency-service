@@ -100,7 +100,7 @@ public class AgencyController {
 	@ResponseBody
 	public AgencyResult getClassNotice(@RequestParam(value = "agencyClassId")Long agencyClassId,
                                        @RequestParam(value = "userId")String userId,
-									   @RequestParam(value = "studentId")Long studentId,
+									   @RequestParam(value = "studentId",required = false)Long studentId,
                                        @RequestParam(value = "isReceipt")int isReceipt,
                                        @RequestParam(value = "page",required = false)Integer page,
                                        @RequestParam(value = "size",required = false)Integer size) {
@@ -129,7 +129,7 @@ public class AgencyController {
 	@ResponseBody
 	public AgencyResult getClassNoticeDetail(@RequestParam(value = "noticeId")Long noticeId,
                                              @RequestParam(value = "userId")String userId,
-											 @RequestParam(value = "studentId")Long studentId) {
+											 @RequestParam(value = "studentId",required = false)Long studentId) {
 
 		AgencyResult result = new AgencyResult();
 		try {
