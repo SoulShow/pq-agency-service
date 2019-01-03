@@ -22,4 +22,11 @@ public class Constants {
 
     public static final String AGENCY_GROUP_FORWARD_INFO = "AGENCY_GROUP_FORWARD_INFO:";
 
+    public static final String AGENCY_CLASS_NOTICE_STUDENT_INFO = "AGENCY_CLASS_NOTICE_STUDENT_INFO:";
+
+
+    public static final Long PUSH_TEMPLATE_ID_NOTICE_7 = 7L;
+
+
+
 }

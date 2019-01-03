@@ -17,4 +17,6 @@ public interface ClassNoticeReadLogMapper {
     int updateByPrimaryKey(ClassNoticeReadLog record);
 
     ClassNoticeReadLog selectByUserIdAndNoticeId(@Param("userId") String userId,@Param("noticeId") Long noticeId);
+
+    ClassNoticeReadLog selectByNoticeIdAndStudentId(@Param("noticeId") Long noticeId,@Param("studentId") Long studentId);
 }

@@ -1,5 +1,7 @@
 package com.pq.agency.api;
 
+import com.pq.agency.dto.ClassNoticeDto;
+import com.pq.agency.dto.NoticePushDto;
 import com.pq.agency.exception.AgencyException;
 import com.pq.agency.param.*;
 import com.pq.agency.service.AgencyClassService;
@@ -505,4 +507,59 @@ public class AgencyTeacherController {
         }
         return result;
     }
+
+    @PostMapping(value = "/class/notice")
+    @ResponseBody
+    public AgencyResult createClassNotice(@RequestBody ClassNoticeDto classNoticeDto) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            agencyClassService.createClassNotice(classNoticeDto);
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/class/notice/student")
+    @ResponseBody
+    public AgencyResult getReceiptStudentList(@RequestParam("noticeId") Long noticeId,@RequestParam("status") int status) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            result.setData(agencyClassService.getReceiptStudentList(noticeId,status));
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/class/notice/push")
+    @ResponseBody
+    public AgencyResult getReceiptStudentList(@RequestBody NoticePushDto pushDto) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            agencyClassService.noticePush(pushDto.getNoticeId(),pushDto.getUserId());
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+
 }

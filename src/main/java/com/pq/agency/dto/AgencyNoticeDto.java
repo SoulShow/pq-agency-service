@@ -17,7 +17,6 @@ public class AgencyNoticeDto {
 
     private int imgStatus;
 
-
     public String getCreatedTime() {
         return createdTime;
     }

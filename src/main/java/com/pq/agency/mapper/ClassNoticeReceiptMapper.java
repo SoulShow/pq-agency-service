@@ -19,4 +19,6 @@ public interface ClassNoticeReceiptMapper {
     ClassNoticeReceipt selectByNoticeIdAndUserIdAndStudentId(@Param("noticeId") Long noticeId,
                                                              @Param("userId") String userId,
                                                              @Param("studentId") Long studentId);
+
+    ClassNoticeReceipt selectByNoticeIdAndStudentId(@Param("noticeId") Long noticeId, @Param("studentId") Long studentId);
 }

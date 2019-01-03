@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="notice_id" property="noticeId" jdbcType="BIGINT" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="student_id" property="studentId" jdbcType="BIGINT" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
     <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
@@ -18,34 +19,42 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into pq_class_notice_read_log (notice_id, user_id, state, 
-      updated_time, created_time)
+      updated_time, created_time,student_id)
     values (#{noticeId,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, 
-      #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP})
+      #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP},#{studentId})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.ClassNoticeReadLog" >
     update pq_class_notice_read_log
     set notice_id = #{noticeId,jdbcType=BIGINT},
       user_id = #{userId,jdbcType=VARCHAR},
+      student_id = #{studentId,jdbcType=BIGINT},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
       created_time = #{createdTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, notice_id, user_id, state, updated_time, created_time
+    select id, notice_id, user_id, state, updated_time, created_time, student_id
     from pq_class_notice_read_log
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, notice_id, user_id, state, updated_time, created_time
+    select id, notice_id, user_id, state, updated_time, created_time, student_id
     from pq_class_notice_read_log
   </select>
 
   <select id="selectByUserIdAndNoticeId" resultMap="BaseResultMap" >
-    select id, notice_id, user_id, state, updated_time, created_time
+    select id, notice_id, user_id, state, updated_time, created_time, student_id
     from pq_class_notice_read_log
     where notice_id = #{noticeId}
     and user_id = #{userId}
+    and state = 1
+  </select>
+  <select id="selectByNoticeIdAndStudentId" resultMap="BaseResultMap" >
+    select id, notice_id, user_id, state, updated_time, created_time, student_id
+    from pq_class_notice_read_log
+    where notice_id = #{noticeId}
+    and student_id = #{studentId}
     and state = 1
   </select>
 </mapper>

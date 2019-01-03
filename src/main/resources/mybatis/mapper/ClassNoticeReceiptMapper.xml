@@ -56,4 +56,12 @@
     and student_id = #{studentId}
     and state = 1
   </select>
+
+  <select id="selectByNoticeIdAndStudentId" resultMap="BaseResultMap" >
+    select id, notice_id, user_id, name, receipt_content, state, updated_time, created_time, student_id
+    from pq_class_notice_receipt
+    where notice_id = #{noticeId}
+    and student_id = #{studentId}
+    and state = 1
+  </select>
 </mapper>

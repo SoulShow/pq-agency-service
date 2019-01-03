@@ -19,6 +19,7 @@ import com.pq.common.exception.CommonErrors;
 import com.pq.common.util.DateUtil;
 import com.pq.common.util.HttpUtil;
 import com.pq.common.util.StringUtil;
+import javafx.scene.Parent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -469,6 +470,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         if(readLog==null){
             readLog = new ClassNoticeReadLog();
             readLog.setUserId(userId);
+            readLog.setStudentId(studentId==null?0:studentId);
             readLog.setNoticeId(noticeId); readLog.setState(true);
             readLog.setUpdatedTime(DateUtil.currentTime());
             readLog.setCreatedTime(DateUtil.currentTime());
@@ -719,25 +721,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyStudentDto.setName(student.getName());
             agencyStudentDto.setAvatar(student.getAvatar());
             agencyStudentDto.setSex(student.getSex());
-            List<ParentDto> parentList = new ArrayList<>();
 
-            List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
-                    selectByAgencyClassIdAndStudentId(classTask.getAgencyClassId(),student.getId());
-            for(AgencyUserStudent userStudent : userStudentList){
-                ParentDto parentDto = new ParentDto();
-                parentDto.setUserId(userStudent.getUserId());
-                parentDto.setName(student.getName()+userStudent.getRelation());
-                AgencyResult<UserDto> result = userFeign.getUserInfo(userStudent.getUserId());
-                if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
-                    throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
-                }
-                UserDto userDto = result.getData();
-                parentDto.setPhone(userDto.getUsername());
-                parentDto.setHuanxinId(userDto.getHuanxinId());
-                parentDto.setAvatar(userDto.getAvatar());
-                parentList.add(parentDto);
-            }
-            agencyStudentDto.setParentList(parentList);
+            agencyStudentDto.setParentList(getParentList(student.getAgencyClassId(),student));
             studentDtos.add(agencyStudentDto);
         }
         return studentDtos;
@@ -1897,5 +1882,149 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         return agencyNoticeDtoList;
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void createClassNotice(ClassNoticeDto classNoticeDto){
+        AgencyClassNotice agencyClassNotice = new AgencyClassNotice();
+        agencyClassNotice.setAgencyClassId(classNoticeDto.getAgencyClassId());
+        agencyClassNotice.setUserId(classNoticeDto.getUserId());
+        agencyClassNotice.setTitle(classNoticeDto.getTitle());
+        agencyClassNotice.setContent(classNoticeDto.getContent());
+        agencyClassNotice.setIsReceipt(classNoticeDto.getIsReceipt()==1?true:false);
+        agencyClassNotice.setState(true);
+        agencyClassNotice.setUpdatedTime(DateUtil.currentTime());
+        agencyClassNotice.setCreatedTime(DateUtil.currentTime());
+        noticeMapper.insert(agencyClassNotice);
+        for(NoticeFileDto fileDto:classNoticeDto.getFileList()){
+            ClassNoticeFile classNoticeFile = new ClassNoticeFile();
+            classNoticeFile.setNoticeId(agencyClassNotice.getId());
+            classNoticeFile.setFile(fileDto.getFile());
+            classNoticeFile.setFileName(fileDto.getFileName());
+            classNoticeFile.setFileSize(fileDto.getFileSize());
+            classNoticeFile.setSuffix(fileDto.getSuffix());
+            classNoticeFile.setType(fileDto.getType());
+            classNoticeFile.setState(true);
+            classNoticeFile.setUpdatedTime(DateUtil.currentTime());
+            classNoticeFile.setCreatedTime(DateUtil.currentTime());
+            noticeFileMapper.insert(classNoticeFile);
+        }
+    }
+
+    @Override
+    public List<ReceiptUserDto> getReceiptStudentList(Long noticeId,int status){
+        AgencyClassNotice classNotice = noticeMapper.selectByPrimaryKey(noticeId);
+        if(classNotice == null){
+            AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOTICE_NOT_EXIST_ERROR);
+        }
+        List<AgencyStudent> studentList = agencyStudentMapper.selectByAgencyClassId(classNotice.getAgencyClassId());
+        List<ReceiptUserDto> list = new ArrayList<>();
+        for(AgencyStudent agencyStudent:studentList){
+
+            if(status==1){
+                if(!classNotice.getIsReceipt()){
+                    //不需要回执获取已读信息
+                    ClassNoticeReadLog classNoticeReadLog = noticeReadLogMapper.selectByNoticeIdAndStudentId(noticeId,agencyStudent.getId());
+                    if(classNoticeReadLog != null){
+                        list.add(getReceiptUserDto(agencyStudent));
+                    }
+                }else{
+                    //回执获取已回执信息
+                    ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeIdAndStudentId(noticeId,agencyStudent.getId());
+                    if(noticeReceipt != null){
+                        list.add(getReceiptUserDto(agencyStudent));
+                    }
+                }
+            }else {
+                if(!classNotice.getIsReceipt()){
+                    //不需要回执获取未读信息
+                    ClassNoticeReadLog classNoticeReadLog = noticeReadLogMapper.selectByNoticeIdAndStudentId(noticeId,agencyStudent.getId());
+                    if(classNoticeReadLog == null){
+                        list.add(getReceiptUserDto(agencyStudent));
+                    }
+                }else{
+                    //回执获取未回执信息
+                    ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeIdAndStudentId(noticeId,agencyStudent.getId());
+                    if(noticeReceipt == null){
+                        list.add(getReceiptUserDto(agencyStudent));
+                    }
+                }
+                redisTemplate.opsForValue().set(Constants.AGENCY_CLASS_NOTICE_STUDENT_INFO+noticeId,JSON.toJSON(list).toString());
+            }
+        }
+        return list;
+    }
+
+    private ReceiptUserDto getReceiptUserDto(AgencyStudent agencyStudent){
+        ReceiptUserDto receiptUserDto = new ReceiptUserDto();
+        receiptUserDto.setStudentId(agencyStudent.getId());
+        receiptUserDto.setAvatar(agencyStudent.getAvatar());
+        receiptUserDto.setName(agencyStudent.getName());
+        receiptUserDto.setParentList(getParentList(agencyStudent.getAgencyClassId(),agencyStudent));
+        return receiptUserDto;
+    }
+    private List<ParentDto> getParentList(Long classId, AgencyStudent agencyStudent){
+        List<ParentDto> parentList = new ArrayList<>();
+
+        List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
+                selectByAgencyClassIdAndStudentId(classId,agencyStudent.getId());
+        for(AgencyUserStudent userStudent : userStudentList){
+            ParentDto parentDto = new ParentDto();
+            parentDto.setUserId(userStudent.getUserId());
+            parentDto.setName(agencyStudent.getName()+userStudent.getRelation());
+            AgencyResult<UserDto> result = userFeign.getUserInfo(userStudent.getUserId());
+            if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+            }
+            UserDto userDto = result.getData();
+            parentDto.setPhone(userDto.getUsername());
+            parentDto.setHuanxinId(userDto.getHuanxinId());
+            parentDto.setAvatar(userDto.getAvatar());
+            parentList.add(parentDto);
+        }
+        return parentList;
+    }
+
+    @Override
+    public void noticePush(Long noticeId,String userId){
+        AgencyClassNotice notice = noticeMapper.selectByPrimaryKey(noticeId);
+        if(notice==null){
+            AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOTICE_NOT_EXIST_ERROR);
+        }
+
+        List<ReceiptUserDto> list = new ArrayList<>();
+        if(redisTemplate.hasKey(Constants.AGENCY_CLASS_NOTICE_STUDENT_INFO+noticeId)){
+            list = JSON.parseObject((String) redisTemplate.opsForValue().get(Constants.AGENCY_CLASS_NOTICE_STUDENT_INFO+noticeId),new TypeReference<List<ReceiptUserDto>>() {
+            });
+        }
+        List<String> userList = new ArrayList<>();
+        for(ReceiptUserDto receiptUserDto:list){
+            for(ParentDto parentDto:receiptUserDto.getParentList()){
+                userList.add(parentDto.getHuanxinId());
+            }
+        }
+        HashMap<String, Object> paramMap = new HashMap<>();
+
+        AgencyResult<UserDto> result = userFeign.getUserInfo(userId);
+        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+            throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+        }
+        UserDto userDto = result.getData();
+        paramMap.put("parameterId", Constants.PUSH_TEMPLATE_ID_NOTICE_7);
+        paramMap.put("user", userList);
+        paramMap.put("form", userDto.getHuanxinId());
+        paramMap.put("teacherName", userDto.getName());
+        paramMap.put("title", notice.getTitle());
+
+        String huanxResult = null;
+        try {
+            huanxResult = HttpUtil.sendJson(phpUrl+"push",new HashMap<>(),JSON.toJSONString(paramMap));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
+        if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
+            AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
+        }
+    }
 
 }

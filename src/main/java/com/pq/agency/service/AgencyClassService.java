@@ -491,4 +491,26 @@ public interface AgencyClassService {
      * @return
      */
     List<AgencyNoticeDto> getTeacherNoticeList(Long classId,String userId,int isMine,int offset,int size);
+
+    /**
+     * 创建通知
+     * @param classNoticeDto
+     */
+    void createClassNotice(ClassNoticeDto classNoticeDto);
+
+
+    /**
+     * 获取回执用户信息
+     * @param noticeId
+     * @param status
+     * @return
+     */
+    List<ReceiptUserDto> getReceiptStudentList(Long noticeId,int status);
+
+    /**
+     * 提醒推送
+     * @param notice
+     * @param userId
+     */
+    void noticePush(Long notice,String userId);
 }
