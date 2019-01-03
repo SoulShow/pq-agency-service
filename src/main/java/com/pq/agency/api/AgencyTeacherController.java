@@ -526,7 +526,7 @@ public class AgencyTeacherController {
         return result;
     }
 
-    @PostMapping(value = "/class/notice/student")
+    @GetMapping(value = "/class/notice/student")
     @ResponseBody
     public AgencyResult getReceiptStudentList(@RequestParam("noticeId") Long noticeId,@RequestParam("status") int status) {
 
