@@ -1,7 +1,6 @@
 package com.pq.agency.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.pq.agency.dto.*;
 import com.pq.agency.entity.*;
@@ -19,7 +18,6 @@ import com.pq.common.exception.CommonErrors;
 import com.pq.common.util.DateUtil;
 import com.pq.common.util.HttpUtil;
 import com.pq.common.util.StringUtil;
-import javafx.scene.Parent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
