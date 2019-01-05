@@ -31,6 +31,8 @@ public class AgencyNoticeDetailDto {
 
     private int receiptStatus;
 
+    private int isReceipt;
+
     public String getAvatar() {
         return avatar;
     }
@@ -141,5 +143,13 @@ public class AgencyNoticeDetailDto {
 
     public void setSuffix(String suffix) {
         this.suffix = suffix;
+    }
+
+    public int getIsReceipt() {
+        return isReceipt;
+    }
+
+    public void setIsReceipt(int isReceipt) {
+        this.isReceipt = isReceipt;
     }
 }

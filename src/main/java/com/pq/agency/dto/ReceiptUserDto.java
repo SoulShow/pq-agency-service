@@ -10,6 +10,8 @@ public class ReceiptUserDto {
 
     private String name;
 
+    private String className;
+
     private List<ParentDto> parentList;
 
     public String getName() {
@@ -45,4 +47,11 @@ public class ReceiptUserDto {
     }
 
 
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
 }

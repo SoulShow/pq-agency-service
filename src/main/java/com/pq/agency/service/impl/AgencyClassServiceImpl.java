@@ -434,6 +434,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         agencyNoticeDetailDto.setCreatedTime(DateUtil.formatDate(agencyClassNotice.getCreatedTime(),DateUtil.DEFAULT_TIME_MINUTE));
         agencyNoticeDetailDto.setContent(agencyClassNotice.getContent());
         agencyNoticeDetailDto.setTitle(agencyClassNotice.getTitle());
+        agencyNoticeDetailDto.setIsReceipt(agencyClassNotice.getIsReceipt()?1:0);
         AgencyResult<UserDto> result = userFeign.getUserInfo(agencyClassNotice.getUserId());
         if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
             throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
@@ -1957,6 +1958,11 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         receiptUserDto.setStudentId(agencyStudent.getId());
         receiptUserDto.setAvatar(agencyStudent.getAvatar());
         receiptUserDto.setName(agencyStudent.getName());
+        AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyStudent.getAgencyClassId());
+        if(agencyClass==null){
+            AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
+        }
+        receiptUserDto.setClassName(agencyClass.getName());
         receiptUserDto.setParentList(getParentList(agencyStudent.getAgencyClassId(),agencyStudent));
         return receiptUserDto;
     }
