@@ -62,7 +62,8 @@
     created_time, vote_type
     from pq_agency_class_vote
     where state = 1
-    and agency_class_id = #{agencyClassId}
+    and agency_class_id in
+    <foreach item="item" collection="agencyClassIdList" separator="," open="(" close=")">#{item}</foreach>
     order by created_time desc
     limit #{offset},#{size}
   </select>

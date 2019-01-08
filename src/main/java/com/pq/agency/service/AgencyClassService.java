@@ -239,14 +239,14 @@ public interface AgencyClassService {
 
     /**
      * 获取投票列表
-     * @param agencyClassId
+     * @param agencyClassIdList
      * @param userId
      * @param studentId
      * @param offset
      * @param size
      * @return
      */
-    List<AgencyVoteDto> getVoteList(Long agencyClassId,String userId,Long studentId,int offset,int size);
+    List<AgencyVoteDto> getVoteList(List<Long> agencyClassIdList,String userId,Long studentId,int offset,int size);
 
     /**
      * 获取投票详情

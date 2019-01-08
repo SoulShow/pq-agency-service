@@ -728,8 +728,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     }
 
     @Override
-    public List<AgencyVoteDto> getVoteList(Long agencyClassId,String userId,Long studentId,int offset,int size){
-        List<AgencyClassVote> voteList = classVoteMapper.selectByClassId(agencyClassId,offset,size);
+    public List<AgencyVoteDto> getVoteList(List<Long> agencyClassIdList,String userId,Long studentId,int offset,int size){
+        List<AgencyClassVote> voteList = classVoteMapper.selectByClassIdList(agencyClassIdList,offset,size);
         List<AgencyVoteDto> list = new ArrayList<>();
         for(AgencyClassVote classVote: voteList){
             AgencyVoteDto agencyVoteDto = new AgencyVoteDto();
@@ -743,7 +743,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyVoteDto.setUserId(classVote.getUserId());
             agencyVoteDto.setAvatar(userDto.getAvatar());
             agencyVoteDto.setUsername(userDto.getName());
-            AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyClassId);
+            AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(classVote.getAgencyClassId());
             if(agencyClass==null){
                 AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
             }
@@ -1861,6 +1861,21 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyNoticeDto.setTitle(agencyClassNotice.getTitle());
             ClassNoticeReadLog readLog = noticeReadLogMapper.selectByUserIdAndNoticeId(userId,agencyClassNotice.getId());
             agencyNoticeDto.setReadStatus(readLog==null?0:1);
+            agencyNoticeDto.setIsReceipt(agencyClassNotice.getIsReceipt()?1:0);
+
+            AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyClassNotice.getAgencyClassId());
+            if(agencyClass==null){
+                AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
+            }
+            agencyNoticeDto.setClassName(agencyClass.getName());
+
+            AgencyResult<UserDto> result = userFeign.getUserInfo(userId);
+            if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+            }
+            UserDto userDto = result.getData();
+            agencyNoticeDto.setAvatar(userDto.getAvatar());
+            agencyNoticeDto.setTeacherName(userDto.getName());
 
             int fileStatus = 0;
             int imgStatus = 0;

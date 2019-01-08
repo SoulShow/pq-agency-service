@@ -17,6 +17,14 @@ public class AgencyNoticeDto {
 
     private int imgStatus;
 
+    private String teacherName;
+
+    private String className;
+
+    private String avatar;
+
+    private int isReceipt;
+
     public String getCreatedTime() {
         return createdTime;
     }
@@ -79,5 +87,37 @@ public class AgencyNoticeDto {
 
     public void setImgStatus(int imgStatus) {
         this.imgStatus = imgStatus;
+    }
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public int getIsReceipt() {
+        return isReceipt;
+    }
+
+    public void setIsReceipt(int isReceipt) {
+        this.isReceipt = isReceipt;
     }
 }

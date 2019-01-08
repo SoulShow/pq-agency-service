@@ -9,6 +9,8 @@ import com.pq.common.exception.CommonErrors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/agency")
 public class AgencyController {
@@ -230,7 +232,7 @@ public class AgencyController {
     }
 	@GetMapping(value = "/class/vote/list")
 	@ResponseBody
-	public AgencyResult getClassVoteList(@RequestParam(value = "agencyClassId")Long agencyClassId,
+	public AgencyResult getClassVoteList(@RequestParam("agencyClassIdList")List<Long> agencyClassIdList,
 									 @RequestParam(value = "userId")String userId,
 									 @RequestParam(value = "studentId",required = false) Long studentId,
 									 @RequestParam(value = "page",required = false)Integer page,
@@ -245,7 +247,7 @@ public class AgencyController {
 
 		AgencyResult result = new AgencyResult();
 		try {
-			result.setData(agencyClassService.getVoteList(agencyClassId,userId,studentId,offset,size));
+			result.setData(agencyClassService.getVoteList(agencyClassIdList,userId,studentId,offset,size));
 		} catch (AgencyException e){
 			result.setStatus(e.getErrorCode().getErrorCode());
 			result.setMessage(e.getErrorCode().getErrorMsg());

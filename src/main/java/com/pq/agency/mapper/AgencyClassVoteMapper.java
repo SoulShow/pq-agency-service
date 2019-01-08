@@ -16,6 +16,6 @@ public interface AgencyClassVoteMapper {
 
     int updateByPrimaryKey(AgencyClassVote record);
 
-    List<AgencyClassVote> selectByClassId(@Param("agencyClassId") Long agencyClassId,
+    List<AgencyClassVote> selectByClassIdList(@Param("agencyClassIdList") List<Long> agencyClassIdList,
                                           @Param("offset")int offset,@Param("size")int size);
 }
