@@ -203,6 +203,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         agencyUser.setRole(registerForm.getRole());
         agencyUser.setState(true);
         agencyUser.setIsHead(0);
+        agencyUser.setChatStatus(0);
         agencyUser.setCreatedTime(DateUtil.currentTime());
         agencyUser.setUpdatedTime(DateUtil.currentTime());
         agencyUserMapper.insert(agencyUser);
@@ -1311,6 +1312,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyUser.setIsHead(agencyClassDto.getIsHead());
             agencyUser.setCreatedTime(DateUtil.currentTime());
             agencyUser.setUpdatedTime(DateUtil.currentTime());
+            agencyUser.setChatStatus(0);
             agencyUserMapper.insert(agencyUser);
             AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyUser.getAgencyClassId());
             if(agencyClass==null){
