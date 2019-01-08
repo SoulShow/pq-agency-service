@@ -57,7 +57,7 @@
     created_time, vote_type
     from pq_agency_class_vote
   </select>
-  <select id="selectByClassId" resultMap="BaseResultMap" >
+  <select id="selectByClassIdList" resultMap="BaseResultMap" >
     select id, agency_class_id, user_id, title, deadline, type, is_secret, state, updated_time,
     created_time, vote_type
     from pq_agency_class_vote
