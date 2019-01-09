@@ -53,5 +53,8 @@ public class AgencyErrors extends CommonErrors {
 
     public final static ErrorCode AGENCY_GROUP_NO_PERMISSION_ERROR = new AgencyErrorCode("0022", "此群组无禁言权限");
 
+    public final static ErrorCode AGENCY_NOTICE_PUSH_ERROR = new AgencyErrorCode("0023", "push通知接口报错");
+
+
 
 }

@@ -1030,6 +1030,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                     UserDto userDto = result.getData();
                     parentDto.setHuanxinId(userDto.getHuanxinId());
                     parentDto.setAvatar(userDto.getAvatar());
+                    parentDto.setPhone(userDto.getPhone());
                     parentList.add(parentDto);
                 }
                 classUserInfoDto.setParentList(parentList);
@@ -2023,6 +2024,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 userList.add(parentDto.getHuanxinId());
             }
         }
+        if(userList==null || userList.size()==0){
+            return;
+        }
         HashMap<String, Object> paramMap = new HashMap<>();
 
         AgencyResult<UserDto> result = userFeign.getUserInfo(userId);
@@ -2044,7 +2048,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
         AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
         if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
-            AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
+            AgencyException.raise(AgencyErrors.AGENCY_NOTICE_PUSH_ERROR);
         }
     }
 
