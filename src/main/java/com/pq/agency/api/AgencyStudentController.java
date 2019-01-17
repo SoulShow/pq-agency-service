@@ -96,4 +96,12 @@ public class AgencyStudentController {
 		}
 		return result;
 	}
+
+	@GetMapping(value = "/count")
+	@ResponseBody
+	public AgencyResult<Integer> getStudentCount(@RequestParam("agencyClassId")Long agencyClassId){
+		AgencyResult agencyResult = new AgencyResult();
+		agencyResult.setData(agencyStudentService.getStudentCount(agencyClassId));
+		return agencyResult;
+	}
 }

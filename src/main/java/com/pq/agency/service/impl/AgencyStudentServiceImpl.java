@@ -94,5 +94,14 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
             studentLifeImgMapper.insert(studentLifeImg);
         }
     }
+    @Override
+    public int getStudentCount(Long classId){
+        Integer count = studentMapper.selectCountByAgencyClassId(classId);
+        if(count==null){
+            count=0;
+        }
+        return count;
+    }
+
 
 }

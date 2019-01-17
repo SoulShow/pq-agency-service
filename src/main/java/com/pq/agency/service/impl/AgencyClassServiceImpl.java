@@ -2052,4 +2052,10 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
     }
 
+    @Override
+    public AgencyClass getClassInfoByClassId(Long classId){
+        return agencyClassMapper.selectByPrimaryKey(classId);
+    }
+
+
 }

@@ -427,4 +427,11 @@ public class AgencyController {
 		return result;
 	}
 
+	@GetMapping(value = "/class/info")
+	@ResponseBody
+	public AgencyResult getAgencyClassInfo(@RequestParam(value = "agencyClassId")Long agencyClassId) {
+		AgencyResult result = new AgencyResult();
+		result.setData(agencyClassService.getClassInfoByClassId(agencyClassId));
+		return result;
+	}
 }

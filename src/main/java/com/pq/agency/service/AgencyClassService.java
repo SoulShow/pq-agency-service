@@ -513,4 +513,11 @@ public interface AgencyClassService {
      * @param userId
      */
     void noticePush(Long notice,String userId);
+
+    /**
+     * 获取class信息
+     * @param classId
+     * @return
+     */
+    AgencyClass getClassInfoByClassId(Long classId);
 }

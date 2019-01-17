@@ -43,9 +43,11 @@ public interface AgencyStudentService {
      */
     void createStudentLife(StudentLifeForm studentLifeForm);
 
-//    /**
-//     * 获取学生信息
-//     * @return
-//     */
-//    List<AgencyStudent> getStudentByStudentName(String studentName);
+
+    /**
+     * 获取学生数量
+     * @param classId
+     * @return
+     */
+    int getStudentCount(Long classId);
 }
