@@ -7,6 +7,7 @@ public class AgencyStudentDto {
     private String avatar;
     private String name;
     private int sex;
+    private String className;
 
     private List<ParentDto> parentList;
 
@@ -48,5 +49,13 @@ public class AgencyStudentDto {
 
     public void setSex(int sex) {
         this.sex = sex;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 }

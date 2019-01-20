@@ -1,6 +1,7 @@
 package com.pq.agency.api;
 
 
+import com.pq.agency.dto.AgencyStudentDto;
 import com.pq.agency.dto.AgencyStudentLifeListDto;
 import com.pq.agency.entity.AgencyStudent;
 import com.pq.agency.exception.AgencyErrors;
@@ -102,6 +103,14 @@ public class AgencyStudentController {
 	public AgencyResult<Integer> getStudentCount(@RequestParam("agencyClassId")Long agencyClassId){
 		AgencyResult agencyResult = new AgencyResult();
 		agencyResult.setData(agencyStudentService.getStudentCount(agencyClassId));
+		return agencyResult;
+	}
+
+	@GetMapping(value = "/info")
+	@ResponseBody
+	public AgencyResult<AgencyStudentDto> getStudentInfo(@RequestParam("studentId")Long studentId){
+		AgencyResult agencyResult = new AgencyResult();
+		agencyResult.setData(agencyStudentService.getStudentInfoById(studentId));
 		return agencyResult;
 	}
 }

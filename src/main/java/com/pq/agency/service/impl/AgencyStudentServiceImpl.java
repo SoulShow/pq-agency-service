@@ -1,11 +1,15 @@
 package com.pq.agency.service.impl;
 
+import com.pq.agency.dto.AgencyStudentDto;
 import com.pq.agency.dto.AgencyStudentLifeDto;
 import com.pq.agency.dto.AgencyStudentLifeListDto;
+import com.pq.agency.entity.AgencyClass;
 import com.pq.agency.entity.AgencyStudent;
 import com.pq.agency.entity.AgencyStudentLife;
 import com.pq.agency.entity.AgencyStudentLifeImg;
+import com.pq.agency.exception.AgencyErrors;
 import com.pq.agency.exception.AgencyException;
+import com.pq.agency.mapper.AgencyClassMapper;
 import com.pq.agency.mapper.AgencyStudentLifeImgMapper;
 import com.pq.agency.mapper.AgencyStudentLifeMapper;
 import com.pq.agency.mapper.AgencyStudentMapper;
@@ -31,6 +35,8 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
     private AgencyStudentLifeMapper studentLifeMapper;
     @Autowired
     private AgencyStudentLifeImgMapper studentLifeImgMapper;
+    @Autowired
+    private AgencyClassMapper agencyClassMapper;
 
     @Override
     public void updateStudentInfo(AgencyStudent agencyStudent){
@@ -102,6 +108,27 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
         }
         return count;
     }
+
+    @Override
+    public AgencyStudentDto getStudentInfoById(Long studentId){
+        AgencyStudent agencyStudent = studentMapper.selectByPrimaryKey(studentId);
+        if(agencyStudent==null){
+            AgencyException.raise(AgencyErrors.AGENCY_STUDENT_NOT_EXIST_ERROR);
+        }
+
+        AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyStudent.getAgencyClassId());
+        if(agencyClass==null){
+            AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
+        }
+        AgencyStudentDto agencyStudentDto = new AgencyStudentDto();
+        agencyStudentDto.setStudentId(studentId);
+        agencyStudentDto.setSex(agencyStudent.getSex());
+        agencyStudentDto.setAvatar(agencyStudent.getAvatar());
+        agencyStudentDto.setName(agencyStudent.getName());
+        agencyStudentDto.setClassName(agencyClass.getName());
+        return agencyStudentDto;
+    }
+
 
 
 }

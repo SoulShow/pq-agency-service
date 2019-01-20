@@ -1,6 +1,7 @@
 package com.pq.agency.service;
 
 
+import com.pq.agency.dto.AgencyStudentDto;
 import com.pq.agency.dto.AgencyStudentLifeListDto;
 import com.pq.agency.entity.AgencyStudent;
 import com.pq.agency.param.StudentLifeForm;
@@ -50,4 +51,13 @@ public interface AgencyStudentService {
      * @return
      */
     int getStudentCount(Long classId);
+
+
+    /**
+     * 获取学生相关信息
+     * @param studentId
+     * @return
+     */
+    AgencyStudentDto getStudentInfoById(Long studentId);
+
 }
