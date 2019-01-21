@@ -1,20 +1,17 @@
 package com.pq.agency.service.impl;
 
-import com.pq.agency.dto.AgencyStudentDto;
-import com.pq.agency.dto.AgencyStudentLifeDto;
-import com.pq.agency.dto.AgencyStudentLifeListDto;
-import com.pq.agency.entity.AgencyClass;
-import com.pq.agency.entity.AgencyStudent;
-import com.pq.agency.entity.AgencyStudentLife;
-import com.pq.agency.entity.AgencyStudentLifeImg;
+import com.pq.agency.dto.*;
+import com.pq.agency.entity.*;
+import com.pq.agency.exception.AgencyErrorCode;
 import com.pq.agency.exception.AgencyErrors;
 import com.pq.agency.exception.AgencyException;
-import com.pq.agency.mapper.AgencyClassMapper;
-import com.pq.agency.mapper.AgencyStudentLifeImgMapper;
-import com.pq.agency.mapper.AgencyStudentLifeMapper;
-import com.pq.agency.mapper.AgencyStudentMapper;
+import com.pq.agency.feign.UserFeign;
+import com.pq.agency.mapper.*;
 import com.pq.agency.param.StudentLifeForm;
 import com.pq.agency.service.AgencyStudentService;
+import com.pq.agency.utils.AgencyResult;
+import com.pq.common.constants.CommonConstants;
+import com.pq.common.exception.CommonErrors;
 import com.pq.common.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +34,10 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
     private AgencyStudentLifeImgMapper studentLifeImgMapper;
     @Autowired
     private AgencyClassMapper agencyClassMapper;
-
+    @Autowired
+    private AgencyUserMapper agencyUserMapper;
+    @Autowired
+    private UserFeign userFeign;
     @Override
     public void updateStudentInfo(AgencyStudent agencyStudent){
         agencyStudent.setUpdatedTime(DateUtil.currentTime());
@@ -128,6 +128,39 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
         agencyStudentDto.setClassName(agencyClass.getName());
         return agencyStudentDto;
     }
+
+    @Override
+    public List<AgencyTeacherDto> getClassTeachersByStudentId(Long studentId){
+
+        AgencyStudent agencyStudent = studentMapper.selectByPrimaryKey(studentId);
+        if(agencyStudent==null){
+            AgencyException.raise(AgencyErrors.AGENCY_USER_STUDENT_NOT_EXIST_ERROR);
+        }
+        AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyStudent.getAgencyClassId());
+        if(agencyClass==null){
+            AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
+        }
+
+        List<AgencyUser> userList = agencyUserMapper.selectByClassIdAndRole(agencyClass.getId(),
+                CommonConstants.PQ_LOGIN_ROLE_TEACHER);
+        List<AgencyTeacherDto> list = new ArrayList<>();
+        for(AgencyUser agencyUser:userList){
+            AgencyTeacherDto teacherDto = new AgencyTeacherDto();
+            AgencyResult<UserDto> result = userFeign.getUserInfo(agencyUser.getUserId());
+            if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+            }
+            UserDto userDto = result.getData();
+
+            teacherDto.setUserId(agencyUser.getUserId());
+            teacherDto.setHuanxinId(userDto.getHuanxinId());
+            teacherDto.setName(userDto.getName());
+            teacherDto.setAvatar(userDto.getAvatar());
+            list.add(teacherDto);
+        }
+        return list;
+    }
+
 
 
 
