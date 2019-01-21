@@ -68,4 +68,11 @@ public interface AgencyStudentService {
      */
     List<AgencyTeacherDto> getClassTeachersByStudentId(Long studentId);
 
+    /**
+     * 获取班级学生列表
+     * @param classId
+     * @return
+     */
+    List<Long> getClassStudentList(Long classId);
+
 }
