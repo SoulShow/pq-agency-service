@@ -2018,38 +2018,41 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             list = JSON.parseObject((String) redisTemplate.opsForValue().get(Constants.AGENCY_CLASS_NOTICE_STUDENT_INFO+noticeId),new TypeReference<List<ReceiptUserDto>>() {
             });
         }
-        List<String> userList = new ArrayList<>();
         for(ReceiptUserDto receiptUserDto:list){
             for(ParentDto parentDto:receiptUserDto.getParentList()){
-                userList.add(parentDto.getHuanxinId());
+                HashMap<String, Object> paramMap = new HashMap<>();
+
+                AgencyResult<UserDto> result = userFeign.getUserInfo(userId);
+                if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                    throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+                }
+
+                UserDto userDto = result.getData();
+                paramMap.put("parameterId", Constants.PUSH_TEMPLATE_ID_NOTICE_7);
+                paramMap.put("user", parentDto.getHuanxinId());
+                paramMap.put("form", userDto.getHuanxinId());
+                paramMap.put("teacherName", userDto.getName());
+                paramMap.put("title", notice.getTitle());
+
+                StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
+                studentNoticeDto.setNoticeId(noticeId);
+                studentNoticeDto.setStudent_id(receiptUserDto.getStudentId());
+                studentNoticeDto.setStudent_name(receiptUserDto.getName());
+                paramMap.put("ext",studentNoticeDto);
+
+                String huanxResult = null;
+                try {
+                    huanxResult = HttpUtil.sendJson(phpUrl+"push",new HashMap<>(),JSON.toJSONString(paramMap));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
+                if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
+                    AgencyException.raise(AgencyErrors.AGENCY_NOTICE_PUSH_ERROR);
+                }
             }
         }
-        if(userList==null || userList.size()==0){
-            return;
-        }
-        HashMap<String, Object> paramMap = new HashMap<>();
 
-        AgencyResult<UserDto> result = userFeign.getUserInfo(userId);
-        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
-            throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
-        }
-        UserDto userDto = result.getData();
-        paramMap.put("parameterId", Constants.PUSH_TEMPLATE_ID_NOTICE_7);
-        paramMap.put("user", userList);
-        paramMap.put("form", userDto.getHuanxinId());
-        paramMap.put("teacherName", userDto.getName());
-        paramMap.put("title", notice.getTitle());
-
-        String huanxResult = null;
-        try {
-            huanxResult = HttpUtil.sendJson(phpUrl+"push",new HashMap<>(),JSON.toJSONString(paramMap));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
-        if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
-            AgencyException.raise(AgencyErrors.AGENCY_NOTICE_PUSH_ERROR);
-        }
     }
 
     @Override
