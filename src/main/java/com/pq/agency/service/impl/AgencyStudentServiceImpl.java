@@ -37,6 +37,8 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
     @Autowired
     private AgencyUserMapper agencyUserMapper;
     @Autowired
+    private AgencyUserStudentMapper agencyUserStudentMapper;
+    @Autowired
     private UserFeign userFeign;
     @Override
     public void updateStudentInfo(AgencyStudent agencyStudent){
@@ -126,7 +128,31 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
         agencyStudentDto.setAvatar(agencyStudent.getAvatar());
         agencyStudentDto.setName(agencyStudent.getName());
         agencyStudentDto.setClassName(agencyClass.getName());
+
+        agencyStudentDto.setParentList(getParentList(agencyClass.getId(),agencyStudent));
         return agencyStudentDto;
+    }
+
+    private List<ParentDto> getParentList(Long classId, AgencyStudent agencyStudent){
+        List<ParentDto> parentList = new ArrayList<>();
+
+        List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
+                selectByAgencyClassIdAndStudentId(classId,agencyStudent.getId());
+        for(AgencyUserStudent userStudent : userStudentList){
+            ParentDto parentDto = new ParentDto();
+            parentDto.setUserId(userStudent.getUserId());
+            parentDto.setName(agencyStudent.getName()+userStudent.getRelation());
+            AgencyResult<UserDto> result = userFeign.getUserInfo(userStudent.getUserId());
+            if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+            }
+            UserDto userDto = result.getData();
+            parentDto.setPhone(userDto.getUsername());
+            parentDto.setHuanxinId(userDto.getHuanxinId());
+            parentDto.setAvatar(userDto.getAvatar());
+            parentList.add(parentDto);
+        }
+        return parentList;
     }
 
     @Override
