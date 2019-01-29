@@ -1,6 +1,15 @@
 package com.pq.agency.test11;
 
-public abstract class Base {
+public  class Base {
+//    public int getNumber(){
+//        int a = 0;
+//        try{
+//            String a = "ss";
+//        }catch(){
+//
+//        }
+//    }
+
 //    int i;
 //     Base(){
 //        add(1);
@@ -12,5 +21,5 @@ public abstract class Base {
 //        System.out.println("base class add method:"+i);
 //
 //    }
-    abstract public void myFun();
+
 }

@@ -1,6 +1,6 @@
 package com.pq.agency.test11;
 
-public class MyBase{
+public abstract class MyBase extends Base{
 
 //    MyBase(){
 //        System.out.println("my base class construtor:");
@@ -15,4 +15,8 @@ public class MyBase{
 //        System.out.println("my base class add method:"+i);
 //
 //    }
+//    private void myMethor(){
+//        System.out.print("methor");
+//    }
+
 }

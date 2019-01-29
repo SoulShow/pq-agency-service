@@ -422,6 +422,17 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             }
             agencyNoticeDto.setFileStatus(fileStatus);
             agencyNoticeDto.setImgStatus(imgStatus);
+
+            AgencyResult<UserDto> result = userFeign.getUserInfo(agencyClassNotice.getUserId());
+            if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+            }
+            agencyNoticeDto.setTeacherName(result.getData().getName());
+            agencyNoticeDto.setAvatar(result.getData().getAvatar());
+
+            AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyClassId);
+            agencyNoticeDto.setClassName(agencyClass.getName());
+
             agencyNoticeDtoList.add(agencyNoticeDto);
         }
         return agencyNoticeDtoList;
