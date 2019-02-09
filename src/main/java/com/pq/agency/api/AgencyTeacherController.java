@@ -2,6 +2,8 @@ package com.pq.agency.api;
 
 import com.pq.agency.dto.ClassNoticeDto;
 import com.pq.agency.dto.NoticePushDto;
+import com.pq.agency.exception.AgencyErrorCode;
+import com.pq.agency.exception.AgencyErrors;
 import com.pq.agency.exception.AgencyException;
 import com.pq.agency.param.*;
 import com.pq.agency.service.AgencyClassService;
@@ -102,6 +104,9 @@ public class AgencyTeacherController {
     public AgencyResult createVote(@RequestBody AgencyClassVoteForm voteForm) {
         AgencyResult result = new AgencyResult();
         try {
+            if(voteForm.getTitle().length()<2||voteForm.getTitle().length()>80){
+                AgencyException.raise(new AgencyErrorCode("99999","投票标题必须在2-80个字符"));
+            }
             agencyClassService.createVote(voteForm);
         } catch (AgencyException e){
             result.setStatus(e.getErrorCode().getErrorCode());
@@ -514,6 +519,9 @@ public class AgencyTeacherController {
 
         AgencyResult result = new AgencyResult();
         try {
+            if(classNoticeDto.getTitle().length()>26){
+                AgencyException.raise(AgencyErrors.AGENCY_NOTICE_MORE_THAN_26_ERROR);
+            }
             agencyClassService.createClassNotice(classNoticeDto);
         } catch (AgencyException e){
             result.setStatus(e.getErrorCode().getErrorCode());

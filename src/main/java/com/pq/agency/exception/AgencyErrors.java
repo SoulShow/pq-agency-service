@@ -55,6 +55,7 @@ public class AgencyErrors extends CommonErrors {
 
     public final static ErrorCode AGENCY_NOTICE_PUSH_ERROR = new AgencyErrorCode("0023", "push通知接口报错");
 
+    public final static ErrorCode AGENCY_NOTICE_MORE_THAN_26_ERROR = new AgencyErrorCode("0024", "通知标题请控制在26个字符以内");
 
 
 }

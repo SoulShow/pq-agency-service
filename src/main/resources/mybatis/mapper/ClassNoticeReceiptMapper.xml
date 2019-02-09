@@ -52,7 +52,9 @@
     select id, notice_id, user_id, name, receipt_content, state, updated_time, created_time, student_id
     from pq_class_notice_receipt
     where notice_id = #{noticeId}
+    <if test="userId != null and userId !=''">
     and user_id = #{userId}
+    </if>
     and student_id = #{studentId}
     and state = 1
   </select>

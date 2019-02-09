@@ -400,13 +400,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyNoticeDto.setTitle(agencyClassNotice.getTitle());
             ClassNoticeReadLog readLog = noticeReadLogMapper.selectByUserIdAndNoticeId(userId,agencyClassNotice.getId());
             agencyNoticeDto.setReadStatus(readLog==null?0:1);
-            ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeIdAndUserIdAndStudentId(agencyClassNotice.getId(),
-                    userId,studentId);
-            if(noticeReceipt==null){
+            List<ClassNoticeReceipt> noticeReceiptList = noticeReceiptMapper.selectByNoticeIdAndUserIdAndStudentId(agencyClassNotice.getId(),
+                    null, studentId);
+            if(noticeReceiptList==null||noticeReceiptList.size()==0){
                 agencyNoticeDto.setReceiptStatus(Constants.CLASS_NOTICE_RECEIPT_STATUS_NO);
             }else {
                 agencyNoticeDto.setReceiptStatus(Constants.CLASS_NOTICE_RECEIPT_STATUS_YES);
-
             }
             int fileStatus = 0;
             int imgStatus = 0;
@@ -468,13 +467,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 imgList.add(classNoticeFile.getFile());
             }
         }
-        ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeIdAndUserIdAndStudentId(agencyClassNotice.getId(),
-                userId, studentId);
-        if(noticeReceipt==null){
+        List<ClassNoticeReceipt> noticeReceiptList = noticeReceiptMapper.selectByNoticeIdAndUserIdAndStudentId(agencyClassNotice.getId(),
+                null, studentId);
+        if(noticeReceiptList==null||noticeReceiptList.size()==0){
             agencyNoticeDetailDto.setReceiptStatus(Constants.CLASS_NOTICE_RECEIPT_STATUS_NO);
         }else {
             agencyNoticeDetailDto.setReceiptStatus(Constants.CLASS_NOTICE_RECEIPT_STATUS_YES);
-
         }
         agencyNoticeDetailDto.setImgList(imgList);
         ClassNoticeReadLog readLog = noticeReadLogMapper.selectByUserIdAndNoticeId(userId,noticeId);
@@ -497,12 +495,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         if(classNotice==null){
             AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOTICE_NOT_EXIST_ERROR);
         }
-        ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeIdAndUserIdAndStudentId(classNotice.getId(),
-                noticeReceiptForm.getUserId(), noticeReceiptForm.getStudentId());
-        if(noticeReceipt!=null){
+        List<ClassNoticeReceipt> noticeReceiptList = noticeReceiptMapper.selectByNoticeIdAndUserIdAndStudentId(classNotice.getId(),
+                null, noticeReceiptForm.getStudentId());
+        if(noticeReceiptList!=null||noticeReceiptList.size()>0){
             AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOTICE_IS_RECEIPT_ERROR);
         }
-        noticeReceipt = new ClassNoticeReceipt();
+        ClassNoticeReceipt noticeReceipt = new ClassNoticeReceipt();
         noticeReceipt.setNoticeId(noticeReceiptForm.getNoticeId());
         noticeReceipt.setUserId(noticeReceiptForm.getUserId());
         noticeReceipt.setName(noticeReceiptForm.getName());
@@ -925,12 +923,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             for(ClassVoteSelected voteSelected: selectedList){
                 OptionUserDto optionUserDto = new OptionUserDto();
                 optionUserDto.setUserId(voteSelected.getUserId());
-                optionUserDto.setUsername(voteSelected.getName());
                 AgencyResult<UserDto> result = userFeign.getUserInfo(voteSelected.getUserId());
                 if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
                     throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
                 }
                 UserDto userDto = result.getData();
+                optionUserDto.setUsername(userDto.getName());
                 optionUserDto.setAvatar(userDto.getAvatar());
                 userDtos.add(optionUserDto);
             }
