@@ -146,8 +146,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             gradeList = gradeMapper.selectValid();
         }else {
             List<AgencyClass> gradeIdList = agencyClassMapper.selectGradeByAgencyId(agencyId);
+            Map<Long,Integer> map = new HashMap<>();
             for(AgencyClass agencyClass:gradeIdList){
-                gradeList.add(gradeMapper.selectByPrimaryKey(agencyClass.getGradeId()));
+                map.put(agencyClass.getGradeId(),null);
+            }
+            for(Long key : map.keySet()){
+                gradeList.add(gradeMapper.selectByPrimaryKey(key));
             }
         }
         return gradeList;
@@ -1881,7 +1885,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             }
             agencyNoticeDto.setClassName(agencyClass.getName());
 
-            AgencyResult<UserDto> result = userFeign.getUserInfo(userId);
+            AgencyResult<UserDto> result = userFeign.getUserInfo(agencyClassNotice.getUserId());
             if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
                 throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
             }

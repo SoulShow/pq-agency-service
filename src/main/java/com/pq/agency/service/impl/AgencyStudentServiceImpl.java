@@ -128,7 +128,7 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
         agencyStudentDto.setAvatar(agencyStudent.getAvatar());
         agencyStudentDto.setName(agencyStudent.getName());
         agencyStudentDto.setClassName(agencyClass.getName());
-
+        agencyStudentDto.setClassId(agencyClass.getId());
         agencyStudentDto.setParentList(getParentList(agencyClass.getId(),agencyStudent));
         return agencyStudentDto;
     }
