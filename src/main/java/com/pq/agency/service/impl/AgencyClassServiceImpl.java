@@ -561,8 +561,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         userNoticeFileCollection.setSuffix(noticeFileCollectionForm.getSuffix());
         userNoticeFileCollection.setState(true);
         userNoticeFileCollection.setUpdatedTime(DateUtil.currentTime());
+        userNoticeFileCollection.setCreatedTime(DateUtil.currentTime());
         if(userNoticeFileCollection.getId()==null){
-            userNoticeFileCollection.setCreatedTime(DateUtil.currentTime());
             collectionMapper.insert(userNoticeFileCollection);
         }else {
             collectionMapper.updateByPrimaryKey(userNoticeFileCollection);
@@ -932,7 +932,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                     throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
                 }
                 UserDto userDto = result.getData();
-                optionUserDto.setUsername(userDto.getName());
+                optionUserDto.setUsername(voteSelected.getName());
                 optionUserDto.setAvatar(userDto.getAvatar());
                 userDtos.add(optionUserDto);
             }
@@ -1915,6 +1915,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createClassNotice(ClassNoticeDto classNoticeDto){
+        if(classNoticeDto.getContent()==null||classNoticeDto.getContent().length()>1000){
+            AgencyException.raise(AgencyErrors.AGENCY_NOTICE_MORE_THAN_100_ERROR);
+        }
         AgencyClassNotice agencyClassNotice = new AgencyClassNotice();
         agencyClassNotice.setAgencyClassId(classNoticeDto.getAgencyClassId());
         agencyClassNotice.setUserId(classNoticeDto.getUserId());

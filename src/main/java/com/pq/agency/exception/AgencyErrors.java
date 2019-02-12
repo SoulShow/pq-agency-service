@@ -57,5 +57,6 @@ public class AgencyErrors extends CommonErrors {
 
     public final static ErrorCode AGENCY_NOTICE_MORE_THAN_26_ERROR = new AgencyErrorCode("0024", "通知标题请控制在26个字符以内");
 
+    public final static ErrorCode AGENCY_NOTICE_MORE_THAN_100_ERROR = new AgencyErrorCode("0024", "请控制在1000个字符以内");
 
 }
