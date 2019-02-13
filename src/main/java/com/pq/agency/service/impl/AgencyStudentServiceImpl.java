@@ -196,6 +196,21 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
         return studentDtos;
     }
 
+    @Override
+    public List<Long> getAgencyStudentList(Long classId){
+        List<Long> studentDtos = new ArrayList<>();
+        AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(classId);
+        List<AgencyClass> classList = agencyClassMapper.selectGradeByAgencyId(agencyClass.getAgencyId());
+        for(AgencyClass classInfo:classList ){
+            List<AgencyStudent> list = studentMapper.selectByAgencyClassId(classInfo.getId());
+            for(AgencyStudent agencyStudent:list){
+                studentDtos.add(agencyStudent.getId());
+            }
+        }
+        return studentDtos;
+    }
+
+
 
 
 

@@ -148,4 +148,20 @@ public class AgencyStudentController {
 		}
 		return result;
 	}
+
+	@GetMapping(value = "/all/list")
+	@ResponseBody
+	public AgencyResult<List<Long>> getAgencyStudentList(@RequestParam(value = "classId")Long classId){
+		AgencyResult result = new AgencyResult();
+		try{
+			result.setData(agencyStudentService.getAgencyStudentList(classId));
+		} catch (AgencyException a){
+			result.setStatus(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorCode());
+			result.setMessage(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorMsg());
+		}catch (Exception e) {
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
 }

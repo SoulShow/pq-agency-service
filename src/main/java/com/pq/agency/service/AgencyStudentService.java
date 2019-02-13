@@ -75,4 +75,11 @@ public interface AgencyStudentService {
      */
     List<Long> getClassStudentList(Long classId);
 
+    /**
+     * 获取学校全部学生
+     * @param classId
+     * @return
+     */
+    List<Long> getAgencyStudentList(Long classId);
+
 }
