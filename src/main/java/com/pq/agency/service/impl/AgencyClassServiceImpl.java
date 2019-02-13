@@ -1941,6 +1941,51 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             classNoticeFile.setCreatedTime(DateUtil.currentTime());
             noticeFileMapper.insert(classNoticeFile);
         }
+
+        AgencyResult<UserDto> result = userFeign.getUserInfo(classNoticeDto.getUserId());
+        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+            throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+        }
+        String teacherHgId = result.getData().getHuanxinId();
+        String teacherName = result.getData().getName();
+
+        List<AgencyUser> list = agencyUserMapper.selectByClassId(classNoticeDto.getAgencyClassId());
+        for(AgencyUser agencyUser: list){
+            if(agencyUser.getRole()==CommonConstants.PQ_LOGIN_ROLE_PARENT){
+                AgencyResult<UserDto> parentResult = userFeign.getUserInfo(agencyUser.getUserId());
+                if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                    throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+                }
+                UserDto parentResultData = parentResult.getData();
+                HashMap<String, Object> paramMap = new HashMap<>();
+
+                paramMap.put("parameterId", Constants.PUSH_TEMPLATE_ID_NOTICE_1);
+                paramMap.put("user", parentResultData.getHuanxinId());
+                paramMap.put("form", teacherHgId);
+                paramMap.put("teacherName", teacherName);
+                paramMap.put("title", agencyClassNotice.getTitle());
+
+                List<AgencyUserStudent> studentList = agencyUserStudentMapper.selectByAgencyClassIdAndUserId(classNoticeDto.getAgencyClassId(),agencyUser.getUserId());
+                for(AgencyUserStudent student:studentList){
+
+                    StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
+                    studentNoticeDto.setNoticeId(agencyClassNotice.getId());
+                    studentNoticeDto.setStudent_id(student.getStudentId());
+                    studentNoticeDto.setStudent_name(agencyStudentMapper.selectByPrimaryKey(student.getStudentId()).getName());
+                    paramMap.put("ext",studentNoticeDto);
+                    String huanxResult = null;
+                    try {
+                        huanxResult = HttpUtil.sendJson(phpUrl+"push",new HashMap<>(),JSON.toJSONString(paramMap));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
+                    if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
+                        AgencyException.raise(AgencyErrors.AGENCY_NOTICE_PUSH_ERROR);
+                    }
+                }
+            }
+        }
     }
 
     @Override
