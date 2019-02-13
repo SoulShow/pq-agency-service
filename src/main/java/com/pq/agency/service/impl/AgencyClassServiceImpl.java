@@ -501,7 +501,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
         List<ClassNoticeReceipt> noticeReceiptList = noticeReceiptMapper.selectByNoticeIdAndUserIdAndStudentId(classNotice.getId(),
                 null, noticeReceiptForm.getStudentId());
-        if(noticeReceiptList!=null||noticeReceiptList.size()>0){
+        if(noticeReceiptList!=null&&noticeReceiptList.size()>0){
             AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOTICE_IS_RECEIPT_ERROR);
         }
         ClassNoticeReceipt noticeReceipt = new ClassNoticeReceipt();
@@ -514,10 +514,6 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         noticeReceipt.setUpdatedTime(DateUtil.currentTime());
         noticeReceipt.setCreatedTime(DateUtil.currentTime());
         noticeReceiptMapper.insert(noticeReceipt);
-
-        classNotice.setIsReceipt(true);
-        classNotice.setUpdatedTime(DateUtil.currentTime());
-        noticeMapper.updateByPrimaryKey(classNotice);
     }
     @Override
     public List<UserNoticeFileCollectionDto> getCollectList(String userId,Long studentId, int offset,int size){
