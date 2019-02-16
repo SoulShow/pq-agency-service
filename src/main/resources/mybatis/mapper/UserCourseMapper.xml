@@ -3,7 +3,8 @@
 <mapper namespace="com.pq.agency.mapper.UserCourseMapper" >
   <resultMap id="BaseResultMap" type="com.pq.agency.entity.UserCourse" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="class_course_id" property="classCourseId" jdbcType="BIGINT" />
+    <result column="agency_course_relation_id" property="agencyCourseRelationId" jdbcType="BIGINT" />
+    <result column="agency_class_id" property="agencyClassId" jdbcType="BIGINT" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
@@ -17,14 +18,17 @@
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into pq_user_course (class_course_id, user_id, state, 
-      updated_time, created_time)
-    values (#{classCourseId,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, 
-      #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP})
+    insert into pq_user_course (agency_course_relation_id, agency_class_id, 
+      user_id, state, updated_time, 
+      created_time)
+    values (#{agencyCourseRelationId,jdbcType=BIGINT}, #{agencyClassId,jdbcType=BIGINT}, 
+      #{userId,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{createdTime,jdbcType=TIMESTAMP})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.UserCourse" >
     update pq_user_course
-    set class_course_id = #{classCourseId,jdbcType=BIGINT},
+    set agency_course_relation_id = #{agencyCourseRelationId,jdbcType=BIGINT},
+      agency_class_id = #{agencyClassId,jdbcType=BIGINT},
       user_id = #{userId,jdbcType=VARCHAR},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
@@ -32,36 +36,43 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, class_course_id, user_id, state, updated_time, created_time
+    select id, agency_course_relation_id, agency_class_id, user_id, state, updated_time, 
+    created_time
     from pq_user_course
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, class_course_id, user_id, state, updated_time, created_time
+    select id, agency_course_relation_id, agency_class_id, user_id, state, updated_time, 
+    created_time
     from pq_user_course
   </select>
 
-  <select id="selectByUserIdAndClassId" resultMap="BaseResultMap" >
-    select u.*
-    from pq_user_course u, pq_class_course c
-    where u.user_id = #{userId}
-    and c.class_id = #{classId}
-    and u.class_course_id = c.id
-    and u.state = 1
-  </select>
-  <select id="selectByUserIdAndClassCourseId" resultMap="BaseResultMap" >
-    select id, class_course_id, user_id, state, updated_time, created_time
+  <select id="selectByUserIdAndClassIdAndCourseRelationId" resultMap="BaseResultMap" >
+    select id, agency_course_relation_id, agency_class_id, user_id, state, updated_time,
+    created_time
     from pq_user_course
-    where user_id = #{userId}
-    and class_course_id = #{classCourseId}
+    where agency_course_relation_id = #{relationId}
+    and agency_class_id = #{classId}
+    and user_id = #{userId}
     and state = 1
   </select>
 
-  <select id="deleteByUserId" >
+  <select id="selectByUserIdAndClassId" resultMap="BaseResultMap" >
+    select id, agency_course_relation_id, agency_class_id, user_id, state, updated_time,
+    created_time
+    from pq_user_course
+    where user_id = #{userId}
+    and agency_class_id = #{classId}
+    and user_id = #{userId}
+    and state = 1
+  </select>
+
+  <select id="deleteByUserIdAndClassId" >
     update  pq_user_course
     set state = 0,
         updated_time = now()
     where user_id = #{userId}
+    and agency_class_id = {classId}
     and state = 1
   </select>
 </mapper>

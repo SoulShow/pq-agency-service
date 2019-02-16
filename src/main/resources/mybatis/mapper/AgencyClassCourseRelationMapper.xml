@@ -44,4 +44,11 @@
     select id, agency_id, course_id, course_name, state, updated_time, created_time
     from pq_agency_course_relation
   </select>
+
+  <select id="selectByAgencyId" resultMap="BaseResultMap" >
+    select id, agency_id, course_id, course_name, state, updated_time, created_time
+    from pq_agency_course_relation
+    where agency_id = #{agencyId}
+    and state = 1
+  </select>
 </mapper>

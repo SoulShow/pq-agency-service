@@ -5,7 +5,9 @@ import java.sql.Timestamp;
 public class UserCourse {
     private Long id;
 
-    private Long classCourseId;
+    private Long agencyCourseRelationId;
+
+    private Long agencyClassId;
 
     private String userId;
 
@@ -21,14 +23,6 @@ public class UserCourse {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getClassCourseId() {
-        return classCourseId;
-    }
-
-    public void setClassCourseId(Long classCourseId) {
-        this.classCourseId = classCourseId;
     }
 
     public String getUserId() {
@@ -61,5 +55,21 @@ public class UserCourse {
 
     public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public Long getAgencyCourseRelationId() {
+        return agencyCourseRelationId;
+    }
+
+    public void setAgencyCourseRelationId(Long agencyCourseRelationId) {
+        this.agencyCourseRelationId = agencyCourseRelationId;
+    }
+
+    public Long getAgencyClassId() {
+        return agencyClassId;
+    }
+
+    public void setAgencyClassId(Long agencyClassId) {
+        this.agencyClassId = agencyClassId;
     }
 }

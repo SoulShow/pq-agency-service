@@ -10,6 +10,7 @@ public class TeacherCourseForm implements Serializable {
 
     private static final long serialVersionUID = 6463724844871324162L;
     private String userId;
+    private Long classId;
     private List<Long> classCourseIdList;
 
     public String getUserId() {
@@ -27,5 +28,13 @@ public class TeacherCourseForm implements Serializable {
 
     public void setClassCourseIdList(List<Long> classCourseIdList) {
         this.classCourseIdList = classCourseIdList;
+    }
+
+    public Long getClassId() {
+        return classId;
+    }
+
+    public void setClassId(Long classId) {
+        this.classId = classId;
     }
 }

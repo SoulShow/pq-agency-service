@@ -91,7 +91,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     @Autowired
     private AgencyGroupMemberMapper groupMemberMapper;
     @Autowired
-    private ClassCourseMapper classCourseMapper;
+    private AgencyClassCourseRelationMapper courseRelationMapper;
     @Autowired
     private UserCourseMapper userCourseMapper;
     @Value("${php.url}")
@@ -1402,14 +1402,19 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(classId);
             classCourseDto.setClassId(agencyClass.getId());
             classCourseDto.setClassName(agencyClass.getName());
-            List<ClassCourse> list = classCourseMapper.selectByClassId(classId);
-            for(ClassCourse classCourse:list){
-                UserCourse userCourse = userCourseMapper.selectByUserIdAndClassCourseId(userId,classCourse.getId());
+            List<AgencyClassCourseRelation> list = courseRelationMapper.selectByAgencyId(agencyClass.getAgencyId());
+            List<ClassCourse> courseList = new ArrayList<>();
+            for(AgencyClassCourseRelation relation:list){
+                ClassCourse classCourse = new ClassCourse();
+                classCourse.setId(relation.getId());
+                classCourse.setCourseName(relation.getCourseName());
+                UserCourse userCourse = userCourseMapper.selectByUserIdAndClassIdAndCourseRelationId(userId,classId,relation.getId());
                 if(userCourse!=null){
                     classCourse.setIsExist(1);
                 }
+                courseList.add(classCourse);
             }
-            classCourseDto.setClassCourseList(list);
+            classCourseDto.setClassCourseList(courseList);
             classCourseDtoList.add(classCourseDto);
         }
         return classCourseDtoList;
@@ -1452,8 +1457,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             StringBuilder course = new StringBuilder(agencyClass.getName()+"-");
             List<UserCourse> userCourseList = userCourseMapper.selectByUserIdAndClassId(userId,classId);
             for(UserCourse userCourse : userCourseList){
-                ClassCourse classCourse = classCourseMapper.selectByPrimaryKey(userCourse.getClassCourseId());
-                course.append(classCourse.getCourseName()+",");
+                AgencyClassCourseRelation relation = courseRelationMapper.selectByPrimaryKey(userCourse.getAgencyCourseRelationId());
+                course.append(relation.getCourseName()+",");
             }
             if(userCourseList!=null && userCourseList.size()>0){
                 courseList.add(course.substring(0,course.length()-1));
@@ -1468,11 +1473,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
     @Override
     public void createTeacherCourse(TeacherCourseForm teacherCourseForm){
-        userCourseMapper.deleteByUserId(teacherCourseForm.getUserId());
+        userCourseMapper.deleteByUserIdAndClassId(teacherCourseForm.getUserId(),teacherCourseForm.getClassId());
         for(Long classCourseId:teacherCourseForm.getClassCourseIdList()){
             UserCourse userCourse = new UserCourse();
             userCourse.setUserId(teacherCourseForm.getUserId());
-            userCourse.setClassCourseId(classCourseId);
+            userCourse.setAgencyCourseRelationId(classCourseId);
+            userCourse.setAgencyClassId(teacherCourseForm.getClassId());
             userCourse.setState(true);
             userCourse.setCreatedTime(DateUtil.currentTime());
             userCourse.setUpdatedTime(DateUtil.currentTime());
