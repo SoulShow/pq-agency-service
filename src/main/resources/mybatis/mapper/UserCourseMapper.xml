@@ -72,7 +72,7 @@
     set state = 0,
         updated_time = now()
     where user_id = #{userId}
-    and agency_class_id = {classId}
+    and agency_class_id = #{classId}
     and state = 1
   </select>
 </mapper>
