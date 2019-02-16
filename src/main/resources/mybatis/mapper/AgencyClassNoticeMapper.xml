@@ -56,7 +56,9 @@
     created_time
     from pq_agency_class_notice
     where agency_class_id = #{agencyClassId}
+    <if test="isReceipt!=9">
     and is_receipt = #{isReceipt}
+    </if>
     and state = 1
     order by created_time desc
     limit #{offset},#{size}

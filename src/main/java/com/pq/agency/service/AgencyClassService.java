@@ -520,4 +520,15 @@ public interface AgencyClassService {
      * @return
      */
     AgencyClass getClassInfoByClassId(Long classId);
+
+
+    /**
+     * 获取最新通知
+     * @param agencyClassId
+     * @param userId
+     * @param studentId
+     * @param role
+     * @return
+     */
+    AgencyNoticeDto getLastNotice(Long agencyClassId,String userId,Long studentId,int role);
 }

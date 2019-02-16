@@ -1,5 +1,6 @@
 package com.pq.agency.api;
 
+import com.pq.agency.dto.AgencyNoticeDto;
 import com.pq.agency.exception.AgencyException;
 import com.pq.agency.param.*;
 import com.pq.agency.service.AgencyClassService;
@@ -432,6 +433,17 @@ public class AgencyController {
 	public AgencyResult getAgencyClassInfo(@RequestParam(value = "agencyClassId")Long agencyClassId) {
 		AgencyResult result = new AgencyResult();
 		result.setData(agencyClassService.getClassInfoByClassId(agencyClassId));
+		return result;
+	}
+
+	@GetMapping(value = "/class/last/notice")
+	@ResponseBody
+	public AgencyResult<AgencyNoticeDto> getLastNotice(@RequestParam(value = "agencyClassId")Long agencyClassId,
+													   @RequestParam(value = "userId")String userId,
+													   @RequestParam(value = "studentId",required = false)Long studentId,
+													   @RequestParam(value = "role")int role) {
+		AgencyResult result = new AgencyResult();
+		result.setData(agencyClassService.getLastNotice(agencyClassId,userId,studentId,role));
 		return result;
 	}
 }

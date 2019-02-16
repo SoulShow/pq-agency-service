@@ -98,6 +98,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     private String phpUrl;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private Agency
 
     @Override
     public void checkInvitationCodeAndStudent(String phone, String invitationCode, String studentName){
@@ -2123,5 +2125,18 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         return agencyClassMapper.selectByPrimaryKey(classId);
     }
 
-
+    @Override
+    public AgencyNoticeDto getLastNotice(Long agencyClassId,String userId,Long studentId,int role){
+        List<AgencyNoticeDto> list = new ArrayList<>();
+        if(CommonConstants.PQ_LOGIN_ROLE_PARENT==role){
+            list = getClassNoticeList(agencyClassId, userId, studentId, 9, 0, 1);
+        }else {
+            list = getTeacherNoticeList(agencyClassId,userId,0,0,1);
+        }
+        if(list==null||list.size()==0){
+            return null;
+        }else {
+            return list.get(0);
+        }
+    }
 }
