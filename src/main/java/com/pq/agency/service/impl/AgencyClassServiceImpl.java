@@ -98,8 +98,6 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     private String phpUrl;
     @Autowired
     private RedisTemplate redisTemplate;
-    @Autowired
-    private Agency
 
     @Override
     public void checkInvitationCodeAndStudent(String phone, String invitationCode, String studentName){
