@@ -18,5 +18,5 @@ public interface ClassNoticeReadLogMapper {
 
     ClassNoticeReadLog selectByUserIdAndNoticeId(@Param("userId") String userId,@Param("noticeId") Long noticeId);
 
-    ClassNoticeReadLog selectByNoticeIdAndStudentId(@Param("noticeId") Long noticeId,@Param("studentId") Long studentId);
+    List<ClassNoticeReadLog> selectByNoticeIdAndStudentId(@Param("noticeId") Long noticeId,@Param("studentId") Long studentId);
 }

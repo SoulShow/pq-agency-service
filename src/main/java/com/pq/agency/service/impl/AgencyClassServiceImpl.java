@@ -2003,8 +2003,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             if(status==1){
                 if(!classNotice.getIsReceipt()){
                     //不需要回执获取已读信息
-                    ClassNoticeReadLog classNoticeReadLog = noticeReadLogMapper.selectByNoticeIdAndStudentId(noticeId,agencyStudent.getId());
-                    if(classNoticeReadLog != null){
+                    List<ClassNoticeReadLog> classNoticeReadLogList = noticeReadLogMapper.selectByNoticeIdAndStudentId(noticeId,agencyStudent.getId());
+                    if(classNoticeReadLogList != null){
                         list.add(getReceiptUserDto(agencyStudent));
                     }
                 }else{
@@ -2017,8 +2017,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             }else {
                 if(!classNotice.getIsReceipt()){
                     //不需要回执获取未读信息
-                    ClassNoticeReadLog classNoticeReadLog = noticeReadLogMapper.selectByNoticeIdAndStudentId(noticeId,agencyStudent.getId());
-                    if(classNoticeReadLog == null){
+                    List<ClassNoticeReadLog> classNoticeReadLogList = noticeReadLogMapper.selectByNoticeIdAndStudentId(noticeId,agencyStudent.getId());
+                    if(classNoticeReadLogList == null){
                         list.add(getReceiptUserDto(agencyStudent));
                     }
                 }else{
