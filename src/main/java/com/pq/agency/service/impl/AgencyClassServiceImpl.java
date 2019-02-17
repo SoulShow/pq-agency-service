@@ -394,7 +394,28 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
     @Override
     public List<AgencyNoticeDto> getClassNoticeList(Long agencyClassId, String userId, Long studentId, int isReceipt, int offset, int size){
-        List<AgencyClassNotice> list = noticeMapper.selectByClassIdAndIsReceipt(agencyClassId,isReceipt,offset,size);
+        List<AgencyClassNotice> list = new ArrayList<>();
+        if(isReceipt==1){
+            //需要回执但是未回执的
+            List<AgencyClassNotice> notReceiptList = noticeMapper.selectNotReceiptByClassId(agencyClassId,studentId,offset,size);
+            if(notReceiptList!=null && notReceiptList.size()>0){
+                list.addAll(notReceiptList);
+            }
+
+            if(notReceiptList==null||notReceiptList.size()<size){
+                String key = agencyClassId+userId+studentId;
+                if(!redisTemplate.hasKey("NOT_RECEIPT_LIST_OFFSET"+key)){
+                    redisTemplate.opsForValue().set("NOT_RECEIPT_LIST_OFFSET"+key,offset);
+                }
+                Integer index= (Integer)redisTemplate.opsForValue().get("NOT_RECEIPT_LIST_OFFSET"+key);
+                //需要回执已回执的
+                List<AgencyClassNotice> receiptList = noticeMapper.selectReceiptByClassId(agencyClassId,studentId,offset-index,size-notReceiptList.size());
+                list.addAll(receiptList);
+            }
+        }else {
+            list = noticeMapper.selectByClassIdAndIsReceipt(agencyClassId,isReceipt,offset,size);
+        }
+
         List<AgencyNoticeDto> agencyNoticeDtoList = new ArrayList<>();
         for(AgencyClassNotice agencyClassNotice:list){
             AgencyNoticeDto agencyNoticeDto = new AgencyNoticeDto();

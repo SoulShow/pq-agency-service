@@ -30,4 +30,15 @@ public interface AgencyClassNoticeMapper {
                                                        @Param("classId")Long classId,
                                                        @Param("offset")int offset,
                                                        @Param("size") int size);
+
+    List<AgencyClassNotice> selectNotReceiptByClassId(@Param("agencyClassId")Long agencyClassId,
+                                                      @Param("studentId")Long studentId,
+                                                      @Param("offset")int offset,
+                                                      @Param("size") int size);
+
+    List<AgencyClassNotice> selectReceiptByClassId(@Param("agencyClassId")Long agencyClassId,
+                                                   @Param("studentId")Long studentId,
+                                                   @Param("offset")int offset,
+                                                   @Param("size") int size);
+
 }
