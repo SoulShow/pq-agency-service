@@ -1333,6 +1333,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 paramMap.put("title", voteForm.getTitle());
                 if(voteForm.getIsSecret()==1){
                     paramMap.put("voteNick", "匿名");
+                }else {
+                    paramMap.put("voteNick", "新");
+
                 }
                 if(agencyUser.getRole()==CommonConstants.PQ_LOGIN_ROLE_PARENT){
                     List<AgencyUserStudent> studentList = agencyUserStudentMapper.selectByAgencyClassIdAndUserId(classId,agencyUser.getUserId());
