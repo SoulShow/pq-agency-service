@@ -1276,6 +1276,13 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             }
         }
 
+        AgencyResult<UserDto> result = userFeign.getUserInfo(voteForm.getUserId());
+        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+            throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+        }
+        String teacherHgId = result.getData().getHuanxinId();
+        String teacherName = result.getData().getName();
+
         for(Long classId : voteForm.getAgencyClassIdList()){
             AgencyClassVote classVote = new AgencyClassVote();
             classVote.setAgencyClassId(classId);
@@ -1309,6 +1316,47 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 voteImg.setCreatedTime(DateUtil.currentTime());
                 voteImgMapper.insert(voteImg);
             }
+            List<AgencyUser> list = agencyUserMapper.selectByClassId(classId);
+            for(AgencyUser agencyUser: list){
+
+                AgencyResult<UserDto> parentResult = userFeign.getUserInfo(agencyUser.getUserId());
+                if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                    throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+                }
+                UserDto parentResultData = parentResult.getData();
+                HashMap<String, Object> paramMap = new HashMap<>();
+
+                paramMap.put("parameterId", Constants.PUSH_TEMPLATE_ID_NOTICE_4);
+                paramMap.put("user", parentResultData.getHuanxinId());
+                paramMap.put("form", teacherHgId);
+                paramMap.put("teacherName", teacherName);
+                paramMap.put("title", voteForm.getTitle());
+                if(voteForm.getIsSecret()==1){
+                    paramMap.put("voteNick", "匿名");
+                }
+                if(agencyUser.getRole()==CommonConstants.PQ_LOGIN_ROLE_PARENT){
+                    List<AgencyUserStudent> studentList = agencyUserStudentMapper.selectByAgencyClassIdAndUserId(classId,agencyUser.getUserId());
+                    for(AgencyUserStudent student:studentList){
+
+                        StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
+                        studentNoticeDto.setVoteId(classVote.getId());
+                        studentNoticeDto.setStudent_id(student.getStudentId());
+                        studentNoticeDto.setStudent_name(agencyStudentMapper.selectByPrimaryKey(student.getStudentId()).getName());
+                        paramMap.put("ext",studentNoticeDto);
+                    }
+                }
+                String huanxResult = null;
+                try {
+                    huanxResult = HttpUtil.sendJson(phpUrl+"push",new HashMap<>(),JSON.toJSONString(paramMap));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
+                if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
+                    AgencyException.raise(AgencyErrors.AGENCY_NOTICE_PUSH_ERROR);
+                }
+            }
+
         }
 
     }
@@ -1339,7 +1387,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyUser.setUserId(teacherRegisterForm.getUserId());
             agencyUser.setRole(teacherRegisterForm.getRole());
             //TODO 测试传true，需要审核传false
-            agencyUser.setState(true);
+            agencyUser.setState(false);
             agencyUser.setIsHead(agencyClassDto.getIsHead());
             agencyUser.setCreatedTime(DateUtil.currentTime());
             agencyUser.setUpdatedTime(DateUtil.currentTime());
@@ -1369,7 +1417,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 agencyGroupMember.setGroupId(agencyGroup.getId());
                 agencyGroupMember.setDisturbStatus(1);
                 agencyGroupMember.setIsHead(agencyUser.getIsHead());
-                agencyGroupMember.setState(true);
+                //TODO 测试传true，需要审核传false
+                agencyGroupMember.setState(false);
                 agencyGroupMember.setUpdatedTime(DateUtil.currentTime());
                 agencyGroupMember.setCreatedTime(DateUtil.currentTime());
                 groupMemberMapper.insert(agencyGroupMember);

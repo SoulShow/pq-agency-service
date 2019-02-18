@@ -14,6 +14,8 @@ public class StudentNoticeDto implements Serializable {
 
     private String student_name;
 
+    private Long voteId;
+
 
     public Long getNoticeId() {
         return noticeId;
@@ -37,5 +39,13 @@ public class StudentNoticeDto implements Serializable {
 
     public void setStudent_name(String student_name) {
         this.student_name = student_name;
+    }
+
+    public Long getVoteId() {
+        return voteId;
+    }
+
+    public void setVoteId(Long voteId) {
+        this.voteId = voteId;
     }
 }

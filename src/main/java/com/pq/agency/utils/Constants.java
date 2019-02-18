@@ -28,6 +28,9 @@ public class Constants {
     public static final Long PUSH_TEMPLATE_ID_NOTICE_7 = 7L;
     public static final Long PUSH_TEMPLATE_ID_NOTICE_1 = 1L;
 
+    public static final Long PUSH_TEMPLATE_ID_NOTICE_4 = 4L;
+
+
 
 
 
