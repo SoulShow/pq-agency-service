@@ -2046,6 +2046,10 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                         studentNoticeDto.setStudent_name(agencyStudentMapper.selectByPrimaryKey(student.getStudentId()).getName());
                         paramMap.put("ext",studentNoticeDto);
                     }
+                }else {
+                    StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
+                    studentNoticeDto.setNoticeId(agencyClassNotice.getId());
+                    paramMap.put("ext",studentNoticeDto);
                 }
                 String huanxResult = null;
                 try {
