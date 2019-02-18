@@ -2,6 +2,7 @@ package com.pq.agency.api;
 
 
 import com.pq.agency.dto.AgencyClassDto;
+import com.pq.agency.dto.UserDto;
 import com.pq.agency.entity.AgencyStudent;
 import com.pq.agency.exception.AgencyErrors;
 import com.pq.agency.exception.AgencyException;
@@ -209,6 +210,20 @@ public class AgencyUserController {
 		AgencyResult result = new AgencyResult();
 		try{
 			result.setData(agencyClassService.getUserClassInfo(userId));
+		}catch (Exception e){
+			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
+
+	@GetMapping(value = "/class/users")
+	@ResponseBody
+	public AgencyResult<List<UserDto>> getUserClassUsers(@RequestParam("classId")Long classId) {
+		AgencyResult result = new AgencyResult();
+		try{
+			result.setData(agencyClassService.getClassUsers(classId));
 		}catch (Exception e){
 			e.printStackTrace();
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());

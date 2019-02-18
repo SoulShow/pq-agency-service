@@ -531,4 +531,11 @@ public interface AgencyClassService {
      * @return
      */
     AgencyNoticeDto getLastNotice(Long agencyClassId,String userId,Long studentId,int role);
+
+    /**
+     * 获取班级全部用户
+     * @param classId
+     * @return
+     */
+    List<UserDto> getClassUsers(Long classId);
 }
