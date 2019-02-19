@@ -2091,7 +2091,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 if(!classNotice.getIsReceipt()){
                     //不需要回执获取已读信息
                     List<ClassNoticeReadLog> classNoticeReadLogList = noticeReadLogMapper.selectByNoticeIdAndStudentId(noticeId,agencyStudent.getId());
-                    if(classNoticeReadLogList != null){
+                    if(classNoticeReadLogList != null&&classNoticeReadLogList.size()>0){
                         list.add(getReceiptUserDto(agencyStudent,null));
                     }
                 }else{
@@ -2105,7 +2105,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 if(!classNotice.getIsReceipt()){
                     //不需要回执获取未读信息
                     List<ClassNoticeReadLog> classNoticeReadLogList = noticeReadLogMapper.selectByNoticeIdAndStudentId(noticeId,agencyStudent.getId());
-                    if(classNoticeReadLogList == null){
+                    if(classNoticeReadLogList == null||classNoticeReadLogList.size()==0){
                         list.add(getReceiptUserDto(agencyStudent,null));
                     }
                 }else{
