@@ -548,7 +548,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
             }
             collectionDto.setUserId(userId);
-            collectionDto.setUserName(result.getData().getName());
+            collectionDto.setUserName(collection.getUserName());
             collectionDto.setNoticeId(collection.getNoticeId());
             collectionDto.setFile(collection.getFile());
             collectionDto.setFileName(collection.getFileName());
