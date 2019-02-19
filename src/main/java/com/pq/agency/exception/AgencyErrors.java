@@ -59,4 +59,6 @@ public class AgencyErrors extends CommonErrors {
 
     public final static ErrorCode AGENCY_NOTICE_MORE_THAN_100_ERROR = new AgencyErrorCode("0024", "请控制在1000个字符以内");
 
+    public final static ErrorCode AGENCY_VOTE_DELETE_ERROR = new AgencyErrorCode("0025", "该投票已被删除");
+
 }

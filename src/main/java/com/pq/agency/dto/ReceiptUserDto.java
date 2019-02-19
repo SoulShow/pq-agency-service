@@ -12,6 +12,8 @@ public class ReceiptUserDto {
 
     private String className;
 
+    private String img;
+
     private List<ParentDto> parentList;
 
     public String getName() {
@@ -53,5 +55,13 @@ public class ReceiptUserDto {
 
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }

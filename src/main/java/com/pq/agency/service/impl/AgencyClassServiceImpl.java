@@ -813,6 +813,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     @Override
     public AgencyVoteDetailDto getVoteDetail(Long voteId,String userId,Long studentId){
         AgencyClassVote classVote = classVoteMapper.selectByPrimaryKey(voteId);
+        if(classVote==null){
+            AgencyException.raise(AgencyErrors.AGENCY_VOTE_DELETE_ERROR);
+        }
         AgencyVoteDetailDto  agencyVoteDetailDto = new AgencyVoteDetailDto();
 
         AgencyResult<UserDto> result = userFeign.getUserInfo(classVote.getUserId());
@@ -1318,6 +1321,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             }
             List<AgencyUser> list = agencyUserMapper.selectByClassId(classId);
             for(AgencyUser agencyUser: list){
+                if(agencyUser.getUserId().equals(voteForm.getUserId())){
+                    continue;
+                }
 
                 AgencyResult<UserDto> parentResult = userFeign.getUserInfo(agencyUser.getUserId());
                 if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
@@ -1347,6 +1353,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                         studentNoticeDto.setStudent_name(agencyStudentMapper.selectByPrimaryKey(student.getStudentId()).getName());
                         paramMap.put("ext",studentNoticeDto);
                     }
+                }else{
+                    StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
+                    studentNoticeDto.setVoteId(classVote.getId());
                 }
                 String huanxResult = null;
                 try {
@@ -2082,13 +2091,13 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                     //不需要回执获取已读信息
                     List<ClassNoticeReadLog> classNoticeReadLogList = noticeReadLogMapper.selectByNoticeIdAndStudentId(noticeId,agencyStudent.getId());
                     if(classNoticeReadLogList != null){
-                        list.add(getReceiptUserDto(agencyStudent));
+                        list.add(getReceiptUserDto(agencyStudent,null));
                     }
                 }else{
                     //回执获取已回执信息
                     ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeIdAndStudentId(noticeId,agencyStudent.getId());
                     if(noticeReceipt != null){
-                        list.add(getReceiptUserDto(agencyStudent));
+                        list.add(getReceiptUserDto(agencyStudent,noticeReceipt));
                     }
                 }
             }else {
@@ -2096,13 +2105,13 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                     //不需要回执获取未读信息
                     List<ClassNoticeReadLog> classNoticeReadLogList = noticeReadLogMapper.selectByNoticeIdAndStudentId(noticeId,agencyStudent.getId());
                     if(classNoticeReadLogList == null){
-                        list.add(getReceiptUserDto(agencyStudent));
+                        list.add(getReceiptUserDto(agencyStudent,null));
                     }
                 }else{
                     //回执获取未回执信息
                     ClassNoticeReceipt noticeReceipt = noticeReceiptMapper.selectByNoticeIdAndStudentId(noticeId,agencyStudent.getId());
                     if(noticeReceipt == null){
-                        list.add(getReceiptUserDto(agencyStudent));
+                        list.add(getReceiptUserDto(agencyStudent,noticeReceipt));
                     }
                 }
                 redisTemplate.opsForValue().set(Constants.AGENCY_CLASS_NOTICE_STUDENT_INFO+noticeId,JSON.toJSON(list).toString());
@@ -2111,7 +2120,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         return list;
     }
 
-    private ReceiptUserDto getReceiptUserDto(AgencyStudent agencyStudent){
+    private ReceiptUserDto getReceiptUserDto(AgencyStudent agencyStudent,ClassNoticeReceipt noticeReceipt){
         ReceiptUserDto receiptUserDto = new ReceiptUserDto();
         receiptUserDto.setStudentId(agencyStudent.getId());
         receiptUserDto.setAvatar(agencyStudent.getAvatar());
@@ -2119,6 +2128,10 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyStudent.getAgencyClassId());
         if(agencyClass==null){
             AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOT_EXIST_ERROR);
+        }
+
+        if(noticeReceipt!=null){
+            receiptUserDto.setImg(noticeReceipt.getReceiptContent());
         }
         receiptUserDto.setClassName(agencyClass.getName());
         receiptUserDto.setParentList(getParentList(agencyStudent.getAgencyClassId(),agencyStudent));
