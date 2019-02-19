@@ -1356,6 +1356,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 }else{
                     StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
                     studentNoticeDto.setVoteId(classVote.getId());
+                    paramMap.put("ext",studentNoticeDto);
                 }
                 String huanxResult = null;
                 try {
