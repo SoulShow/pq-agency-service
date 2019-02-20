@@ -570,7 +570,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }
         userNoticeFileCollection.setFile(noticeFileCollectionForm.getFileUrl());
         userNoticeFileCollection.setFileName(noticeFileCollectionForm.getFileName());
-        userNoticeFileCollection.setFileSize(noticeFileCollectionForm.getFileSize());
+        if(noticeFileCollectionForm.getFileSize()!=null){
+            userNoticeFileCollection.setFileSize(userNoticeFileCollection.getFileSize()+"KB");
+        }
         userNoticeFileCollection.setUserId(noticeFileCollectionForm.getUserId());
         userNoticeFileCollection.setStudentId(noticeFileCollectionForm.getStudentId()==null?
                 0:noticeFileCollectionForm.getStudentId());
@@ -990,7 +992,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         return agencyClassInfoDto;
     }
     @Override
-    public  AgencyClassInfoDto getClassUserInfo(Long groupId,Long studentId,String userId){
+    public  AgencyClassInfoDto getClassUserInfo(Long groupId,Long studentId,String userId,int isCreate){
 
         AgencyClassInfoDto agencyClassInfoDto = new AgencyClassInfoDto();
         AgencyGroup agencyGroup = agencyGroupMapper.selectByPrimaryKey(groupId);
@@ -1073,6 +1075,16 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         redisTemplate.opsForValue().set(Constants.AGENCY_GROUP_USER_INFO+groupId,JSON.toJSON(list).toString());
         agencyClassInfoDto.setChatCount(chatCount);
         agencyClassInfoDto.setList(list);
+
+        if(isCreate==1){
+            List<ClassUserInfoDto> createList = new ArrayList<>();
+            for(ClassUserInfoDto classUserInfoDto: list){
+                if(classUserInfoDto.getParentList()!=null && classUserInfoDto.getParentList().size()>0){
+                    createList.add(classUserInfoDto);
+                }
+            }
+            agencyClassInfoDto.setList(list);
+        }
 
         return agencyClassInfoDto;
     }
@@ -1858,7 +1870,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         List<AgencyClassGroupDto> teacherClassList = getTeacherClassList(userId);
         List<ClassUserInfoDto> list = new ArrayList<>();
         for(AgencyClassGroupDto groupDto:teacherClassList){
-            getClassUserInfo(groupDto.getGroupId(),null,userId);
+            getClassUserInfo(groupDto.getGroupId(),null,userId,0);
             AgencyClassInfoDto classInfoDto =  getGroupSearchUserInfo(groupDto.getGroupId(), name);
             list.addAll(classInfoDto.getList());
         }
@@ -1952,8 +1964,12 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         }else {
             list = noticeMapper.selectByNoUserIdAndClassId(userId,classId,offset,size);
         }
+        return getNoticeList(list,userId);
+    }
 
+    private List<AgencyNoticeDto> getNoticeList(List<AgencyClassNotice> list,String userId){
         List<AgencyNoticeDto> agencyNoticeDtoList = new ArrayList<>();
+
         for(AgencyClassNotice agencyClassNotice:list){
             AgencyNoticeDto agencyNoticeDto = new AgencyNoticeDto();
             agencyNoticeDto.setId(agencyClassNotice.getId());
@@ -2220,7 +2236,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         if(CommonConstants.PQ_LOGIN_ROLE_PARENT==role){
             list = getClassNoticeList(agencyClassId, userId, studentId, 9, 0, 1);
         }else {
-            list = getTeacherNoticeList(agencyClassId,userId,0,0,1);
+            List<Long> classIdList = agencyUserMapper.selectClassIdByUserId(userId);
+            List<AgencyClassNotice> noticeList = noticeMapper.selectTeacherLastNotice(userId,classIdList);
+            list = getNoticeList(noticeList,userId);
         }
         if(list==null||list.size()==0){
             return null;

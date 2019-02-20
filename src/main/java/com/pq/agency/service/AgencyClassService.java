@@ -285,9 +285,10 @@ public interface AgencyClassService {
      * @param groupId
      * @param studentId
      * @param userId
+     * @param isCreate
      * @return
      */
-    AgencyClassInfoDto getClassUserInfo(Long groupId,Long studentId,String userId);
+    AgencyClassInfoDto getClassUserInfo(Long groupId,Long studentId,String userId,int isCreate);
 
     /**
      * 获取老师班级

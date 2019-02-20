@@ -338,10 +338,11 @@ public class AgencyController {
 	@ResponseBody
 	public AgencyResult getAgencyClassUserInfo(@RequestParam(value = "groupId")Long groupId,
 											   @RequestParam(value = "studentId",required = false)Long studentId,
-											   @RequestParam(value = "userId")String userId) {
+											   @RequestParam(value = "userId")String userId,
+											   @RequestParam(value = "isCreate")int isCreate) {
 		AgencyResult result = new AgencyResult();
 		try {
-			result.setData(agencyClassService.getClassUserInfo(groupId,studentId,userId));
+			result.setData(agencyClassService.getClassUserInfo(groupId,studentId,userId,isCreate));
 		}catch (AgencyException e){
 			result.setStatus(e.getErrorCode().getErrorCode());
 			result.setMessage(e.getErrorCode().getErrorMsg());

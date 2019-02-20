@@ -41,4 +41,7 @@ public interface AgencyClassNoticeMapper {
                                                    @Param("offset")int offset,
                                                    @Param("size") int size);
 
+    List<AgencyClassNotice> selectTeacherLastNotice(@Param("userId")String userId,
+                                                    @Param("classIdList")List<Long> classIdList);
+
 }
