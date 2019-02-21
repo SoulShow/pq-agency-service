@@ -17,6 +17,8 @@ public class AgencyClassNotice {
 
     private Boolean state;
 
+    private int isOld;
+
     private Timestamp updatedTime;
 
     private Timestamp createdTime;
@@ -91,5 +93,13 @@ public class AgencyClassNotice {
 
     public void setCreatedTime(Timestamp createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public int getIsOld() {
+        return isOld;
+    }
+
+    public void setIsOld(int isOld) {
+        this.isOld = isOld;
     }
 }

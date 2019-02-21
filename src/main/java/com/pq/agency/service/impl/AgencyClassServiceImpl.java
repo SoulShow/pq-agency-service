@@ -425,6 +425,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyNoticeDto.setTitle(agencyClassNotice.getTitle());
             ClassNoticeReadLog readLog = noticeReadLogMapper.selectByUserIdAndNoticeId(userId,agencyClassNotice.getId());
             agencyNoticeDto.setReadStatus(readLog==null?0:1);
+            if(agencyClassNotice.getIsOld()==1){
+                agencyNoticeDto.setReadStatus(1);
+            }
             List<ClassNoticeReceipt> noticeReceiptList = noticeReceiptMapper.selectByNoticeIdAndUserIdAndStudentId(agencyClassNotice.getId(),
                     null, studentId);
             if(noticeReceiptList==null||noticeReceiptList.size()==0){
@@ -1980,6 +1983,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             agencyNoticeDto.setTitle(agencyClassNotice.getTitle());
             ClassNoticeReadLog readLog = noticeReadLogMapper.selectByUserIdAndNoticeId(userId,agencyClassNotice.getId());
             agencyNoticeDto.setReadStatus(readLog==null?0:1);
+            if(agencyClassNotice.getIsOld()==1){
+                agencyNoticeDto.setReadStatus(1);
+            }
             agencyNoticeDto.setIsReceipt(agencyClassNotice.getIsReceipt()?1:0);
 
             AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyClassNotice.getAgencyClassId());

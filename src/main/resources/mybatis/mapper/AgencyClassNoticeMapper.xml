@@ -11,6 +11,8 @@
     <result column="state" property="state" jdbcType="BIT" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
     <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="is_old" property="isOld" jdbcType="INTEGER" />
+
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from pq_agency_class_notice
@@ -22,10 +24,10 @@
     </selectKey>
     insert into pq_agency_class_notice (agency_class_id, user_id, title, 
       content, is_receipt, state, 
-      updated_time, created_time)
+      updated_time, created_time,is_old)
     values (#{agencyClassId,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
       #{content,jdbcType=VARCHAR}, #{isReceipt,jdbcType=BIT}, #{state,jdbcType=BIT}, 
-      #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP})
+      #{updatedTime,jdbcType=TIMESTAMP}, #{createdTime,jdbcType=TIMESTAMP},0)
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.AgencyClassNotice" >
     update pq_agency_class_notice
@@ -36,24 +38,25 @@
       is_receipt = #{isReceipt,jdbcType=BIT},
       state = #{state,jdbcType=BIT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
-      created_time = #{createdTime,jdbcType=TIMESTAMP}
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      is_old = 0
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time,
-    created_time
+    created_time,is_old
     from pq_agency_class_notice
     where id = #{id,jdbcType=BIGINT}
     and state = 1
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time,
-    created_time
+    created_time,is_old
     from pq_agency_class_notice
   </select>
   <select id="selectByClassIdAndIsReceipt" resultMap="BaseResultMap" >
     select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time,
-    created_time
+    created_time,is_old
     from pq_agency_class_notice
     where agency_class_id = #{agencyClassId}
     <if test="isReceipt!=9">
@@ -66,7 +69,7 @@
 
   <select id="selectByUserIdAndClassId" resultMap="BaseResultMap" >
     select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time,
-    created_time
+    created_time,is_old
     from pq_agency_class_notice
     where user_id = #{userId}
     and agency_class_id =#{classId}
@@ -77,7 +80,7 @@
 
   <select id="selectByNoUserIdAndClassId" resultMap="BaseResultMap" >
     select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time,
-    created_time
+    created_time,is_old
     from pq_agency_class_notice
     where user_id != #{userId}
     and agency_class_id =#{classId}
@@ -89,7 +92,7 @@
 
   <select id="selectNotReceiptByClassId" resultMap="BaseResultMap" >
     select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time,
-    created_time
+    created_time,is_old
     from pq_agency_class_notice
     where agency_class_id = #{agencyClassId}
     and is_receipt = 1
@@ -105,7 +108,7 @@
 
   <select id="selectReceiptByClassId" resultMap="BaseResultMap" >
     select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time,
-    created_time
+    created_time,is_old
     from pq_agency_class_notice
     where agency_class_id = #{agencyClassId}
     and is_receipt = 1
@@ -122,7 +125,7 @@
 
   <select id="selectTeacherLastNotice" resultMap="BaseResultMap" >
     select id, agency_class_id, user_id, title, content, is_receipt, state, updated_time,
-    created_time
+    created_time,is_old
     from pq_agency_class_notice
     where user_id != #{userId}
     and agency_class_id in
