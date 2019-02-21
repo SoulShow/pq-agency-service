@@ -1083,7 +1083,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                     createList.add(classUserInfoDto);
                 }
             }
-            agencyClassInfoDto.setList(list);
+            agencyClassInfoDto.setList(createList);
         }
 
         return agencyClassInfoDto;
