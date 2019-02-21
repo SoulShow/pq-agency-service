@@ -1079,7 +1079,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         if(isCreate==1){
             List<ClassUserInfoDto> createList = new ArrayList<>();
             for(ClassUserInfoDto classUserInfoDto: list){
-                if(classUserInfoDto.getParentList()!=null && classUserInfoDto.getParentList().size()>0){
+                if(classUserInfoDto.getParentList()!=null
+                        && classUserInfoDto.getParentList().size()>0 &&
+                        classUserInfoDto.getRole()!=1){
                     createList.add(classUserInfoDto);
                 }
             }
