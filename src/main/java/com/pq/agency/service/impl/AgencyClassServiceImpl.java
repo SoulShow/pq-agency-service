@@ -2067,6 +2067,11 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 paramMap.put("form", teacherHgId);
                 paramMap.put("teacherName", teacherName);
                 paramMap.put("title", agencyClassNotice.getTitle());
+                AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(classNoticeDto.getAgencyClassId());
+                if(agencyClass==null){
+                    continue;
+                }
+                paramMap.put("className",agencyClass.getName());
                 if(agencyUser.getRole()==CommonConstants.PQ_LOGIN_ROLE_PARENT){
                     List<AgencyUserStudent> studentList = agencyUserStudentMapper.selectByAgencyClassIdAndUserId(classNoticeDto.getAgencyClassId(),agencyUser.getUserId());
                     for(AgencyUserStudent student:studentList){
