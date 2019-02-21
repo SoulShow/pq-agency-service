@@ -439,7 +439,7 @@ public class AgencyController {
 
 	@GetMapping(value = "/class/last/notice")
 	@ResponseBody
-	public AgencyResult<AgencyNoticeDto> getLastNotice(@RequestParam(value = "agencyClassId")Long agencyClassId,
+	public AgencyResult<AgencyNoticeDto> getLastNotice(@RequestParam(value = "agencyClassId",required = false)Long agencyClassId,
 													   @RequestParam(value = "userId")String userId,
 													   @RequestParam(value = "studentId",required = false)Long studentId,
 													   @RequestParam(value = "role")int role) {
