@@ -2060,7 +2060,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
         List<AgencyUser> list = agencyUserMapper.selectByClassId(classNoticeDto.getAgencyClassId());
         for(AgencyUser agencyUser: list){
-
+            if(agencyUser.getUserId().equals(classNoticeDto.getUserId())){
+                continue;
+            }
                 AgencyResult<UserDto> parentResult = userFeign.getUserInfo(agencyUser.getUserId());
                 if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
                     throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
