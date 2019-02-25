@@ -539,4 +539,11 @@ public interface AgencyClassService {
      * @return
      */
     List<UserDto> getClassUsers(Long classId);
+
+    /**
+     * 获取所在班级的学校的全部班级
+     * @param classId
+     * @return
+     */
+    List<Long> getAgencyClassIds(Long classId);
 }

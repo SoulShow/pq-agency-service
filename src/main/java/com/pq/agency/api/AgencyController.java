@@ -447,4 +447,12 @@ public class AgencyController {
 		result.setData(agencyClassService.getLastNotice(agencyClassId,userId,studentId,role));
 		return result;
 	}
+
+	@GetMapping(value = "/classIds")
+	@ResponseBody
+	public AgencyResult getClassIds(@RequestParam(value = "classId")Long classId) {
+		AgencyResult result = new AgencyResult();
+		result.setData(agencyClassService.getAgencyClassIds(classId));
+		return result;
+	}
 }

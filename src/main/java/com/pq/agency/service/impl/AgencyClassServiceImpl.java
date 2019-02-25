@@ -2274,4 +2274,15 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         return  userDtoList;
     }
 
+    @Override
+    public List<Long> getAgencyClassIds(Long classId){
+        AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(classId);
+        List<AgencyClass> classList = agencyClassMapper.selectClassByAgencyIdAndGradeId(agencyClass.getAgencyId(),agencyClass.getGradeId());
+        List<Long> classIdList = new ArrayList<>();
+        for(AgencyClass agencyClassDto:classList){
+            classIdList.add(agencyClassDto.getId());
+        }
+        return classIdList;
+    }
+
 }
