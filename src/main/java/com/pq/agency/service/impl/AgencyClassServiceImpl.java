@@ -574,7 +574,11 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         userNoticeFileCollection.setFile(noticeFileCollectionForm.getFileUrl());
         userNoticeFileCollection.setFileName(noticeFileCollectionForm.getFileName());
         if(noticeFileCollectionForm.getFileSize()!=null){
-            userNoticeFileCollection.setFileSize((Integer.valueOf(noticeFileCollectionForm.getFileSize())/1024)+"KB");
+            if(noticeFileCollectionForm.getFileSize().indexOf("KB")>=0){
+                userNoticeFileCollection.setFileSize(noticeFileCollectionForm.getFileSize());
+            }else {
+                userNoticeFileCollection.setFileSize((Integer.valueOf(noticeFileCollectionForm.getFileSize())/1024)+"KB");
+            }
         }
         userNoticeFileCollection.setUserId(noticeFileCollectionForm.getUserId());
         userNoticeFileCollection.setStudentId(noticeFileCollectionForm.getStudentId()==null?
