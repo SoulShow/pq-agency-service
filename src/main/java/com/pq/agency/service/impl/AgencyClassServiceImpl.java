@@ -26,6 +26,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -577,7 +578,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             if(noticeFileCollectionForm.getFileSize().indexOf("KB")>=0){
                 userNoticeFileCollection.setFileSize(noticeFileCollectionForm.getFileSize());
             }else {
-                userNoticeFileCollection.setFileSize((Integer.valueOf(noticeFileCollectionForm.getFileSize())/1024)+"KB");
+                userNoticeFileCollection.setFileSize(new BigDecimal(noticeFileCollectionForm.getFileSize())
+                        .divide(new BigDecimal(1024)).setScale(2, BigDecimal.ROUND_HALF_UP)+"KB");
             }
         }
         userNoticeFileCollection.setUserId(noticeFileCollectionForm.getUserId());
