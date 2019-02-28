@@ -470,6 +470,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     public AgencyNoticeDetailDto getClassNoticeDetail(Long noticeId,String userId,Long studentId){
         AgencyNoticeDetailDto agencyNoticeDetailDto = new AgencyNoticeDetailDto();
         AgencyClassNotice agencyClassNotice = noticeMapper.selectByPrimaryKey(noticeId);
+        if(agencyClassNotice==null){
+            AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOTICE_NOT_EXIST_ERROR);
+        }
         agencyNoticeDetailDto.setId(agencyClassNotice.getId());
         agencyNoticeDetailDto.setCreatedTime(DateUtil.formatDate(agencyClassNotice.getCreatedTime(),DateUtil.DEFAULT_TIME_MINUTE));
         agencyNoticeDetailDto.setContent(agencyClassNotice.getContent());
