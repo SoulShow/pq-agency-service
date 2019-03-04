@@ -61,4 +61,7 @@ public class AgencyErrors extends CommonErrors {
 
     public final static ErrorCode AGENCY_VOTE_DELETE_ERROR = new AgencyErrorCode("0025", "该投票已被删除");
 
+    public final static ErrorCode AGENCY_GET_STDUENT_NAME_ERROR = new AgencyErrorCode("0026", "拨打客服联系电话，获取孩子正确的姓名");
+
+
 }

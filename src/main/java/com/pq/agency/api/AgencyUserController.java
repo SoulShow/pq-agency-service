@@ -6,11 +6,9 @@ import com.pq.agency.dto.UserDto;
 import com.pq.agency.entity.AgencyStudent;
 import com.pq.agency.exception.AgencyErrors;
 import com.pq.agency.exception.AgencyException;
-import com.pq.agency.param.AgencyUserRegisterCheckForm;
-import com.pq.agency.param.AgencyUserRegisterForm;
-import com.pq.agency.param.CollectionDeleteForm;
-import com.pq.agency.param.NoticeFileCollectionForm;
+import com.pq.agency.param.*;
 import com.pq.agency.service.AgencyClassService;
+import com.pq.agency.service.AgencyStudentService;
 import com.pq.agency.utils.AgencyResult;
 import com.pq.common.exception.CommonErrors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +26,8 @@ public class AgencyUserController {
 
     @Autowired
 	private AgencyClassService agencyClassService;
+    @Autowired
+	private AgencyStudentService studentService;
 
 	@PostMapping(value = "/student/check")
 	@ResponseBody
@@ -226,6 +226,22 @@ public class AgencyUserController {
 			result.setData(agencyClassService.getClassUsers(classId));
 		}catch (Exception e){
 			e.printStackTrace();
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
+
+	@PostMapping(value = "/add/student")
+	@ResponseBody
+	public AgencyResult addStudent(@RequestBody AddStudentForm addStudentForm){
+		AgencyResult result = new AgencyResult();
+		try{
+			studentService.userAddStudent(addStudentForm);
+		} catch (AgencyException a){
+			result.setStatus(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorCode());
+			result.setMessage(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorMsg());
+		}catch (Exception e) {
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
 		}

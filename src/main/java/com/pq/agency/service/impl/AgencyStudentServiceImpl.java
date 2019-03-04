@@ -7,6 +7,7 @@ import com.pq.agency.exception.AgencyErrors;
 import com.pq.agency.exception.AgencyException;
 import com.pq.agency.feign.UserFeign;
 import com.pq.agency.mapper.*;
+import com.pq.agency.param.AddStudentForm;
 import com.pq.agency.param.StudentLifeForm;
 import com.pq.agency.service.AgencyStudentService;
 import com.pq.agency.utils.AgencyResult;
@@ -14,6 +15,7 @@ import com.pq.common.constants.CommonConstants;
 import com.pq.common.exception.CommonErrors;
 import com.pq.common.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +41,11 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
     @Autowired
     private AgencyUserStudentMapper agencyUserStudentMapper;
     @Autowired
+    private AgencyClassInvitationCodeMapper invitationCodeMapper;
+    @Autowired
     private UserFeign userFeign;
+    @Autowired
+    private RedisTemplate redisTemplate;
     @Override
     public void updateStudentInfo(AgencyStudent agencyStudent){
         agencyStudent.setUpdatedTime(DateUtil.currentTime());
@@ -209,5 +215,57 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
         }
         return studentDtos;
     }
+    @Override
+    public  AgencyStudentRelationDto getStudentExistRelation(String code,String name,String userId){
+        AgencyClassInvitationCode invitationCode = invitationCodeMapper.selectByCode(code);
+        if(invitationCode==null){
+            AgencyException.raise(AgencyErrors.INVITATION_CODE_ERROR);
+        }
+        List<AgencyStudent> list = studentMapper.selectByAgencyClassIdAndName(invitationCode.getAgencyClassId(),name);
+        if(list==null||list.size()==0){
+            if(redisTemplate.hasKey("STUDENT_NAME_ERROR_TIME"+userId)){
+                int count = (int)redisTemplate.opsForValue().get("STUDENT_NAME_ERROR_TIME"+userId);
+                if(count>=3){
+                    redisTemplate.delete("STUDENT_NAME_ERROR_TIME"+userId);
+                    AgencyException.raise(AgencyErrors.AGENCY_GET_STDUENT_NAME_ERROR);
+                }
+                redisTemplate.opsForValue().set("STUDENT_NAME_ERROR_TIME"+userId,count+1);
+            }else {
+                redisTemplate.opsForValue().set("STUDENT_NAME_ERROR_TIME"+userId,1);
+            }
+
+            AgencyException.raise(AgencyErrors.AGENCY_STUDENT_NOT_EXIST_ERROR);
+        }
+
+        List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
+                selectByAgencyClassIdAndStudentId(invitationCode.getAgencyClassId(),list.get(0).getId());
+        AgencyStudentRelationDto relationDto = new AgencyStudentRelationDto();
+
+        List<String> relationList = new ArrayList<>();
+        for(AgencyUserStudent userStudent:userStudentList){
+            relationList.add(userStudent.getRelation());
+        }
+        relationDto.setRelationList(relationList);
+        relationDto.setStudentId(list.get(0).getId());
+        relationDto.setAgencyClassId(invitationCode.getAgencyClassId());
+        return relationDto;
+    }
+
+    @Override
+    public void userAddStudent(AddStudentForm addStudentForm){
+        AgencyUser agencyUser = agencyUserMapper.selectByUserAndClassId(addStudentForm.getUserId(),addStudentForm.getAgencyClassId());
+        AgencyUserStudent userStudent = new AgencyUserStudent();
+        userStudent.setAgencyClassId(addStudentForm.getAgencyClassId());
+        userStudent.setUserId(addStudentForm.getUserId());
+        userStudent.setAgencyUserId(agencyUser.getId());
+        userStudent.setStudentId(addStudentForm.getStudentId());
+        userStudent.setStudentName(addStudentForm.getStudentName());
+        userStudent.setRelation(addStudentForm.getRelation());
+        userStudent.setState(true);
+        userStudent.setUpdatedTime(DateUtil.currentTime());
+        userStudent.setCreatedTime(DateUtil.currentTime());
+        agencyUserStudentMapper.insert(userStudent);
+    }
+
 
 }

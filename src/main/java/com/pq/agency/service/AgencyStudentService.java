@@ -3,8 +3,10 @@ package com.pq.agency.service;
 
 import com.pq.agency.dto.AgencyStudentDto;
 import com.pq.agency.dto.AgencyStudentLifeListDto;
+import com.pq.agency.dto.AgencyStudentRelationDto;
 import com.pq.agency.dto.AgencyTeacherDto;
 import com.pq.agency.entity.AgencyStudent;
+import com.pq.agency.param.AddStudentForm;
 import com.pq.agency.param.StudentLifeForm;
 
 import java.util.List;
@@ -81,6 +83,21 @@ public interface AgencyStudentService {
      * @return
      */
     List<Long> getAgencyStudentList(Long classId);
+
+    /**
+     * 检查学生姓名是都存在
+     * @param code
+     * @param name
+     * @param userId
+     * @Return
+     */
+    AgencyStudentRelationDto getStudentExistRelation(String code, String name, String userId);
+
+    /**
+     * 用户添加学生
+     * @param addStudentForm
+     */
+    void userAddStudent(AddStudentForm addStudentForm);
 
 
 

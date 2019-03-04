@@ -164,4 +164,22 @@ public class AgencyStudentController {
 		}
 		return result;
 	}
+
+	@GetMapping(value = "/exist/relation")
+	@ResponseBody
+	public AgencyResult getStudentExistRelation(@RequestParam(value = "code")String code,
+										        @RequestParam(value = "name")String name,
+										        @RequestParam(value = "userId")String userId){
+		AgencyResult result = new AgencyResult();
+		try{
+			result.setData(agencyStudentService.getStudentExistRelation(code, name, userId));
+		} catch (AgencyException a){
+			result.setStatus(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorCode());
+			result.setMessage(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorMsg());
+		}catch (Exception e) {
+			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+		}
+		return result;
+	}
 }
