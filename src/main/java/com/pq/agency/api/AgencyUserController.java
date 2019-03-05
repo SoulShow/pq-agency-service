@@ -242,6 +242,7 @@ public class AgencyUserController {
 			result.setStatus(a.getErrorCode().getErrorCode());
 			result.setMessage(a.getErrorCode().getErrorCode());
 		}catch (Exception e) {
+			e.printStackTrace();
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
 		}
