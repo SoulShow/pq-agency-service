@@ -37,8 +37,8 @@ public class AgencyStudentController {
             student.setAvatar(studentModifyDto.getAvatar());
             agencyStudentService.updateStudentInfo(student);
         }catch (AgencyException a){
-			result.setStatus(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorCode());
-			result.setMessage(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorMsg());
+			result.setStatus(a.getErrorCode().getErrorCode());
+			result.setMessage(a.getErrorCode().getErrorMsg());
 		}catch (Exception e){
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
@@ -55,8 +55,8 @@ public class AgencyStudentController {
             student.setSex(studentModifyDto.getSex());
             agencyStudentService.updateStudentInfo(student);
 		}catch (AgencyException a){
-			result.setStatus(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorCode());
-			result.setMessage(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorMsg());
+			result.setStatus(a.getErrorCode().getErrorCode());
+			result.setMessage(a.getErrorCode().getErrorMsg());
 		}catch (Exception e){
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
@@ -124,8 +124,8 @@ public class AgencyStudentController {
 		try{
 			result.setData(agencyStudentService.getClassTeachersByStudentId(studentId));
 		} catch (AgencyException a){
-			result.setStatus(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorCode());
-			result.setMessage(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorMsg());
+			result.setStatus(a.getErrorCode().getErrorCode());
+			result.setMessage(a.getErrorCode().getErrorMsg());
 		}catch (Exception e) {
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
@@ -140,8 +140,8 @@ public class AgencyStudentController {
 		try{
 			result.setData(agencyStudentService.getClassStudentList(classId));
 		} catch (AgencyException a){
-			result.setStatus(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorCode());
-			result.setMessage(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorMsg());
+			result.setStatus(a.getErrorCode().getErrorCode());
+			result.setMessage(a.getErrorCode().getErrorMsg());
 		}catch (Exception e) {
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
@@ -156,8 +156,8 @@ public class AgencyStudentController {
 		try{
 			result.setData(agencyStudentService.getAgencyStudentList(classId));
 		} catch (AgencyException a){
-			result.setStatus(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorCode());
-			result.setMessage(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorMsg());
+			result.setStatus(a.getErrorCode().getErrorCode());
+			result.setMessage(a.getErrorCode().getErrorMsg());
 		}catch (Exception e) {
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
@@ -174,8 +174,8 @@ public class AgencyStudentController {
 		try{
 			result.setData(agencyStudentService.getStudentExistRelation(code, name, userId));
 		} catch (AgencyException a){
-			result.setStatus(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorCode());
-			result.setMessage(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR.getErrorMsg());
+			result.setStatus(a.getErrorCode().getErrorCode());
+			result.setMessage(a.getErrorCode().getErrorMsg());
 		}catch (Exception e) {
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
