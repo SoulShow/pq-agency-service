@@ -259,6 +259,10 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
 
     @Override
     public void userAddStudent(AddStudentForm addStudentForm){
+        AgencyUserStudent agencyUserStudent = agencyUserStudentMapper.selectByStudentIdAndRelation(addStudentForm.getStudentId(),addStudentForm.getRelation());
+        if(agencyUserStudent!=null){
+            AgencyException.raise(AgencyErrors.AGENCY_ADD_STUDENT_RELATION_ERROR);
+        }
         AgencyUser agencyUser = agencyUserMapper.selectByUserAndClassId(addStudentForm.getUserId(),addStudentForm.getAgencyClassId());
         AgencyUserStudent userStudent = new AgencyUserStudent();
         userStudent.setAgencyClassId(addStudentForm.getAgencyClassId());

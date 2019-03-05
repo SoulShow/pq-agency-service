@@ -65,4 +65,6 @@ public class AgencyErrors extends CommonErrors {
 
     public final static ErrorCode AGENCY_ADD_STUDENT_REPEAT_ERROR = new AgencyErrorCode("0027", "请不要重复添加学生");
 
+    public final static ErrorCode AGENCY_ADD_STUDENT_RELATION_ERROR = new AgencyErrorCode("0028", "关系已存在");
+
 }

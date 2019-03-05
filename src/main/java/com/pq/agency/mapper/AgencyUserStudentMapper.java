@@ -25,4 +25,7 @@ public interface AgencyUserStudentMapper {
 
     List<AgencyUserStudent> selectByAgencyClassIdAndUserId(@Param("agencyClassId") Long agencyClassId,
                                                            @Param("userId") String userId);
+
+    AgencyUserStudent selectByStudentIdAndRelation(@Param("studentId")Long studentId,
+                                                   @Param("relation")String relation);
 }
