@@ -273,7 +273,7 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
         if(agencyUserStudent!=null){
             AgencyException.raise(AgencyErrors.AGENCY_ADD_STUDENT_RELATION_ERROR);
         }
-        AgencyUser agencyUser = agencyUserMapper.selectByUserAndClassId(addStudentForm.getUserId(),agencyUserStudent.getAgencyClassId());
+        AgencyUser agencyUser = agencyUserMapper.selectByUserAndClassId(addStudentForm.getUserId(),addStudentForm.getAgencyClassId());
         if(agencyUser==null){
             agencyUser = new AgencyUser();
             agencyUser.setAgencyClassId(addStudentForm.getAgencyClassId());
