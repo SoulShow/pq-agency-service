@@ -1,5 +1,6 @@
 package com.pq.agency.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.pq.agency.dto.*;
 import com.pq.agency.entity.*;
 import com.pq.agency.exception.AgencyErrorCode;
@@ -14,12 +15,15 @@ import com.pq.agency.utils.AgencyResult;
 import com.pq.common.constants.CommonConstants;
 import com.pq.common.exception.CommonErrors;
 import com.pq.common.util.DateUtil;
+import com.pq.common.util.HttpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -43,9 +47,15 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
     @Autowired
     private AgencyClassInvitationCodeMapper invitationCodeMapper;
     @Autowired
+    private AgencyGroupMemberMapper groupMemberMapper;
+    @Autowired
+    private AgencyGroupMapper agencyGroupMapper;
+    @Autowired
     private UserFeign userFeign;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Value("${php.url}")
+    private String phpUrl;
     @Override
     public void updateStudentInfo(AgencyStudent agencyStudent){
         agencyStudent.setUpdatedTime(DateUtil.currentTime());
@@ -263,18 +273,73 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
         if(agencyUserStudent!=null){
             AgencyException.raise(AgencyErrors.AGENCY_ADD_STUDENT_RELATION_ERROR);
         }
-        AgencyUser agencyUser = agencyUserMapper.selectByUserAndClassId(addStudentForm.getUserId(),addStudentForm.getAgencyClassId());
+        AgencyUser agencyUser = agencyUserMapper.selectByUserAndClassId(addStudentForm.getUserId(),agencyUserStudent.getAgencyClassId());
+        if(agencyUser==null){
+            agencyUser = new AgencyUser();
+            agencyUser.setAgencyClassId(addStudentForm.getAgencyClassId());
+            agencyUser.setUserId(addStudentForm.getUserId());
+            agencyUser.setRole(CommonConstants.PQ_LOGIN_ROLE_PARENT);
+            agencyUser.setState(true);
+            agencyUser.setIsHead(0);
+            agencyUser.setChatStatus(0);
+            agencyUser.setCreatedTime(DateUtil.currentTime());
+            agencyUser.setUpdatedTime(DateUtil.currentTime());
+            agencyUserMapper.insert(agencyUser);
+        }
+
         AgencyUserStudent userStudent = new AgencyUserStudent();
         userStudent.setAgencyClassId(addStudentForm.getAgencyClassId());
         userStudent.setUserId(addStudentForm.getUserId());
         userStudent.setAgencyUserId(agencyUser.getId());
         userStudent.setStudentId(addStudentForm.getStudentId());
         userStudent.setStudentName(addStudentForm.getStudentName());
-        userStudent.setRelation(addStudentForm.getRelation());
         userStudent.setState(true);
-        userStudent.setUpdatedTime(DateUtil.currentTime());
+        userStudent.setRelation(addStudentForm.getRelation());
         userStudent.setCreatedTime(DateUtil.currentTime());
+        userStudent.setUpdatedTime(DateUtil.currentTime());
         agencyUserStudentMapper.insert(userStudent);
+
+        try {
+            if(agencyUser==null){
+                HashMap<String, String> paramMap = new HashMap<>();
+                AgencyResult<UserDto> result = userFeign.getUserInfo(addStudentForm.getUserId());
+                if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                    throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+                }
+                UserDto userDto = result.getData();
+                paramMap.put("hxGroupId", agencyClassMapper.selectByPrimaryKey(addStudentForm.getAgencyClassId()).getGroupId());
+                paramMap.put("userHxId", userDto.getHuanxinId());
+                String huanxResult = HttpUtil.sendJson(phpUrl+"addHxGroup",new HashMap<>(),JSON.toJSONString(paramMap));
+                AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
+                if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
+                    AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
+                }
+            }
+
+            AgencyGroup agencyGroup = agencyGroupMapper.selectByClassId(userStudent.getAgencyClassId());
+            if(agencyGroup==null){
+                AgencyException.raise(AgencyErrors.AGENCY_GROUP_NOT_EXIST_ERROR);
+            }
+
+            AgencyGroupMember agencyGroupMember = groupMemberMapper.selectByGroupIdAndStudentOrUserId(agencyGroup.getId(),
+                    userStudent.getStudentId(),null);
+            if(agencyGroupMember==null){
+                agencyGroupMember = new AgencyGroupMember();
+            }else {
+                return;
+            }
+            agencyGroupMember.setStudentId(userStudent.getStudentId());
+            agencyGroupMember.setGroupId(agencyGroup.getId());
+            agencyGroupMember.setDisturbStatus(1);
+            agencyGroupMember.setState(true);
+            agencyGroupMember.setIsHead(0);
+            agencyGroupMember.setUpdatedTime(DateUtil.currentTime());
+            agencyGroupMember.setCreatedTime(DateUtil.currentTime());
+            groupMemberMapper.insert(agencyGroupMember);
+        } catch (Exception e) {
+            e.printStackTrace();
+            AgencyException.raise(AgencyErrors.AGENCY_USER_ADD_GROUP_ERROR);
+        }
     }
 
 
