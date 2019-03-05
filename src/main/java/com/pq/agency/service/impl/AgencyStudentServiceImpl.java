@@ -221,13 +221,19 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
         if(invitationCode==null){
             AgencyException.raise(AgencyErrors.INVITATION_CODE_ERROR);
         }
+        //check用户是否绑定过这个学生
         List<AgencyStudent> list = studentMapper.selectByAgencyClassIdAndName(invitationCode.getAgencyClassId(),name);
+
+        AgencyUserStudent userStudent = agencyUserStudentMapper.selectByUserIdAndStudentId(userId,list.get(0).getId());
+        if(userStudent!=null){
+            AgencyException.raise(AgencyErrors.AGENCY_ADD_STUDENT_REPEAT_ERROR);
+        }
         if(list==null||list.size()==0){
             if(redisTemplate.hasKey("STUDENT_NAME_ERROR_TIME"+userId)){
                 int count = (int)redisTemplate.opsForValue().get("STUDENT_NAME_ERROR_TIME"+userId);
                 if(count>=3){
                     redisTemplate.delete("STUDENT_NAME_ERROR_TIME"+userId);
-                    AgencyException.raise(AgencyErrors.AGENCY_GET_STDUENT_NAME_ERROR);
+                    AgencyException.raise(AgencyErrors.AGENCY_GET_STUDENT_NAME_ERROR);
                 }
                 redisTemplate.opsForValue().set("STUDENT_NAME_ERROR_TIME"+userId,count+1);
             }else {
