@@ -224,8 +224,8 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
         //check用户是否绑定过这个学生
         List<AgencyStudent> list = studentMapper.selectByAgencyClassIdAndName(invitationCode.getAgencyClassId(),name);
 
-        AgencyUserStudent userStudent = agencyUserStudentMapper.selectByUserIdAndStudentId(userId,list.get(0).getId());
-        if(userStudent!=null){
+        AgencyUserStudent agencyUserStudent = agencyUserStudentMapper.selectByUserIdAndStudentId(userId,list.get(0).getId());
+        if(agencyUserStudent!=null){
             AgencyException.raise(AgencyErrors.AGENCY_ADD_STUDENT_REPEAT_ERROR);
         }
         if(list==null||list.size()==0){
