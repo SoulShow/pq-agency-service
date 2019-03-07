@@ -1376,7 +1376,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                         StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
                         studentNoticeDto.setVoteId(classVote.getId());
                         studentNoticeDto.setStudent_id(student.getStudentId());
-                        studentNoticeDto.setStudent_name(agencyStudentMapper.selectByPrimaryKey(student.getStudentId()).getName());
+                        String studentName = agencyStudentMapper.selectByPrimaryKey(student.getStudentId()).getName();
+                        studentNoticeDto.setStudent_name(studentName);
+                        paramMap.put("studentName", studentName);
                         paramMap.put("ext",studentNoticeDto);
                     }
                 }else{
@@ -2085,6 +2087,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 paramMap.put("form", teacherHgId);
                 paramMap.put("teacherName", teacherName);
                 paramMap.put("title", agencyClassNotice.getTitle());
+
                 AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(classNoticeDto.getAgencyClassId());
                 if(agencyClass==null){
                     continue;
@@ -2097,7 +2100,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                         StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
                         studentNoticeDto.setNoticeId(agencyClassNotice.getId());
                         studentNoticeDto.setStudent_id(student.getStudentId());
-                        studentNoticeDto.setStudent_name(agencyStudentMapper.selectByPrimaryKey(student.getStudentId()).getName());
+                        String studentName = agencyStudentMapper.selectByPrimaryKey(student.getStudentId()).getName();
+                        studentNoticeDto.setStudent_name(studentName);
+                        paramMap.put("studentName", studentName);
                         paramMap.put("ext",studentNoticeDto);
                     }
                 }else {
@@ -2233,6 +2238,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 studentNoticeDto.setNoticeId(noticeId);
                 studentNoticeDto.setStudent_id(receiptUserDto.getStudentId());
                 studentNoticeDto.setStudent_name(receiptUserDto.getName());
+                paramMap.put("studentName", receiptUserDto.getName());
+
                 paramMap.put("ext",studentNoticeDto);
 
                 String huanxResult = null;

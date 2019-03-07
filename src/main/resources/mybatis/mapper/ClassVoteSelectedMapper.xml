@@ -58,7 +58,9 @@
     from pq_class_vote_selected
     where state = 1
     and vote_id = #{voteId}
+    <if test="userId !=null and userId!=''">
     and user_id = #{userId}
+    </if>
     <if test="studentId !=null and studentId!=''">
     and student_id = #{studentId}
     </if>
