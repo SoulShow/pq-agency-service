@@ -2124,6 +2124,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    LOGGER.info("推送参数为："+JSON.toJSONString(paramMap));
                     AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
                     if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
                         AgencyException.raise(AgencyErrors.AGENCY_NOTICE_PUSH_ERROR);
@@ -2207,6 +2208,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            LOGGER.info("推送参数为："+JSON.toJSONString(paramMap));
             AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
             if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
                 AgencyException.raise(AgencyErrors.AGENCY_NOTICE_PUSH_ERROR);
