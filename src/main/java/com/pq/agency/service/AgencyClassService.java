@@ -546,4 +546,13 @@ public interface AgencyClassService {
      * @return
      */
     List<Long> getAgencyClassIds(Long classId);
+
+    /**
+     * 获取回执详情
+     * @param noticeId
+     * @param userId
+     * @param studentId
+     * @return
+     */
+    AgencyNoticeReceiptDetailDto getNoticeReceiptDetail(Long noticeId,String userId,Long studentId);
 }

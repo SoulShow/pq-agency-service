@@ -67,4 +67,8 @@ public class AgencyErrors extends CommonErrors {
 
     public final static ErrorCode AGENCY_ADD_STUDENT_RELATION_ERROR = new AgencyErrorCode("0028", "关系已存在");
 
+    public final static ErrorCode AGENCY_CLASS_NOTICE_NOT_RECEIPT_ERROR = new AgencyErrorCode("0029", "抱歉，无回复信息");
+
+    public final static ErrorCode AGENCY_NOTICE_RECEIPT_PUSH_MORE_60_ERROR = new AgencyErrorCode("0030", "操作频繁，每次提醒间隔一小时");
+
 }

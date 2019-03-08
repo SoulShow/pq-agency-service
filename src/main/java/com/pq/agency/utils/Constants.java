@@ -30,6 +30,9 @@ public class Constants {
 
     public static final Long PUSH_TEMPLATE_ID_NOTICE_4 = 4L;
 
+    public static final String AGENCY_CLASS_NOTICE_RECEIPT_INFO = "AGENCY_CLASS_NOTICE_RECEIPT_INFO:";
+
+
 
 
 

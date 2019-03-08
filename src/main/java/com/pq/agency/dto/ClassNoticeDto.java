@@ -6,7 +6,7 @@ public class ClassNoticeDto {
 
     private List<NoticeFileDto> fileList;
 
-    private Long agencyClassId;
+    private List<Long> agencyClassIdList;
 
     private String userId;
 
@@ -24,13 +24,6 @@ public class ClassNoticeDto {
         this.fileList = fileList;
     }
 
-    public Long getAgencyClassId() {
-        return agencyClassId;
-    }
-
-    public void setAgencyClassId(Long agencyClassId) {
-        this.agencyClassId = agencyClassId;
-    }
 
     public String getUserId() {
         return userId;
@@ -62,5 +55,13 @@ public class ClassNoticeDto {
 
     public void setIsReceipt(int isReceipt) {
         this.isReceipt = isReceipt;
+    }
+
+    public List<Long> getAgencyClassIdList() {
+        return agencyClassIdList;
+    }
+
+    public void setAgencyClassIdList(List<Long> agencyClassIdList) {
+        this.agencyClassIdList = agencyClassIdList;
     }
 }
