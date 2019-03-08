@@ -534,6 +534,27 @@ public class AgencyTeacherController {
         return result;
     }
 
+    @PostMapping(value = "/v2/class/notice")
+    @ResponseBody
+    public AgencyResult createClassNoticeV2(@RequestBody ClassNoticeDto classNoticeDto) {
+
+        AgencyResult result = new AgencyResult();
+        try {
+            if(classNoticeDto.getTitle().length()>26){
+                AgencyException.raise(AgencyErrors.AGENCY_NOTICE_MORE_THAN_26_ERROR);
+            }
+            agencyClassService.createClassNoticeV2(classNoticeDto);
+        } catch (AgencyException e){
+            result.setStatus(e.getErrorCode().getErrorCode());
+            result.setMessage(e.getErrorCode().getErrorMsg());
+        }catch (Exception e) {
+            e.printStackTrace();
+            result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
+            result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
+        }
+        return result;
+    }
+
     @GetMapping(value = "/class/notice/student")
     @ResponseBody
     public AgencyResult getReceiptStudentList(@RequestParam("noticeId") Long noticeId,@RequestParam("status") int status) {

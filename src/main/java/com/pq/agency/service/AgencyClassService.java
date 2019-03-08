@@ -499,6 +499,7 @@ public interface AgencyClassService {
      */
     void createClassNotice(ClassNoticeDto classNoticeDto);
 
+    void createClassNoticeV2(ClassNoticeDto classNoticeDto);
 
     /**
      * 获取回执用户信息

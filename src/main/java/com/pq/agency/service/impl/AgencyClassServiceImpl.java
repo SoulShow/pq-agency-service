@@ -2039,7 +2039,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createClassNotice(ClassNoticeDto classNoticeDto){
+    public void createClassNoticeV2(ClassNoticeDto classNoticeDto){
         if(classNoticeDto.getContent()==null||classNoticeDto.getContent().length()>1000){
             AgencyException.raise(AgencyErrors.AGENCY_NOTICE_MORE_THAN_100_ERROR);
         }
@@ -2132,7 +2132,86 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             });
 
         }
+    }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void createClassNotice(ClassNoticeDto classNoticeDto){
+        if(classNoticeDto.getContent()==null||classNoticeDto.getContent().length()>1000){
+            AgencyException.raise(AgencyErrors.AGENCY_NOTICE_MORE_THAN_100_ERROR);
+        }
+        AgencyClassNotice agencyClassNotice = new AgencyClassNotice();
+        agencyClassNotice.setAgencyClassId(classNoticeDto.getAgencyClassId());
+        agencyClassNotice.setUserId(classNoticeDto.getUserId());
+        agencyClassNotice.setTitle(classNoticeDto.getTitle());
+        agencyClassNotice.setContent(classNoticeDto.getContent());
+        agencyClassNotice.setIsReceipt(classNoticeDto.getIsReceipt()==1?true:false);
+        agencyClassNotice.setState(true);
+        agencyClassNotice.setUpdatedTime(DateUtil.currentTime());
+        agencyClassNotice.setCreatedTime(DateUtil.currentTime());
+        noticeMapper.insert(agencyClassNotice);
+        for(NoticeFileDto fileDto:classNoticeDto.getFileList()){
+            ClassNoticeFile classNoticeFile = new ClassNoticeFile();
+            classNoticeFile.setNoticeId(agencyClassNotice.getId());
+            classNoticeFile.setFile(fileDto.getFile());
+            classNoticeFile.setFileName(fileDto.getFileName());
+            classNoticeFile.setFileSize(fileDto.getFileSize());
+            classNoticeFile.setSuffix(fileDto.getSuffix());
+            classNoticeFile.setType(fileDto.getType());
+            classNoticeFile.setState(true);
+            classNoticeFile.setUpdatedTime(DateUtil.currentTime());
+            classNoticeFile.setCreatedTime(DateUtil.currentTime());
+            noticeFileMapper.insert(classNoticeFile);
+        }
+
+        AgencyResult<UserDto> result = userFeign.getUserInfo(classNoticeDto.getUserId());
+        if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+            throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+        }
+        String teacherHgId = result.getData().getHuanxinId();
+        String teacherName = result.getData().getName();
+
+        List<AgencyUser> list = agencyUserMapper.selectByClassId(classNoticeDto.getAgencyClassId());
+        for(AgencyUser agencyUser: list){
+
+            AgencyResult<UserDto> parentResult = userFeign.getUserInfo(agencyUser.getUserId());
+            if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
+                throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
+            }
+            UserDto parentResultData = parentResult.getData();
+            HashMap<String, Object> paramMap = new HashMap<>();
+
+            paramMap.put("parameterId", Constants.PUSH_TEMPLATE_ID_NOTICE_1);
+            paramMap.put("user", parentResultData.getHuanxinId());
+            paramMap.put("form", teacherHgId);
+            paramMap.put("teacherName", teacherName);
+            paramMap.put("title", agencyClassNotice.getTitle());
+            if(agencyUser.getRole()==CommonConstants.PQ_LOGIN_ROLE_PARENT){
+                List<AgencyUserStudent> studentList = agencyUserStudentMapper.selectByAgencyClassIdAndUserId(classNoticeDto.getAgencyClassId(),agencyUser.getUserId());
+                for(AgencyUserStudent student:studentList){
+
+                    StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
+                    studentNoticeDto.setNoticeId(agencyClassNotice.getId());
+                    studentNoticeDto.setStudent_id(student.getStudentId());
+                    studentNoticeDto.setStudent_name(agencyStudentMapper.selectByPrimaryKey(student.getStudentId()).getName());
+                    paramMap.put("ext",studentNoticeDto);
+                }
+            }else {
+                StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
+                studentNoticeDto.setNoticeId(agencyClassNotice.getId());
+                paramMap.put("ext",studentNoticeDto);
+            }
+            String huanxResult = null;
+            try {
+                huanxResult = HttpUtil.sendJson(phpUrl+"push",new HashMap<>(),JSON.toJSONString(paramMap));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
+            if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
+                AgencyException.raise(AgencyErrors.AGENCY_NOTICE_PUSH_ERROR);
+            }
+        }
     }
 
     @Override

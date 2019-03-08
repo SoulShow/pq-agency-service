@@ -8,6 +8,8 @@ public class ClassNoticeDto {
 
     private List<Long> agencyClassIdList;
 
+    private Long agencyClassId;
+
     private String userId;
 
     private String title;
@@ -63,5 +65,13 @@ public class ClassNoticeDto {
 
     public void setAgencyClassIdList(List<Long> agencyClassIdList) {
         this.agencyClassIdList = agencyClassIdList;
+    }
+
+    public Long getAgencyClassId() {
+        return agencyClassId;
+    }
+
+    public void setAgencyClassId(Long agencyClassId) {
+        this.agencyClassId = agencyClassId;
     }
 }
