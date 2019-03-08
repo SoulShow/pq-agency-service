@@ -2194,7 +2194,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                     StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
                     studentNoticeDto.setNoticeId(agencyClassNotice.getId());
                     studentNoticeDto.setStudent_id(student.getStudentId());
-                    studentNoticeDto.setStudent_name(agencyStudentMapper.selectByPrimaryKey(student.getStudentId()).getName());
+                    String studentName = agencyStudentMapper.selectByPrimaryKey(student.getStudentId()).getName();
+                    studentNoticeDto.setStudent_name(studentName);
+                    paramMap.put("studentName", studentName);
                     paramMap.put("ext",studentNoticeDto);
                 }
             }else {
