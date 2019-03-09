@@ -1373,9 +1373,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                     paramMap.put("voteNick", "新");
 
                 }
-                if(agencyUser.getRole()==CommonConstants.PQ_LOGIN_ROLE_PARENT){
-                    List<AgencyUserStudent> studentList = agencyUserStudentMapper.selectByAgencyClassIdAndUserId(classId,agencyUser.getUserId());
-                    for(AgencyUserStudent student:studentList){
+                if(agencyUser.getRole()==CommonConstants.PQ_LOGIN_ROLE_PARENT) {
+                    List<AgencyUserStudent> studentList = agencyUserStudentMapper.selectByAgencyClassIdAndUserId(classId, agencyUser.getUserId());
+                    for (AgencyUserStudent student : studentList) {
 
                         StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
                         studentNoticeDto.setVoteId(classVote.getId());
@@ -1383,22 +1383,23 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                         String studentName = agencyStudentMapper.selectByPrimaryKey(student.getStudentId()).getName();
                         studentNoticeDto.setStudent_name(studentName);
                         paramMap.put("studentName", studentName);
-                        paramMap.put("ext",studentNoticeDto);
+                        paramMap.put("ext", studentNoticeDto);
                     }
-                }else{
-                    StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
-                    studentNoticeDto.setVoteId(classVote.getId());
-                    paramMap.put("ext",studentNoticeDto);
-                }
-                String huanxResult = null;
-                try {
-                    huanxResult = HttpUtil.sendJson(phpUrl+"push",new HashMap<>(),JSON.toJSONString(paramMap));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
-                if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
-                    AgencyException.raise(AgencyErrors.AGENCY_NOTICE_PUSH_ERROR);
+//                }else{
+//                    StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
+//                    studentNoticeDto.setVoteId(classVote.getId());
+//                    paramMap.put("ext",studentNoticeDto);
+//                }
+                    String huanxResult = null;
+                    try {
+                        huanxResult = HttpUtil.sendJson(phpUrl + "push", new HashMap<>(), JSON.toJSONString(paramMap));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    AgencyResult userResult = JSON.parseObject(huanxResult, AgencyResult.class);
+                    if (userResult == null || !CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())) {
+                        AgencyException.raise(AgencyErrors.AGENCY_NOTICE_PUSH_ERROR);
+                    }
                 }
             }
 
@@ -2101,9 +2102,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                         continue;
                     }
                     paramMap.put("className",agencyClass.getName());
-                    if(agencyUser.getRole()==CommonConstants.PQ_LOGIN_ROLE_PARENT){
-                        List<AgencyUserStudent> studentList = agencyUserStudentMapper.selectByAgencyClassIdAndUserId(classId,agencyUser.getUserId());
-                        for(AgencyUserStudent student:studentList){
+                    if(agencyUser.getRole()==CommonConstants.PQ_LOGIN_ROLE_PARENT) {
+                        List<AgencyUserStudent> studentList = agencyUserStudentMapper.selectByAgencyClassIdAndUserId(classId, agencyUser.getUserId());
+                        for (AgencyUserStudent student : studentList) {
 
                             StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
                             studentNoticeDto.setNoticeId(agencyClassNotice.getId());
@@ -2111,23 +2112,24 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                             String studentName = agencyStudentMapper.selectByPrimaryKey(student.getStudentId()).getName();
                             studentNoticeDto.setStudent_name(studentName);
                             paramMap.put("studentName", studentName);
-                            paramMap.put("ext",studentNoticeDto);
+                            paramMap.put("ext", studentNoticeDto);
                         }
-                    }else {
-                        StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
-                        studentNoticeDto.setNoticeId(agencyClassNotice.getId());
-                        paramMap.put("ext",studentNoticeDto);
-                    }
-                    String huanxResult = null;
-                    try {
-                        huanxResult = HttpUtil.sendJson(phpUrl+"push",new HashMap<>(),JSON.toJSONString(paramMap));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    LOGGER.info("推送参数为："+JSON.toJSONString(paramMap));
-                    AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
-                    if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
-                        AgencyException.raise(AgencyErrors.AGENCY_NOTICE_PUSH_ERROR);
+//                    }else {
+//                        StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
+//                        studentNoticeDto.setNoticeId(agencyClassNotice.getId());
+//                        paramMap.put("ext",studentNoticeDto);
+//                    }
+                        String huanxResult = null;
+                        try {
+                            huanxResult = HttpUtil.sendJson(phpUrl + "push", new HashMap<>(), JSON.toJSONString(paramMap));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        LOGGER.info("推送参数为：" + JSON.toJSONString(paramMap));
+                        AgencyResult userResult = JSON.parseObject(huanxResult, AgencyResult.class);
+                        if (userResult == null || !CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())) {
+                            AgencyException.raise(AgencyErrors.AGENCY_NOTICE_PUSH_ERROR);
+                        }
                     }
                 }
             });
@@ -2187,9 +2189,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             paramMap.put("form", teacherHgId);
             paramMap.put("teacherName", teacherName);
             paramMap.put("title", agencyClassNotice.getTitle());
-            if(agencyUser.getRole()==CommonConstants.PQ_LOGIN_ROLE_PARENT){
-                List<AgencyUserStudent> studentList = agencyUserStudentMapper.selectByAgencyClassIdAndUserId(classNoticeDto.getAgencyClassId(),agencyUser.getUserId());
-                for(AgencyUserStudent student:studentList){
+            if(agencyUser.getRole()==CommonConstants.PQ_LOGIN_ROLE_PARENT) {
+                List<AgencyUserStudent> studentList = agencyUserStudentMapper.selectByAgencyClassIdAndUserId(classNoticeDto.getAgencyClassId(), agencyUser.getUserId());
+                for (AgencyUserStudent student : studentList) {
 
                     StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
                     studentNoticeDto.setNoticeId(agencyClassNotice.getId());
@@ -2197,23 +2199,24 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                     String studentName = agencyStudentMapper.selectByPrimaryKey(student.getStudentId()).getName();
                     studentNoticeDto.setStudent_name(studentName);
                     paramMap.put("studentName", studentName);
-                    paramMap.put("ext",studentNoticeDto);
+                    paramMap.put("ext", studentNoticeDto);
                 }
-            }else {
-                StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
-                studentNoticeDto.setNoticeId(agencyClassNotice.getId());
-                paramMap.put("ext",studentNoticeDto);
-            }
-            String huanxResult = null;
-            try {
-                huanxResult = HttpUtil.sendJson(phpUrl+"push",new HashMap<>(),JSON.toJSONString(paramMap));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            LOGGER.info("推送参数为："+JSON.toJSONString(paramMap));
-            AgencyResult userResult = JSON.parseObject(huanxResult,AgencyResult.class);
-            if(userResult==null||!CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())){
-                AgencyException.raise(AgencyErrors.AGENCY_NOTICE_PUSH_ERROR);
+//            }else {
+//                StudentNoticeDto studentNoticeDto = new StudentNoticeDto();
+//                studentNoticeDto.setNoticeId(agencyClassNotice.getId());
+//                paramMap.put("ext",studentNoticeDto);
+//            }
+                String huanxResult = null;
+                try {
+                    huanxResult = HttpUtil.sendJson(phpUrl + "push", new HashMap<>(), JSON.toJSONString(paramMap));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                LOGGER.info("推送参数为：" + JSON.toJSONString(paramMap));
+                AgencyResult userResult = JSON.parseObject(huanxResult, AgencyResult.class);
+                if (userResult == null || !CommonErrors.SUCCESS.getErrorCode().equals(userResult.getStatus())) {
+                    AgencyException.raise(AgencyErrors.AGENCY_NOTICE_PUSH_ERROR);
+                }
             }
         }
     }
