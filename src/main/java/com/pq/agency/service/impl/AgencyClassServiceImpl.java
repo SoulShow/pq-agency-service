@@ -805,11 +805,19 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             Integer count = voteSelectedMapper.selectCountByVoteId(classVote.getId());
             agencyVoteDto.setVotedCount(count);
 
-            ClassVoteSelected voteSelected = voteSelectedMapper.selectByVoteIdAndUserIdAndStudentId(classVote.getId(), userId, studentId);
+            ClassVoteSelected voteSelected =null;
+            if(studentId==null){
+                voteSelected = voteSelectedMapper.selectByVoteIdAndUserIdAndStudentId(classVote.getId(), userId, null);
+            }else {
+                voteSelected = voteSelectedMapper.selectByVoteIdAndUserIdAndStudentId(classVote.getId(), null, studentId);
+            }
             if(voteSelected != null){
                 //已经投过票
                 agencyVoteDto.setIsVoted(1);
+            }else {
+                agencyVoteDto.setIsVoted(0);
             }
+
             if(DateUtil.currentTimeMillis()>classVote.getDeadline().getTime()){
                 //未过期
                 agencyVoteDto.setVoteStatus(0);
@@ -857,11 +865,19 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         Integer totalCount = voteSelectedMapper.selectCountByVoteId(classVote.getId());
         agencyVoteDetailDto.setVotedCount(totalCount==null?0:totalCount);
 
-        ClassVoteSelected voteSelected = voteSelectedMapper.selectByVoteIdAndUserIdAndStudentId(classVote.getId(), userId, studentId);
+        ClassVoteSelected voteSelected =null;
+        if(studentId==null){
+            voteSelected = voteSelectedMapper.selectByVoteIdAndUserIdAndStudentId(classVote.getId(), userId, null);
+        }else {
+            voteSelected = voteSelectedMapper.selectByVoteIdAndUserIdAndStudentId(classVote.getId(), null, studentId);
+        }
         if(voteSelected != null){
             //已经投过票
             agencyVoteDetailDto.setIsVoted(1);
+        }else {
+            agencyVoteDetailDto.setIsVoted(0);
         }
+
         if(DateUtil.currentTimeMillis()>classVote.getDeadline().getTime()){
             //未过期
             agencyVoteDetailDto.setVoteStatus(0);
