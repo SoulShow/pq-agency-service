@@ -925,7 +925,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     @Transactional(rollbackFor = Exception.class)
     public void voteSelected(VoteSelectedForm voteSelectedForm){
         ClassVoteSelected classVoteSelected = voteSelectedMapper.selectByVoteIdAndUserIdAndStudentId(voteSelectedForm.getVoteId(),
-                voteSelectedForm.getUserId(),voteSelectedForm.getStudentId());
+                null,voteSelectedForm.getStudentId());
         if(classVoteSelected!=null){
             AgencyException.raise(AgencyErrors.AGENCY_CLASS_VOTE_EXIST_ERROR);
         }
