@@ -924,8 +924,15 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void voteSelected(VoteSelectedForm voteSelectedForm){
-        ClassVoteSelected classVoteSelected = voteSelectedMapper.selectByVoteIdAndUserIdAndStudentId(voteSelectedForm.getVoteId(),
-                null,voteSelectedForm.getStudentId());
+        ClassVoteSelected classVoteSelected = null;
+        if(voteSelectedForm.getStudentId()!=null){
+            classVoteSelected = voteSelectedMapper.selectByVoteIdAndUserIdAndStudentId(voteSelectedForm.getVoteId(),
+                    null,voteSelectedForm.getStudentId());
+        }else {
+            classVoteSelected = voteSelectedMapper.selectByVoteIdAndUserIdAndStudentId(voteSelectedForm.getVoteId(),
+                    voteSelectedForm.getUserId(),null);
+        }
+
         if(classVoteSelected!=null){
             AgencyException.raise(AgencyErrors.AGENCY_CLASS_VOTE_EXIST_ERROR);
         }
