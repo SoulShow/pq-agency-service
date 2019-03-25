@@ -481,7 +481,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         if(agencyClassNotice==null){
             AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOTICE_NOT_EXIST_ERROR);
         }
-        if(agencyClassNotice.getState()){
+        if(!agencyClassNotice.getState()){
             AgencyException.raise(AgencyErrors.AGENCY_NOTICE_ALREADY_RECALL_ERROR);
         }
         agencyNoticeDetailDto.setId(agencyClassNotice.getId());
@@ -2478,7 +2478,6 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delNotice(Long noticeId){
-
 
     }
 
