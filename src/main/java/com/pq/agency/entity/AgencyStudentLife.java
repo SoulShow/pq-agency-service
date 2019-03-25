@@ -7,6 +7,8 @@ public class AgencyStudentLife {
 
     private Long agencyClassId;
 
+    private String userId;
+
     private Long studentId;
 
     private String title;
@@ -81,5 +83,13 @@ public class AgencyStudentLife {
 
     public void setStudentId(Long studentId) {
         this.studentId = studentId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

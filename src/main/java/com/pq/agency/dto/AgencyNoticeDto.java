@@ -25,6 +25,11 @@ public class AgencyNoticeDto {
 
     private int isReceipt;
 
+    /**
+     * 0:不能撤回 1：可以撤回
+     */
+    private int recallStatus;
+
     public String getCreatedTime() {
         return createdTime;
     }
@@ -119,5 +124,13 @@ public class AgencyNoticeDto {
 
     public void setIsReceipt(int isReceipt) {
         this.isReceipt = isReceipt;
+    }
+
+    public int getRecallStatus() {
+        return recallStatus;
+    }
+
+    public void setRecallStatus(int recallStatus) {
+        this.recallStatus = recallStatus;
     }
 }

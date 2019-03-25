@@ -556,4 +556,10 @@ public interface AgencyClassService {
      * @return
      */
     AgencyNoticeReceiptDetailDto getNoticeReceiptDetail(Long noticeId,String userId,Long studentId);
+
+    /**
+     * 删除通知
+     * @param noticeId
+     */
+    void delNotice(Long noticeId);
 }

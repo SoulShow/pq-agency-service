@@ -24,6 +24,7 @@ public class Constants {
 
     public static final String AGENCY_CLASS_NOTICE_STUDENT_INFO = "AGENCY_CLASS_NOTICE_STUDENT_INFO:";
 
+    public static final String AGENCY_CLASS_NOTICE_INFO = "AGENCY_CLASS_NOTICE_INFO:";
 
     public static final Long PUSH_TEMPLATE_ID_NOTICE_7 = 7L;
     public static final Long PUSH_TEMPLATE_ID_NOTICE_1 = 1L;

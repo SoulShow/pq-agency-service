@@ -7,6 +7,7 @@
     <result column="student_id" property="studentId" jdbcType="BIGINT" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="BIT" />
     <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
@@ -20,10 +21,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into pq_agency_student_life (agency_class_id, title, content, 
-      state, created_time, updated_time,student_id
+      state, created_time, updated_time,student_id,user_id
       )
     values (#{agencyClassId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
-      #{state,jdbcType=BIT}, #{createdTime,jdbcType=TIMESTAMP}, #{updatedTime,jdbcType=TIMESTAMP},#{studentId}
+      #{state,jdbcType=BIT}, #{createdTime,jdbcType=TIMESTAMP}, #{updatedTime,jdbcType=TIMESTAMP},#{studentId},
+    #{userId}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.pq.agency.entity.AgencyStudentLife" >
@@ -34,21 +36,22 @@
       state = #{state,jdbcType=BIT},
       created_time = #{createdTime,jdbcType=TIMESTAMP},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
-      student_id = #{studentId}
+      student_id = #{studentId},
+      user_id = #{user_id}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, agency_class_id, title, content, state, created_time, updated_time,student_id
+    select id, agency_class_id, title, content, state, created_time, updated_time,student_id,user_id
     from pq_agency_student_life
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, agency_class_id, title, content, state, created_time, updated_time,student_id
+    select id, agency_class_id, title, content, state, created_time, updated_time,student_id,user_id
     from pq_agency_student_life
   </select>
 
   <select id="selectByStudentIdAndAgencyClassId" resultMap="BaseResultMap" >
-    select id, agency_class_id, title, content, state, created_time, updated_time,student_id
+    select id, agency_class_id, title, content, state, created_time, updated_time,student_id,user_id
     from pq_agency_student_life
     where agency_class_id = #{agencyClassId}
     and student_id = #{studentId}

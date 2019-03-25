@@ -87,7 +87,11 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
             lifeDto.setImgList(list);
             lifeDto.setContent(agencyStudentLife.getContent());
             lifeDto.setTitle(agencyStudentLife.getTitle());
-
+            AgencyUserStudent userStudent = agencyUserStudentMapper.selectByUserIdAndStudentId(agencyStudentLife.getUserId(),agencyStudentLife.getStudentId());
+            if(userStudent==null){
+                AgencyException.raise(AgencyErrors.AGENCY_STUDENT_NOT_EXIST_ERROR);
+            }
+            lifeDto.setRelation(userStudent.getRelation());
             lifeDto.setCreatedTime(DateUtil.formatDate(agencyStudentLife.getCreatedTime(),DateUtil.DEFAULT_DATE_FORMAT));
             lifeDto.setId(agencyStudentLife.getId());
             lifeList.add(lifeDto);
@@ -107,6 +111,7 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
         agencyStudentLife.setState(true);
         agencyStudentLife.setCreatedTime(DateUtil.currentTime());
         agencyStudentLife.setUpdatedTime(DateUtil.currentTime());
+        agencyStudentLife.setUserId(studentLifeForm.getUserId());
         studentLifeMapper.insert(agencyStudentLife);
         for(String img:studentLifeForm.getImgList()){
             AgencyStudentLifeImg studentLifeImg = new AgencyStudentLifeImg();

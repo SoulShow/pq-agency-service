@@ -14,6 +14,8 @@ public class AgencyStudentLifeDto {
 
     private String createdTime;
 
+    private String relation;
+
 
     public Long getId() {
         return id;
@@ -53,5 +55,13 @@ public class AgencyStudentLifeDto {
 
     public void setCreatedTime(String createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public String getRelation() {
+        return relation;
+    }
+
+    public void setRelation(String relation) {
+        this.relation = relation;
     }
 }

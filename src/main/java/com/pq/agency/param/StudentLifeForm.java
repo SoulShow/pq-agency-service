@@ -19,6 +19,8 @@ public class StudentLifeForm implements Serializable {
 
     private String content;
 
+    private String userId;
+
     private List<String> imgList = new ArrayList<>();
 
     public Long getAgencyClassId() {
@@ -59,5 +61,13 @@ public class StudentLifeForm implements Serializable {
 
     public void setImgList(List<String> imgList) {
         this.imgList = imgList;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

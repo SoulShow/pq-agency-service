@@ -464,6 +464,10 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
             AgencyClass agencyClass = agencyClassMapper.selectByPrimaryKey(agencyClassId);
             agencyNoticeDto.setClassName(agencyClass.getName());
+            agencyNoticeDto.setRecallStatus(0);
+            if(redisTemplate.hasKey(Constants.AGENCY_CLASS_NOTICE_INFO+agencyClassNotice.getId())){
+                agencyNoticeDto.setRecallStatus(1);
+            }
 
             agencyNoticeDtoList.add(agencyNoticeDto);
         }
@@ -476,6 +480,9 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         AgencyClassNotice agencyClassNotice = noticeMapper.selectByPrimaryKey(noticeId);
         if(agencyClassNotice==null){
             AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOTICE_NOT_EXIST_ERROR);
+        }
+        if(agencyClassNotice.getState()){
+            AgencyException.raise(AgencyErrors.AGENCY_NOTICE_ALREADY_RECALL_ERROR);
         }
         agencyNoticeDetailDto.setId(agencyClassNotice.getId());
         agencyNoticeDetailDto.setCreatedTime(DateUtil.formatDate(agencyClassNotice.getCreatedTime(),DateUtil.DEFAULT_TIME_MINUTE));
@@ -529,7 +536,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     public void receiptNotice(NoticeReceiptForm noticeReceiptForm){
         AgencyClassNotice classNotice = noticeMapper.selectByPrimaryKey(noticeReceiptForm.getNoticeId());
         if(classNotice==null){
-            AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOTICE_NOT_EXIST_ERROR);
+            AgencyException.raise(AgencyErrors.AGENCY_NOTICE_ALREADY_RECALL_ERROR);
         }
         List<ClassNoticeReceipt> noticeReceiptList = noticeReceiptMapper.selectByNoticeIdAndUserIdAndStudentId(classNotice.getId(),
                 null, noticeReceiptForm.getStudentId());
@@ -2054,6 +2061,10 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                     continue;
                 }
             }
+            agencyNoticeDto.setRecallStatus(0);
+            if(redisTemplate.hasKey(Constants.AGENCY_CLASS_NOTICE_INFO+agencyClassNotice.getId())){
+                agencyNoticeDto.setRecallStatus(1);
+            }
             agencyNoticeDto.setFileStatus(fileStatus);
             agencyNoticeDto.setImgStatus(imgStatus);
             agencyNoticeDtoList.add(agencyNoticeDto);
@@ -2091,6 +2102,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
                 classNoticeFile.setCreatedTime(DateUtil.currentTime());
                 noticeFileMapper.insert(classNoticeFile);
             }
+
+            redisTemplate.opsForValue().set(Constants.AGENCY_CLASS_NOTICE_INFO+agencyClassNotice.getId(),agencyClassNotice.getId(),2,TimeUnit.MINUTES);
 
             ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
                     new BasicThreadFactory.Builder().namingPattern("schedule-pool-%d").daemon(true).build());
@@ -2189,6 +2202,8 @@ public class AgencyClassServiceImpl implements AgencyClassService {
             classNoticeFile.setCreatedTime(DateUtil.currentTime());
             noticeFileMapper.insert(classNoticeFile);
         }
+
+        redisTemplate.opsForValue().set(Constants.AGENCY_CLASS_NOTICE_INFO+agencyClassNotice.getId(),agencyClassNotice.getId(),2,TimeUnit.MINUTES);
 
         ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
                 new BasicThreadFactory.Builder().namingPattern("schedule-pool-%d").daemon(true).build());
@@ -2434,7 +2449,7 @@ public class AgencyClassServiceImpl implements AgencyClassService {
 
     @Override
     public AgencyNoticeReceiptDetailDto getNoticeReceiptDetail(Long noticeId,String userId,Long studentId){
-        List<ClassNoticeReceipt> list = noticeReceiptMapper.selectByNoticeIdAndUserIdAndStudentId(noticeId,userId,studentId);
+        List<ClassNoticeReceipt> list = noticeReceiptMapper.selectByNoticeIdAndUserIdAndStudentId(noticeId,null,studentId);
         if(list==null||list.size()==0){
             AgencyException.raise(AgencyErrors.AGENCY_CLASS_NOTICE_NOT_RECEIPT_ERROR);
         }
@@ -2443,18 +2458,28 @@ public class AgencyClassServiceImpl implements AgencyClassService {
         agencyNoticeReceiptDetailDto.setNoticeId(list.get(0).getNoticeId());
         agencyNoticeReceiptDetailDto.setImg(list.get(0).getReceiptContent());
 
-        AgencyResult<UserDto> result = userFeign.getUserInfo(userId);
+        AgencyResult<UserDto> result = userFeign.getUserInfo(list.get(0).getUserId());
         if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
             throw new AgencyException(new AgencyErrorCode(result.getStatus(),result.getMessage()));
         }
 
         UserDto userDto = result.getData();
         agencyNoticeReceiptDetailDto.setAvatar(userDto.getAvatar());
-        agencyNoticeReceiptDetailDto.setName(userDto.getName());
+        AgencyUserStudent userStudent = agencyUserStudentMapper.selectByUserIdAndStudentId(list.get(0).getUserId(),studentId);
+        if(userStudent==null){
+            AgencyException.raise(AgencyErrors.AGENCY_CLASS_USER_NOT_EXIST_ERROR);
+        }
+        agencyNoticeReceiptDetailDto.setName(userStudent.getStudentName()+userStudent.getRelation());
         agencyNoticeReceiptDetailDto.setCreatedTime(DateUtil.formatDate(list.get(0).getCreatedTime(),DateUtil.DEFAULT_DATETIME_FORMAT));
 
         return agencyNoticeReceiptDetailDto;
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delNotice(Long noticeId){
+
+
+    }
 
 }
