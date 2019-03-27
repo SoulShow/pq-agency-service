@@ -40,6 +40,7 @@ public class AgencyStudentController {
 			result.setStatus(a.getErrorCode().getErrorCode());
 			result.setMessage(a.getErrorCode().getErrorMsg());
 		}catch (Exception e){
+			e.printStackTrace();
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
 		}
@@ -58,6 +59,7 @@ public class AgencyStudentController {
 			result.setStatus(a.getErrorCode().getErrorCode());
 			result.setMessage(a.getErrorCode().getErrorMsg());
 		}catch (Exception e){
+			e.printStackTrace();
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
 		}
@@ -83,6 +85,7 @@ public class AgencyStudentController {
 			AgencyStudentLifeListDto life = agencyStudentService.getStudentLife(studentId,agencyClassId,offset,size);
 			result.setData(life);
 		}catch (Exception e){
+			e.printStackTrace();
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
 		}
@@ -95,6 +98,7 @@ public class AgencyStudentController {
 		try{
 			agencyStudentService.createStudentLife(studentLifeForm);
 		}catch (Exception e){
+			e.printStackTrace();
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
 		}
@@ -127,6 +131,7 @@ public class AgencyStudentController {
 			result.setStatus(a.getErrorCode().getErrorCode());
 			result.setMessage(a.getErrorCode().getErrorMsg());
 		}catch (Exception e) {
+			e.printStackTrace();
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
 		}
@@ -143,6 +148,7 @@ public class AgencyStudentController {
 			result.setStatus(a.getErrorCode().getErrorCode());
 			result.setMessage(a.getErrorCode().getErrorMsg());
 		}catch (Exception e) {
+			e.printStackTrace();
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
 		}
@@ -159,6 +165,7 @@ public class AgencyStudentController {
 			result.setStatus(a.getErrorCode().getErrorCode());
 			result.setMessage(a.getErrorCode().getErrorMsg());
 		}catch (Exception e) {
+			e.printStackTrace();
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
 		}
@@ -177,6 +184,7 @@ public class AgencyStudentController {
 			result.setStatus(a.getErrorCode().getErrorCode());
 			result.setMessage(a.getErrorCode().getErrorMsg());
 		}catch (Exception e) {
+			e.printStackTrace();
 			result.setStatus(CommonErrors.DB_EXCEPTION.getErrorCode());
 			result.setMessage(CommonErrors.DB_EXCEPTION.getErrorMsg());
 		}
