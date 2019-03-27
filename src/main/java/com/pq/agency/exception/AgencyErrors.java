@@ -72,4 +72,6 @@ public class AgencyErrors extends CommonErrors {
     public final static ErrorCode AGENCY_NOTICE_RECEIPT_PUSH_MORE_60_ERROR = new AgencyErrorCode("0030", "操作频繁，每次提醒间隔一小时");
 
     public final static ErrorCode AGENCY_NOTICE_ALREADY_RECALL_ERROR = new AgencyErrorCode("0031", "该条通知已被撤回");
+
+    public final static ErrorCode AGENCY_NOTICE_CAN_NOT_RECALL_ERROR = new AgencyErrorCode("0032", "该条通知无法撤回");
 }

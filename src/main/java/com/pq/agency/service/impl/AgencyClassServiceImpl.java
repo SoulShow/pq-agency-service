@@ -2479,6 +2479,13 @@ public class AgencyClassServiceImpl implements AgencyClassService {
     @Transactional(rollbackFor = Exception.class)
     public void delNotice(Long noticeId){
 
+        if(!redisTemplate.hasKey(Constants.AGENCY_CLASS_NOTICE_INFO+noticeId)){
+            AgencyException.raise(AgencyErrors.AGENCY_NOTICE_CAN_NOT_RECALL_ERROR);
+        }
+        AgencyClassNotice classNotice = noticeMapper.selectByPrimaryKey(noticeId);
+        classNotice.setState(false);
+        classNotice.setUpdatedTime(DateUtil.currentTime());
+        noticeMapper.updateByPrimaryKey(classNotice);
     }
 
 }
