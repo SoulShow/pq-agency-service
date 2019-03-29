@@ -239,10 +239,6 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
         //check用户是否绑定过这个学生
         List<AgencyStudent> list = studentMapper.selectByAgencyClassIdAndName(invitationCode.getAgencyClassId(),name);
 
-        AgencyUserStudent agencyUserStudent = agencyUserStudentMapper.selectByUserIdAndStudentId(userId,list.get(0).getId());
-        if(agencyUserStudent!=null){
-            AgencyException.raise(AgencyErrors.AGENCY_ADD_STUDENT_REPEAT_ERROR);
-        }
         if(list==null||list.size()==0){
             if(redisTemplate.hasKey("STUDENT_NAME_ERROR_TIME"+userId)){
                 int count = (int)redisTemplate.opsForValue().get("STUDENT_NAME_ERROR_TIME"+userId);
@@ -257,6 +253,12 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
 
             AgencyException.raise(AgencyErrors.AGENCY_STUDENT_NOT_EXIST_ERROR);
         }
+
+        AgencyUserStudent agencyUserStudent = agencyUserStudentMapper.selectByUserIdAndStudentId(userId,list.get(0).getId());
+        if(agencyUserStudent!=null){
+            AgencyException.raise(AgencyErrors.AGENCY_ADD_STUDENT_REPEAT_ERROR);
+        }
+
 
         List<AgencyUserStudent> userStudentList = agencyUserStudentMapper.
                 selectByAgencyClassIdAndStudentId(invitationCode.getAgencyClassId(),list.get(0).getId());
