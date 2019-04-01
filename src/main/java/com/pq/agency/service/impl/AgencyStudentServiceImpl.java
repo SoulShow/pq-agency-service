@@ -16,6 +16,8 @@ import com.pq.common.constants.CommonConstants;
 import com.pq.common.exception.CommonErrors;
 import com.pq.common.util.DateUtil;
 import com.pq.common.util.HttpUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,7 +33,7 @@ import java.util.List;
  */
 @Service
 public class AgencyStudentServiceImpl implements AgencyStudentService {
-
+    private final static Logger LOGGER = LoggerFactory.getLogger(AgencyStudentServiceImpl.class);
     @Autowired
     private AgencyStudentMapper studentMapper;
     @Autowired
@@ -309,6 +311,7 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
         agencyUserStudentMapper.insert(userStudent);
 
         try {
+            LOGGER.info("是否可以加入群组：***************"+addGroupFlg);
             if(addGroupFlg){
                 HashMap<String, String> paramMap = new HashMap<>();
                 AgencyResult<UserDto> result = userFeign.getUserInfo(addStudentForm.getUserId());
