@@ -281,7 +281,9 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
             AgencyException.raise(AgencyErrors.AGENCY_ADD_STUDENT_RELATION_ERROR);
         }
         AgencyUser agencyUser = agencyUserMapper.selectByUserAndClassId(addStudentForm.getUserId(),addStudentForm.getAgencyClassId());
+        Boolean addGroupFlg = false;
         if(agencyUser==null){
+            addGroupFlg = true;
             agencyUser = new AgencyUser();
             agencyUser.setAgencyClassId(addStudentForm.getAgencyClassId());
             agencyUser.setUserId(addStudentForm.getUserId());
@@ -307,7 +309,7 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
         agencyUserStudentMapper.insert(userStudent);
 
         try {
-            if(agencyUser==null){
+            if(addGroupFlg){
                 HashMap<String, String> paramMap = new HashMap<>();
                 AgencyResult<UserDto> result = userFeign.getUserInfo(addStudentForm.getUserId());
                 if(!CommonErrors.SUCCESS.getErrorCode().equals(result.getStatus())){
@@ -335,7 +337,7 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
             }else {
                 return;
             }
-            agencyGroupMember.setStudentId(userStudent.getStudentId());
+            agencyGroupMember.setStudentId(userStudent.getStudentId()==null?0:userStudent.getStudentId();
             agencyGroupMember.setGroupId(agencyGroup.getId());
             agencyGroupMember.setDisturbStatus(1);
             agencyGroupMember.setState(true);
