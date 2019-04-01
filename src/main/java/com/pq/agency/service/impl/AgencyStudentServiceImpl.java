@@ -337,7 +337,7 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
             }else {
                 return;
             }
-            agencyGroupMember.setStudentId(userStudent.getStudentId()==null?0:userStudent.getStudentId();
+            agencyGroupMember.setStudentId(userStudent.getStudentId()==null?0:userStudent.getStudentId());
             agencyGroupMember.setGroupId(agencyGroup.getId());
             agencyGroupMember.setDisturbStatus(1);
             agencyGroupMember.setState(true);
