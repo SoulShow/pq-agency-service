@@ -1,6 +1,6 @@
-feign:
-  hystrix:
-    enabled: false
+#feign:
+#  hystrix:
+#    enabled: false
 spring:
   jpa:
     show-sql: false
@@ -78,6 +78,7 @@ eureka:
       defaultZone: http://eureka-service:9001/eureka/
 server:
   port: 8082
+  max-http-header-size: 20480
 
 php:
   url: http://172.26.232.247/sms/index.php/home/Demo/
@@ -87,3 +88,17 @@ php:
 #    register-with-eureka: false
 #    fetch-registry: false
 
+#hystrix的超时时间
+hystrix:
+    command:
+        default:
+            execution:
+              timeout:
+                enabled: true
+              isolation:
+                    thread:
+                        timeoutInMilliseconds: 15000
+#ribbon的超时时间
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
