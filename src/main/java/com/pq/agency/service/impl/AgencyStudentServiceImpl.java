@@ -278,10 +278,16 @@ public class AgencyStudentServiceImpl implements AgencyStudentService {
 
     @Override
     public void userAddStudent(AddStudentForm addStudentForm){
-        AgencyUserStudent agencyUserStudent = agencyUserStudentMapper.selectByStudentIdAndRelation(addStudentForm.getStudentId(),addStudentForm.getRelation());
+        AgencyUserStudent agencyUserStudent = agencyUserStudentMapper.selectByUserIdAndStudentId(addStudentForm.getUserId(),addStudentForm.getStudentId());
         if(agencyUserStudent!=null){
+            AgencyException.raise(AgencyErrors.AGENCY_ADD_STUDENT_REPEAT_ERROR);
+        }
+
+        AgencyUserStudent studentRelation = agencyUserStudentMapper.selectByStudentIdAndRelation(addStudentForm.getStudentId(),addStudentForm.getRelation());
+        if(studentRelation!=null){
             AgencyException.raise(AgencyErrors.AGENCY_ADD_STUDENT_RELATION_ERROR);
         }
+
         AgencyUser agencyUser = agencyUserMapper.selectByUserAndClassId(addStudentForm.getUserId(),addStudentForm.getAgencyClassId());
         Boolean addGroupFlg = false;
         if(agencyUser==null){
